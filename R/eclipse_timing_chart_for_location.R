@@ -115,34 +115,36 @@ ec_sched <- function(lon_in, lat_in, time_ny){
     with_tz(., tzone = "America/New_York") 
   
   # / start, max, end
-  return(out.times)
-}
-
-ecsched.times <- ec_sched(lon, lat, time_NY)
-
-
-# get sun coverage----
-
-# convert time to julian
-ecsuncov <- NULL
-
-for(i in 1:length(ecsched.times)){
-  i_time <-  swephR::swe_julday(year = year(with_tz(ecsched.times[i],"UTC")), 
-                                month = lubridate::month(with_tz(ecsched.times[i],"UTC")), 
-                                day = mday(with_tz(ecsched.times[i],"UTC")), 
-                                hourd = lubridate::hour(with_tz(ecsched.times[i],"UTC")) + 
-                                  (lubridate::minute(with_tz(ecsched.times[i],"UTC"))/60), 
-                                gregflag = 1)
+  #return(out.times)
   
-  ecsuncov <- c(ecsuncov, 
-                swephR::swe_sol_eclipse_how(jd_ut = i_time, 
-                                            ephe_flag = 4, 
-                                            geopos = c(x = lon, 
-                                                       y = lat, 
-                                                       z = 10))$attr[1])
+  #ecsched.times <- ec_sched(lon, lat, time_NY)
+  ecsched.times <- out.times
+  
+  # get sun coverage----
+  
+  # convert time to julian
+  ecsuncov <- NULL
+  
+  for(i in 1:length(ecsched.times)){
+    i_time <-  swephR::swe_julday(year = year(with_tz(ecsched.times[i],"UTC")), 
+                                  month = lubridate::month(with_tz(ecsched.times[i],"UTC")), 
+                                  day = mday(with_tz(ecsched.times[i],"UTC")), 
+                                  hourd = lubridate::hour(with_tz(ecsched.times[i],"UTC")) + 
+                                    (lubridate::minute(with_tz(ecsched.times[i],"UTC"))/60), 
+                                  gregflag = 1)
+    
+    ecsuncov <- c(ecsuncov, 
+                  swephR::swe_sol_eclipse_how(jd_ut = i_time, 
+                                              ephe_flag = 4, 
+                                              geopos = c(x = lon, 
+                                                         y = lat, 
+                                                         z = 10))$attr[1])
+  }
+  
+  return(data.frame(time = ecsched.times, 
+             coverage = ecsuncov))
 }
 
-data.frame(time = ecsched.times, 
-           coverage = ecsuncov) 
-
+ 
+ec_sched(lon, lat, time_NY)
 
