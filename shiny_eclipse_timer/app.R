@@ -45,7 +45,13 @@ ui <- fluidPage(
           fluidRow(uiOutput("tab.api")),
           fluidRow(uiOutput("tab.cxy")),
           fluidRow(uiOutput("tab.src"))
-        )
+        ),
+        wellPanel(
+          fluidRow(
+            uiOutput("tab")
+          )
+        ),
+        fluidRow(HTML('<iframe width="448" height="252" src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'))
       )
     ),
     mainPanel(
@@ -55,12 +61,12 @@ ui <- fluidPage(
       ),
       wellPanel(
         shiny::plotOutput(outputId = "map"),
-      ),
-      wellPanel(
-        fluidRow(
-          uiOutput("tab")
-        )
-      )
+      )#,
+      # wellPanel(
+      #   fluidRow(
+      #     uiOutput("tab")
+      #   )
+      # )
     )
   )
 )
@@ -241,7 +247,7 @@ server <- function(input, output) {
     ggplot() + 
       geom_sf(data = usa.states, 
               fill = "dark grey", color = "white")+
-      geom_path(data = all.paths[all.paths$yr <= 2054,], 
+      geom_path(data = all.paths[all.paths$yr <= 2024,], 
                 aes(x = lon, y = lat, color = factor(yr)), 
                 linewidth = 2)+
       geom_point(aes(x = addr.coords$coordinates.x, 
