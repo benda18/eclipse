@@ -59,6 +59,10 @@ ui <- fluidPage(
         fluidRow("See Eclipse Info Below:"),
         fluidRow(shiny::tableOutput(outputId = "return_eclips.times"))
       ),
+      # # new panel for timeline plot----
+      # wellPanel(
+      #   shiny::plotOutput(outputId = "timeline"),
+      # ),
       wellPanel(
         shiny::plotOutput(outputId = "map"),
       )
@@ -255,10 +259,7 @@ server <- function(input, output) {
       labs(title = "Total Eclipse Paths Across the US Over the Next 30 Years")
   })
   
-  # add new chart showing sun coverage over time----
-  output$chart_timeline <- renderPlot({
-    
-  })
+  
   
   
 }
