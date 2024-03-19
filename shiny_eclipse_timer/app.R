@@ -61,12 +61,7 @@ ui <- fluidPage(
       ),
       wellPanel(
         shiny::plotOutput(outputId = "map"),
-      )#,
-      # wellPanel(
-      #   fluidRow(
-      #     uiOutput("tab")
-      #   )
-      # )
+      )
     )
   )
 )
