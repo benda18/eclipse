@@ -14,31 +14,14 @@ library(rsconnect)
 renv::snapshot()
 renv::status()
 
-
-
-# https://github.com/chris-prener/censusxy?tab=readme-ov-file
-
-# cite: censusxy is described in a 2021 paper in Transactions in GIS by Chris
-# and Branson - please cite the paper if you use censusxy in your work!
-
-
 rm(list=ls());cat('\f');gc()
 
-# SET VARS----
-
-# cxy.addr <- censusxy::cxy_oneline(address = "1060 W Addison St, Chicago, IL") 
-# 
-# 
-# cxy.addr$coordinates.x
-# cxy.addr$coordinates.y
-# cxy.addr$matchedAddress
-
-
-
+# vars----
 lon  <- -78.91775 #-81.44067000
 lat  <-  36.04909 #41.24006000
 time_NY <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
 
+# function----
 ec_sched <- function(lon_in, lat_in, time_ny){
   # time logic
   
@@ -145,6 +128,6 @@ ec_sched <- function(lon_in, lat_in, time_ny){
              coverage = ecsuncov))
 }
 
- 
+# do function----
 ec_sched(lon, lat, time_NY)
 
