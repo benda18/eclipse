@@ -34,7 +34,7 @@ ec_sched <- function(lon_in, lat_in, time_ny){
   greg_dt.local <- time_ny
   tz.local      <- tz(greg_dt.local)
   
-  # do the time conversions----
+  # do the time conversions
   # convert to utc
   greg_dt.utc <- with_tz(greg_dt.local, tz = "UTC")
   jul_dt.utc  <- swephR::swe_julday(year  = year(greg_dt.utc), 
@@ -52,7 +52,7 @@ ec_sched <- function(lon_in, lat_in, time_ny){
                                                                 z = 10), 
                                                   backward = F)
   
-  # get start, max, end----
+  # get start, max, end
   ecl_times <- data.frame(st = with_tz(ymd_hms(paste(swe_jdet_to_utc(jd_et = ewl_out$tret[2], 
                                                                      gregflag = 1),
                                                      collapse = "-")), 
@@ -98,13 +98,9 @@ ec_sched <- function(lon_in, lat_in, time_ny){
     with_tz(., tzone = "America/New_York") 
   
   # / start, max, end
-  #return(out.times)
-  
-  #ecsched.times <- ec_sched(lon, lat, time_NY)
   ecsched.times <- out.times
   
-  # get sun coverage----
-  
+  # get sun coverage
   # convert time to julian
   ecsuncov <- NULL
   
