@@ -35,14 +35,15 @@ rm(list=ls());cat('\f');gc()
 
 
 
-lon_in <- -78.91775 #-81.44067000
-lat_in <-  36.04909 #41.24006000
+lon_in  <- -78.91775 #-81.44067000
+lat_in  <-  36.04909 #41.24006000
+time_ny <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
 
 # ECLIPSE MATH----
 
 # set date_time of eclipse (ideally before solar eclipse begins)----
 
-greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+greg_dt.local <- time_ny
 tz.local      <- tz(greg_dt.local)
 
 # do the time conversions----
@@ -77,8 +78,36 @@ ecl_times <- data.frame(st = with_tz(ymd_hms(paste(swe_jdet_to_utc(jd_et = ewl_o
                                                    collapse = "-")), 
                                      tzone = "America/New_York"))
 
+ecl_times2 <- as.vector(ecl_times)
 
+break_mins <- 10
+end_time <- ecl_times2$st 
+n        <- 0
+
+out.times <- ecl_times2 %>%
+  unname() %>%
+  unlist()
+
+while(end_time < ecl_times2$et){
+  n <- n + 1
+  if(n > 1000){
+    stop("error - N")
+  }
+  print(n)
   
+  end_time <- end_time %m+% minutes(break_mins)
+  
+  if(end_time < ecl_times2$et){
+    out.times <- c(out.times, 
+                   end_time)
+  }
+}
+
+out.times <- out.times %>%
+  unique() %>%
+  sort() %>%
+  as_datetime() %>% 
+  with_tz(., tzone = "America/New_York") 
 
 # / start, max, end
 
