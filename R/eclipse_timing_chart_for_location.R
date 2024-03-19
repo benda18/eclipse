@@ -17,9 +17,9 @@ renv::status()
 rm(list=ls());cat('\f');gc()
 
 # vars----
-lon  <- -78.91775 #-81.44067000
-lat  <-  36.04909 #41.24006000
-time_NY <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+lon1  <- -78.91775 #-81.44067000
+lat1  <-  36.04909 #41.24006000
+time_NY1 <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
 
 # function----
 ec_sched <- function(lon_in, lat_in, time_ny){
@@ -115,8 +115,8 @@ ec_sched <- function(lon_in, lat_in, time_ny){
     ecsuncov <- c(ecsuncov, 
                   swephR::swe_sol_eclipse_how(jd_ut = i_time, 
                                               ephe_flag = 4, 
-                                              geopos = c(x = lon, 
-                                                         y = lat, 
+                                              geopos = c(x = lon_in, 
+                                                         y = lat_in, 
                                                          z = 10))$attr[1])
   }
   
@@ -125,5 +125,5 @@ ec_sched <- function(lon_in, lat_in, time_ny){
 }
 
 # do function----
-ec_sched(lon, lat, time_NY)
+ec_sched(lon1, lat1, time_NY1)
 
