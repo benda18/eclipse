@@ -64,7 +64,9 @@ ui <- fluidPage(
       #   shiny::plotOutput(outputId = "timeline"),
       # ),
       wellPanel(
-        shiny::plotOutput(outputId = "map"),
+        shiny::plotOutput(outputId = "sched"),
+        shiny::plotOutput(outputId = "map")
+        
       )
     )
   )
@@ -72,7 +74,112 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  
+  # funs----
+  ec_sched <- function(lon_in, lat_in, time_ny){
+    # time logic
+    
+    if(!is.POSIXct(time_ny)){
+      stop("'time_ny' input must be of class 'POSIXct' or 'POSIXt'.
+         Use lubridate::ymd_hms() or similar, and ensure timezone 
+         set to America/NewYork.")
+    }
+    
+    greg_dt.local <- time_ny
+    tz.local      <- tz(greg_dt.local)
+    
+    # do the time conversions
+    # convert to utc
+    greg_dt.utc <- with_tz(greg_dt.local, tz = "UTC")
+    jul_dt.utc  <- swephR::swe_julday(year  = year(greg_dt.utc), 
+                                      month = lubridate::month(greg_dt.utc, label = F), 
+                                      day   = mday(greg_dt.utc), 
+                                      hourd = hour(greg_dt.utc) + 
+                                        (minute(greg_dt.utc)/60) + 
+                                        (second(greg_dt.utc)/60/60), 
+                                      gregflag = 1)
+    
+    ewl_out     <- swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
+                                                    ephe_flag = 4, 
+                                                    geopos    = c(x = lon_in, 
+                                                                  y = lat_in, 
+                                                                  z = 10), 
+                                                    backward = F)
+    
+    # get start, max, end
+    ecl_times <- data.frame(st = with_tz(ymd_hms(paste(swe_jdet_to_utc(jd_et = ewl_out$tret[2], 
+                                                                       gregflag = 1),
+                                                       collapse = "-")), 
+                                         tzone = "America/New_York"), 
+                            mt = with_tz(ymd_hms(paste(swe_jdet_to_utc(jd_et = ewl_out$tret[1], 
+                                                                       gregflag = 1),
+                                                       collapse = "-")), 
+                                         tzone = "America/New_York"), 
+                            et = with_tz(ymd_hms(paste(swe_jdet_to_utc(jd_et = ewl_out$tret[5], 
+                                                                       gregflag = 1),
+                                                       collapse = "-")), 
+                                         tzone = "America/New_York"))
+    
+    ecl_times2 <- as.vector(ecl_times)
+    
+    break_mins <- 10
+    end_time <- ecl_times2$st 
+    n        <- 0
+    
+    out.times <- ecl_times2 %>%
+      unname() %>%
+      unlist()
+    
+    while(end_time < ecl_times2$et){
+      n <- n + 1
+      if(n > 1000){
+        stop("error - N")
+      }
+      
+      
+      end_time <- end_time %m+% minutes(break_mins)
+      
+      if(end_time < ecl_times2$et){
+        out.times <- c(out.times, 
+                       end_time)
+      }
+    }
+    
+    out.times <- out.times %>%
+      unique() %>%
+      sort() %>%
+      as_datetime() %>% 
+      with_tz(., tzone = "America/New_York") 
+    
+    # / start, max, end
+    ecsched.times <- out.times
+    
+    # get sun coverage
+    # convert time to julian
+    ecsuncov <- NULL
+    
+    for(i in 1:length(ecsched.times)){
+      i_time <-  swephR::swe_julday(year = year(with_tz(ecsched.times[i],"UTC")), 
+                                    month = lubridate::month(with_tz(ecsched.times[i],"UTC")), 
+                                    day = mday(with_tz(ecsched.times[i],"UTC")), 
+                                    hourd = lubridate::hour(with_tz(ecsched.times[i],"UTC")) + 
+                                      (lubridate::minute(with_tz(ecsched.times[i],"UTC"))/60), 
+                                    gregflag = 1)
+      
+      ecsuncov <- c(ecsuncov, 
+                    swephR::swe_sol_eclipse_how(jd_ut = i_time, 
+                                                ephe_flag = 4, 
+                                                geopos = c(x = lon_in, 
+                                                           y = lat_in, 
+                                                           z = 10))$attr[1])
+    }
+    
+    out <- data.frame(time = ecsched.times, 
+                      coverage = ecsuncov)
+    
+    out[nrow(out),]$coverage <- 0
+    return(out)
+  }
+  # other stuff---
   usa.states <- readRDS("usastates.rds") 
   
   
@@ -254,9 +361,34 @@ server <- function(input, output) {
                  shape = 21,
                  size = 4, color = "white", fill = "red")+
       theme_void()+
+      theme(text = element_text(size = 12))+
       coord_sf()+
       scale_color_discrete(name = "Eclipse Path")+
-      labs(title = "Total Eclipse Paths Across the US Over the Next 30 Years")
+      labs(title = "Eclipse Path")
+  })
+  
+  output$sched <- renderPlot({
+    
+    addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
+    df.sched <- ec_sched(addr.coords$coordinates.x, 
+                         addr.coords$coordinates.y, 
+                         ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
+    
+    ggplot() + 
+      geom_polygon(data = df.sched, 
+                 aes(x = time, y = coverage), 
+                 alpha = 0.5) +
+      # theme_void()+
+      scale_y_continuous(name = "Sun Coverage (%)", 
+                         labels = scales::percent)+
+      scale_x_datetime(name = "Time", 
+                       date_labels = "%I:%M %p", 
+                       date_breaks = "15 min")+
+      theme(title = element_text(size = 12), 
+            axis.text.y = element_text(size = 12), 
+            axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
+      # scale_color_discrete(name = "Eclipse Path")+
+       labs(title = "Percentage of Sun Covered by Moon by Time of Day")
   })
   
   
