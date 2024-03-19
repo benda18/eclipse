@@ -177,6 +177,11 @@ server <- function(input, output) {
                       coverage = ecsuncov)
     
     out[nrow(out),]$coverage <- 0
+    
+    #if(any(out$coverage >= 1)){
+      out$coverage[out$coverage >= 1] <- 1.14
+    #}
+    
     return(out)
   }
   # other stuff---
@@ -327,7 +332,10 @@ server <- function(input, output) {
     }
     
     # adjust sun obscuration > 100% 
-    out.times$max_sun_obscured <- scales::percent(ifelse(ewl_out$attr > 1, 1, ewl_out$attr), 
+    out.times$max_sun_obscured <- scales::percent(ifelse(test = ewl_out$attr > 1,
+                                                         #yes = 1, 
+                                                         yes = ewl_out$attr,
+                                                         no  = ewl_out$attr), 
                                                   accuracy = 0.1)
     
     # fix round-up errors
@@ -380,7 +388,9 @@ server <- function(input, output) {
                  alpha = 0.5) +
       # theme_void()+
       scale_y_continuous(name = "Sun Coverage (%)", 
-                         labels = scales::percent)+
+                         labels = scales::percent, 
+                         limits = c(0, 1.25), 
+                         breaks = seq(0, 2, by = 0.2))+
       scale_x_datetime(name = "Time", 
                        date_labels = "%I:%M %p", 
                        date_breaks = "15 min")+
