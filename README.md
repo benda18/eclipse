@@ -12,5 +12,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 
 ### Sources
+[to be added at a future date]
 
 ### Other Links
+[to be added at a future date]
