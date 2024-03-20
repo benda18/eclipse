@@ -125,9 +125,7 @@ server <- function(input, output) {
     end_time <- ecl_times2$st 
     n        <- 0
     
-    out.times <- ecl_times2 %>%
-      unname() %>%
-      unlist()
+    out.times <- unlist(unname(ecl_times2))
     
     while(end_time < ecl_times2$et){
       n <- n + 1
@@ -144,11 +142,7 @@ server <- function(input, output) {
       }
     }
     
-    out.times <- out.times %>%
-      unique() %>%
-      sort() %>%
-      as_datetime() %>% 
-      with_tz(., tzone = "America/New_York") 
+    out.times <- with_tz(as_datetime(sort(unique(out.times))), tzone = "America/New_York") 
     
     # / start, max, end
     ecsched.times <- out.times
