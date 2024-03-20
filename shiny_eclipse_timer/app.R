@@ -21,16 +21,17 @@ library(ggplot2)
 library(sf)
 #library(rsconnect)
 
-# Define UI for application that draws a histogram
+# Define UI for application 
 ui <- fluidPage(
   
   # Application title
   titlePanel("April 8th, 2024 Eclipse Planning Tool -
-             Find out when and if a specific location will see totality."),
+             Find out if and when a specific location will see totality."),
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
-                       label = "Enter Address"),
+                       label = "Enter Address", 
+                       value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH ADDRESS"), 
       wellPanel(
