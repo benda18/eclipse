@@ -58,7 +58,8 @@ ui <- fluidPage(
     mainPanel(
       wellPanel(
         fluidRow("See Eclipse Info Below:"),
-        fluidRow(shiny::tableOutput(outputId = "return_eclips.times"))
+        fluidRow(shiny::tableOutput(outputId = "return_eclips.times")), 
+        fluidRow(shiny::textOutput(outputId = "return_matched.addr")) # returned address
       ),
       # # new panel for timeline plot----
       # wellPanel(
@@ -237,6 +238,12 @@ server <- function(input, output) {
     censusxy::cxy_oneline(address = input$addr_in)
   })
   
+  matched_addr <- eventReactive(eventExpr = input$cxy_go, {  # returned address
+    temp <- get_cxyinfo()
+    matched.addr <- temp$matchedAddress
+    matched.addr
+  })
+  
   get_times <- eventReactive(eventExpr = input$cxy_go, {
     #temp          <- censusxy::cxy_oneline(address = input$addr_in)
     temp          <- get_cxyinfo()
@@ -346,6 +353,10 @@ server <- function(input, output) {
   
   output$return_eclips.times <- renderTable({
     get_times()
+  })
+  
+  output$return_matched.addr <- renderText({
+    matched_addr()  # returned address
   })
   
   output$map <- renderPlot({
