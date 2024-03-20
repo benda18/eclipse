@@ -59,7 +59,10 @@ ui <- fluidPage(
       wellPanel(
         fluidRow("See Eclipse Info Below:"),
         fluidRow(shiny::tableOutput(outputId = "return_eclips.times")), 
-        fluidRow(shiny::textOutput(outputId = "return_matched.addr")) # returned address
+        fluidRow(shiny::textOutput(outputId = "return_matched.addr")), # returned address
+        fluidRow("maximum sun coverage goes here"), # max sun coverage
+        fluidRow("Totality???"), #totality? goes here
+        fluidRow("Totality Duration: ") # duration of Totality goes here
       ),
       # # new panel for timeline plot----
       # wellPanel(
