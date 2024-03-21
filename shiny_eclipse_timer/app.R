@@ -19,18 +19,20 @@ library(censusxy)
 library(scales)
 library(ggplot2)
 library(sf)
+library(glue)
 #library(rsconnect)
 
-# Define UI for application that draws a histogram
+# Define UI for application 
 ui <- fluidPage(
   
   # Application title
   titlePanel("April 8th, 2024 Eclipse Planning Tool -
-             Find out when and if a specific location will see totality."),
+             Find out if and when a specific location will see totality."),
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
-                       label = "Enter Address"),
+                       label = "Enter Address", 
+                       value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH ADDRESS"), 
       wellPanel(
@@ -56,13 +58,12 @@ ui <- fluidPage(
     ),
     mainPanel(
       wellPanel(
-        fluidRow("See Eclipse Info Below:"),
-        fluidRow(shiny::tableOutput(outputId = "return_eclips.times"))
+        fluidRow("SEARCH RESULTS:"),
+        fluidRow(shiny::textOutput(outputId = "return_matched.addr")), # returned address
+        fluidRow(textOutput(outputId = "return_suncov")), # max sun coverage
+        fluidRow(textOutput(outputId = "return_totality")) #totality? goes here
       ),
-      # # new panel for timeline plot----
-      # wellPanel(
-      #   shiny::plotOutput(outputId = "timeline"),
-      # ),
+      # panel for timeline plot----
       wellPanel(
         shiny::plotOutput(outputId = "sched"),
         shiny::plotOutput(outputId = "map")
@@ -171,17 +172,11 @@ server <- function(input, output) {
                       coverage = ecsuncov)
     
     out[nrow(out),]$coverage <- 0
-    
-    #if(any(out$coverage >= 1)){
-      out$coverage[out$coverage >= 1] <- 1.14
-    #}
-    
+    out$coverage[out$coverage >= 1] <- 1.14
     return(out)
   }
   # other stuff---
   usa.states <- readRDS("usastates.rds") 
-  
-  
   path.files <- list.files(pattern = "^eclpathdfusa.*\\.rds$")
   
   all.paths <- NULL
@@ -236,8 +231,14 @@ server <- function(input, output) {
     censusxy::cxy_oneline(address = input$addr_in)
   })
   
-  get_times <- eventReactive(eventExpr = input$cxy_go, {
-    #temp          <- censusxy::cxy_oneline(address = input$addr_in)
+  matched_addr <- eventReactive(eventExpr = input$cxy_go, {  # returned address
+    temp <- get_cxyinfo()
+    matched.addr <- temp$matchedAddress
+    matched.addr
+  })
+  
+  # get totality
+  get_totality <- eventReactive(eventExpr = input$cxy_go, {
     temp          <- get_cxyinfo()
     lon_in        <- temp$coordinates.x
     lat_in        <- temp$coordinates.y
@@ -255,102 +256,60 @@ server <- function(input, output) {
                                         gregflag = 1)
     
     # do eclipse math
-    ewl_out     <- swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
+    sol_cov     <- swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
                                                     ephe_flag = 4, 
                                                     geopos    = c(x = lon_in,
                                                                   y = lat_in,
                                                                   z = 10), 
-                                                    backward = F)
-    # extract needed values
-    ewl_out$tret <- ewl_out$tret[1:5]
-    ewl_out$attr <- ewl_out$attr[1+c(2)]
-    
-    # build output table to be displayed on shiny app
-    out.times <- data.frame(time_val.jul     = ewl_out$tret, 
-                            local_time       = NA)
-    
-    # convert julian times to gregorian
-    for(i in 1:nrow(out.times)){
-      out.times$local_time[i] <- swephR::swe_jdet_to_utc(jd_et = ewl_out$tret[i], 
-                                                         gregflag = 1) |>
-        paste(sep = "-", collapse = "-") |>
-        ymd_hms() |>
-        with_tz(tzone = tz.local) |>
-        strftime(format = "%m-%d-%y %I:%M:%S%p %Z", 
-                 tz = tz.local) |>
-        as.character() 
-    }
-    
-    out.times <- out.times[order(out.times$local_time),]
-    
-    # times labels
-    out.times$eclipse_event <- c("start", 
-                                 "start_totality", 
-                                 "max_eclipse", 
-                                 "end_totality", 
-                                 "end")
-    rownames(out.times) <- 1:nrow(out.times)
-    
-    # filter down to needed columns only
-    out.times <- out.times[,c("eclipse_event", "local_time")]
-    
-    # out_attributes
-    out.attr <- data.frame(longitude = lon_in, 
-                           latitude  = lat_in,
-                           total_ecl_at_loc = ewl_out$attr > 1)
-    rownames(out.attr) <- 1:nrow(out.attr)
-    out.attr
-    
-    # total vs partial eclipse
-    if(!out.attr$total_ecl_at_loc){
-      out.times$local_time[1:5] <- gsub("^.*-\\d{2,2} ", "", out.times$local_time[1:5])
-      out.times$local_time[1:5] <- gsub("^0", "", out.times$local_time[1:5])
-      out.times$local_time[1:5] <- gsub("AM ", "am ", out.times$local_time[1:5])
-      out.times$local_time[1:5] <- gsub("PM ", "pm ", out.times$local_time[1:5])
-      
-      # manual fixes because when partial eclipse the order is different
-      # out.times$local_time[1]  #  no change needed
-      out.times$local_time[5] <- out.times$local_time[3] 
-      out.times$local_time[3] <- out.times$local_time[2]
-      # out.times$local_time[2] <- "<<<partial eclipse only>>>" #  not seen
-      # out.times$local_time[4] <- "<<<partial eclipse only>>>" #  not seen 
-      
-      out.times <- out.times[c(1,3,5),]
-      out.times$eclipse_type <- c("Partial")
-    }else{
-      out.times$local_time <- gsub("^.*-\\d{2,2} ", "", out.times$local_time)
-      out.times$local_time <- gsub("^0", "", out.times$local_time)
-      out.times$local_time <- gsub("AM ", "am ", out.times$local_time)
-      out.times$local_time <- gsub("PM ", "pm ", out.times$local_time)
-      out.times$eclipse_type <- c("Total")
-    }
-    
-    # adjust sun obscuration > 100% 
-    out.times$max_sun_obscured <- scales::percent(ifelse(test = ewl_out$attr > 1,
-                                                         #yes = 1, 
-                                                         yes = ewl_out$attr,
-                                                         no  = ewl_out$attr), 
-                                                  accuracy = 0.1)
-    
-    # fix round-up errors
-    if(ewl_out$attr < 1 & 
-       grepl("^100", out.times$max_sun_obscured[median(1:nrow(out.times))])){
-      out.times$max_sun_obscured <- "99.9%"
-    }
-    
-    out.times$max_sun_obscured[c(1:nrow(out.times) != median(1:nrow(out.times)))] <- NA
-    out.times
-    
+                                                    backward = F)$attr[1]
+    glue("Totality Visible: {as.character(sol_cov >= 1)}")
+  })
+  output$return_totality <- renderText({
+    get_totality()
   })
   
-  output$return_eclips.times <- renderTable({
-    get_times()
+  
+  # get sun coverage
+  get_suncov <- eventReactive(eventExpr = input$cxy_go, {
+    #"[enter sun coverage calulcations here]"
+    
+    temp          <- get_cxyinfo()
+    lon_in        <- temp$coordinates.x
+    lat_in        <- temp$coordinates.y
+    greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    tz.local      <- tz(greg_dt.local)
+    
+    # convert to utc
+    greg_dt.utc   <- with_tz(greg_dt.local, tz = "UTC")
+    jul_dt.utc    <- swephR::swe_julday(year  = year(greg_dt.utc), 
+                                        month = lubridate::month(greg_dt.utc, label = F), 
+                                        day   = mday(greg_dt.utc), 
+                                        hourd = hour(greg_dt.utc) + 
+                                          (minute(greg_dt.utc)/60) + 
+                                          (second(greg_dt.utc)/60/60), 
+                                        gregflag = 1)
+    
+    # do eclipse math
+    sol_cov     <- swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
+                                                    ephe_flag = 4, 
+                                                    geopos    = c(x = lon_in,
+                                                                  y = lat_in,
+                                                                  z = 10), 
+                                                    backward = F)$attr[1]
+    glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
+    
+    
+  })
+  output$return_suncov <- renderText({
+    get_suncov()
+  })
+  
+  output$return_matched.addr <- renderText({
+    matched_addr()  # returned address
   })
   
   output$map <- renderPlot({
-    
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
-    
     
     ggplot() + 
       geom_sf(data = usa.states, 
@@ -380,7 +339,6 @@ server <- function(input, output) {
       geom_polygon(data = df.sched, 
                  aes(x = time, y = coverage), 
                  alpha = 0.5) +
-      # theme_void()+
       scale_y_continuous(name = "Sun Coverage (%)", 
                          labels = scales::percent, 
                          limits = c(0, 1.25), 
@@ -391,12 +349,8 @@ server <- function(input, output) {
       theme(title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
-      # scale_color_discrete(name = "Eclipse Path")+
        labs(title = "Percentage of Sun Covered by Moon by Time of Day")
   })
-  
-  
-  
   
 }
 
