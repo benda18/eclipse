@@ -325,14 +325,10 @@ server <- function(input, output) {
                                                                   y = lat_in,
                                                                   z = 10), 
                                                     backward = F)$attr[1]
-    # sol_cov <- ifelse(is.null(sol_cov), 
-    #                   "[no address found]", 
-    #                   glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}"))
     
     glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
-    
-    
   })
+  
   output$return_suncov <- renderText({
     get_suncov()
   })
