@@ -62,8 +62,8 @@ ui <- fluidPage(
         fluidRow(shiny::tableOutput(outputId = "return_eclips.times")), 
         fluidRow(shiny::textOutput(outputId = "return_matched.addr")), # returned address
         fluidRow(textOutput(outputId = "return_suncov")), # max sun coverage
-        fluidRow("Totality???"), #totality? goes here
-        fluidRow("Totality Duration: ") # duration of Totality goes here
+        fluidRow(textOutput(outputId = "return_totality")), #totality? goes here
+        #fluidRow("Totality Duration: ") # duration of Totality goes here
       ),
       # # new panel for timeline plot----
       # wellPanel(
@@ -247,6 +247,38 @@ server <- function(input, output) {
     matched.addr <- temp$matchedAddress
     matched.addr
   })
+  
+  # get totality
+  get_totality <- eventReactive(eventExpr = input$cxy_go, {
+    temp          <- get_cxyinfo()
+    lon_in        <- temp$coordinates.x
+    lat_in        <- temp$coordinates.y
+    greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    tz.local      <- tz(greg_dt.local)
+    
+    # convert to utc
+    greg_dt.utc   <- with_tz(greg_dt.local, tz = "UTC")
+    jul_dt.utc    <- swephR::swe_julday(year  = year(greg_dt.utc), 
+                                        month = lubridate::month(greg_dt.utc, label = F), 
+                                        day   = mday(greg_dt.utc), 
+                                        hourd = hour(greg_dt.utc) + 
+                                          (minute(greg_dt.utc)/60) + 
+                                          (second(greg_dt.utc)/60/60), 
+                                        gregflag = 1)
+    
+    # do eclipse math
+    sol_cov     <- swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
+                                                    ephe_flag = 4, 
+                                                    geopos    = c(x = lon_in,
+                                                                  y = lat_in,
+                                                                  z = 10), 
+                                                    backward = F)$attr[1]
+    glue("Totality Visible: {as.character(sol_cov >= 1)}")
+  })
+  output$return_totality <- renderText({
+    get_totality()
+  })
+  
   
   # get sun coverage
   get_suncov <- eventReactive(eventExpr = input$cxy_go, {
