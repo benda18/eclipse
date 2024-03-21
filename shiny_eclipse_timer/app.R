@@ -60,7 +60,7 @@ ui <- fluidPage(
         fluidRow("See Eclipse Info Below:"),
         fluidRow(shiny::tableOutput(outputId = "return_eclips.times")), 
         fluidRow(shiny::textOutput(outputId = "return_matched.addr")), # returned address
-        fluidRow("maximum sun coverage goes here"), # max sun coverage
+        fluidRow(textOutput(outputId = "return_suncov")), # max sun coverage
         fluidRow("Totality???"), #totality? goes here
         fluidRow("Totality Duration: ") # duration of Totality goes here
       ),
@@ -246,6 +246,15 @@ server <- function(input, output) {
     matched.addr <- temp$matchedAddress
     matched.addr
   })
+  
+  # get sun coverage
+  get_suncov <- eventReactive(eventExpr = input$cxy_go, {
+    "[enter sun coverage calulcations here]"
+  })
+  output$return_suncov <- renderText({
+    get_suncov()
+  })
+  
   
   get_times <- eventReactive(eventExpr = input$cxy_go, {
     #temp          <- censusxy::cxy_oneline(address = input$addr_in)
