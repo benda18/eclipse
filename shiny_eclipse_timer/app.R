@@ -41,12 +41,22 @@ ui <- fluidPage(
         wellPanel(
           fluidRow("The geocoding utility relies on a library develped by and described in a 2021 paper in \"Transactions in GIS\" by Prener and Fox, and uses the US Census Bureau's Geocoder API")
         ),
-        fluidRow("LINKS"),
+        fluidRow("SOURCES"),
         wellPanel(
           fluidRow(uiOutput("tab.res")),
           fluidRow(uiOutput("tab.api")),
           fluidRow(uiOutput("tab.cxy")),
           fluidRow(uiOutput("tab.src"))
+        ),
+        fluidRow("CONTACT INFO"),
+        wellPanel(
+          fluidRow("Developed by Tim Bender, last updated 3-20-24"), 
+          fluidRow(uiOutput("tab.github")),
+          fluidRow(uiOutput("tab.linkedin")),
+          # fluidRow(uiOutput("tab.res")),
+          # fluidRow(uiOutput("tab.api")),
+          # fluidRow(uiOutput("tab.cxy")),
+          # fluidRow(uiOutput("tab.src"))
         ),
         wellPanel(
           fluidRow(
@@ -211,6 +221,21 @@ server <- function(input, output) {
     tagList(url.cxy)
   })
   
+  
+  url.github <- a("GitHub", 
+                  href = "https://github.com/benda18", 
+                  target = "_blank")
+  output$tab.github <- renderUI({
+    tagList(url.github)
+  })
+  
+  url.linkedin <- a("LinkedIn", 
+                    href = "www.linkedin.com/in/tim-bender-238870171", 
+                    target = "_blank")
+  output$tab.linkedin <- renderUI({
+    tagList(url.linkedin)
+  })
+  
   url.api <- a("US Census Bureau's Geocoder API", 
                href = "https://geocoding.geo.census.gov/geocoder/", 
                target = "_blank")
@@ -341,11 +366,12 @@ server <- function(input, output) {
                  alpha = 0.5) +
       scale_y_continuous(name = "Sun Coverage (%)", 
                          labels = scales::percent, 
-                         limits = c(0, 1.25), 
+                         limits = c(0, 1), 
                          breaks = seq(0, 2, by = 0.2))+
       scale_x_datetime(name = "Time", 
-                       date_labels = "%I:%M %p", 
-                       date_breaks = "15 min")+
+                       date_labels = "%I:%M %p %Z", 
+                       date_breaks = "10 min", 
+                       date_minor_breaks = "5 min")+
       theme(title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
