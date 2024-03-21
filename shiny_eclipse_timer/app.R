@@ -254,6 +254,7 @@ server <- function(input, output) {
   
   get_cxyinfo <- eventReactive(input$cxy_go, {
     censusxy::cxy_oneline(address = input$addr_in)
+    # when a bad address is provided, this returns a null value
   })
   
   matched_addr <- eventReactive(eventExpr = input$cxy_go, {  # returned address
@@ -356,6 +357,10 @@ server <- function(input, output) {
   output$sched <- renderPlot({
     
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
+    
+    # error happening here - if censusxy does not find an appropriate address, a
+    # null value gets input into the function below
+    
     df.sched <- ec_sched(addr.coords$coordinates.x, 
                          addr.coords$coordinates.y, 
                          ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
