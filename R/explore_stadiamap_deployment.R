@@ -1,0 +1,17 @@
+
+library(renv)
+#library(swephR)
+#library(lubridate)
+library(dplyr)
+#library(tigris)
+library(shiny)
+library(censusxy)
+library(scales)
+library(ggplot2)
+library(sf)
+library(glue)
+#library(rsconnect)
+library(ggmap)
+
+# renv::status()
+# renv::snapshot()
