@@ -202,7 +202,7 @@ server <- function(input, output) {
                            temp.paths))
     rm(temp.date, temp.paths)
   }
-  all.paths <- all.paths |> transform (yr = year(ed))
+  all.paths <- all.paths |> transform(yr = year(ed))
   
   url <- a("link to interactive map from National Solar Observatory", 
            href="https://nso.edu/for-public/eclipse-map-2024/", 
