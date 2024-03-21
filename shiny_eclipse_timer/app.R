@@ -59,16 +59,11 @@ ui <- fluidPage(
     mainPanel(
       wellPanel(
         fluidRow("SEARCH RESULTS:"),
-        #fluidRow(shiny::tableOutput(outputId = "return_eclips.times")), 
         fluidRow(shiny::textOutput(outputId = "return_matched.addr")), # returned address
         fluidRow(textOutput(outputId = "return_suncov")), # max sun coverage
-        fluidRow(textOutput(outputId = "return_totality")), #totality? goes here
-        #fluidRow("Totality Duration: ") # duration of Totality goes here
+        fluidRow(textOutput(outputId = "return_totality")) #totality? goes here
       ),
-      # # new panel for timeline plot----
-      # wellPanel(
-      #   shiny::plotOutput(outputId = "timeline"),
-      # ),
+      # panel for timeline plot----
       wellPanel(
         shiny::plotOutput(outputId = "sched"),
         shiny::plotOutput(outputId = "map")
@@ -177,17 +172,11 @@ server <- function(input, output) {
                       coverage = ecsuncov)
     
     out[nrow(out),]$coverage <- 0
-    
-    #if(any(out$coverage >= 1)){
-      out$coverage[out$coverage >= 1] <- 1.14
-    #}
-    
+    out$coverage[out$coverage >= 1] <- 1.14
     return(out)
   }
   # other stuff---
   usa.states <- readRDS("usastates.rds") 
-  
-  
   path.files <- list.files(pattern = "^eclpathdfusa.*\\.rds$")
   
   all.paths <- NULL
@@ -320,9 +309,7 @@ server <- function(input, output) {
   })
   
   output$map <- renderPlot({
-    
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
-    
     
     ggplot() + 
       geom_sf(data = usa.states, 
@@ -352,7 +339,6 @@ server <- function(input, output) {
       geom_polygon(data = df.sched, 
                  aes(x = time, y = coverage), 
                  alpha = 0.5) +
-      # theme_void()+
       scale_y_continuous(name = "Sun Coverage (%)", 
                          labels = scales::percent, 
                          limits = c(0, 1.25), 
@@ -363,12 +349,8 @@ server <- function(input, output) {
       theme(title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
-      # scale_color_discrete(name = "Eclipse Path")+
        labs(title = "Percentage of Sun Covered by Moon by Time of Day")
   })
-  
-  
-  
   
 }
 
