@@ -258,7 +258,11 @@ server <- function(input, output) {
   
   matched_addr <- eventReactive(eventExpr = input$cxy_go, {  # returned address
     temp <- get_cxyinfo()
-    matched.addr <- temp$matchedAddress
+    if(!is.null(temp)){
+      matched.addr <- temp$matchedAddress
+    }else{
+      matched.addr <- "<<< NO ADDRESS MATCH FOUND - TRY AGAIN >>>"
+    }
     matched.addr
   })
   
@@ -321,10 +325,10 @@ server <- function(input, output) {
                                                                   y = lat_in,
                                                                   z = 10), 
                                                     backward = F)$attr[1]
+    
     glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
-    
-    
   })
+  
   output$return_suncov <- renderText({
     get_suncov()
   })
@@ -356,6 +360,10 @@ server <- function(input, output) {
   output$sched <- renderPlot({
     
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
+    
+    # error happening here - if censusxy does not find an appropriate address, a
+    # null value gets input into the function below
+    
     df.sched <- ec_sched(addr.coords$coordinates.x, 
                          addr.coords$coordinates.y, 
                          ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
