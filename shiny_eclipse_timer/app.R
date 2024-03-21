@@ -254,12 +254,16 @@ server <- function(input, output) {
   
   get_cxyinfo <- eventReactive(input$cxy_go, {
     censusxy::cxy_oneline(address = input$addr_in)
-    # when a bad address is provided, this returns a null value
   })
   
   matched_addr <- eventReactive(eventExpr = input$cxy_go, {  # returned address
     temp <- get_cxyinfo()
-    matched.addr <- temp$matchedAddress
+    if(!is.null(temp)){
+      matched.addr <- temp$matchedAddress
+    }else{
+      matched.addr <- "[no address found]"
+    }
+    
     matched.addr
   })
   
