@@ -261,7 +261,7 @@ server <- function(input, output) {
     if(!is.null(temp)){
       matched.addr <- temp$matchedAddress
     }else{
-      matched.addr <- "[no address found]"
+      matched.addr <- "<<< NO ADDRESS MATCH FOUND - TRY AGAIN >>>"
     }
     matched.addr
   })
