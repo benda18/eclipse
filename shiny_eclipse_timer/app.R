@@ -9,7 +9,7 @@
 # live link: https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 
-#library(renv)
+library(renv)
 library(swephR)
 library(lubridate)
 #library(dplyr)
@@ -21,6 +21,10 @@ library(ggplot2)
 library(sf)
 library(glue)
 #library(rsconnect)
+library(ggmap)
+
+# renv::status()
+# renv::snapshot()
 
 # Define UI for application 
 ui <- fluidPage(
