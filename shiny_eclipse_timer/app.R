@@ -191,7 +191,7 @@ server <- function(input, output) {
   }
   # other stuff---
   usa.states <- readRDS("usastates.rds") 
-  path.files <- list.files(pattern = "^eclpathdfusa.*\\.rds$")
+  path.files <- list.files(pattern = "^eclpathdfusa.*\\.rds$") # this line of code pulls in all paths. 
   
   all.paths <- NULL
   for(i in path.files){
