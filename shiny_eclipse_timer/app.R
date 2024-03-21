@@ -54,7 +54,7 @@ ui <- fluidPage(
         ),
         fluidRow("CONTACT INFO"),
         wellPanel(
-          fluidRow("Developed by Tim Bender, last updated 3-20-24"), 
+          fluidRow("Developed by Tim Bender, last updated 3-21-24"), 
           fluidRow(uiOutput("tab.github")),
           fluidRow(uiOutput("tab.linkedin")),
           # fluidRow(uiOutput("tab.res")),
@@ -89,6 +89,12 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  # api keys----
+  #stadiamap set api
+  apikey <- "[STADIAMAPS.COM API KEY HERE]"
+  register_stadiamaps(key = apikey, write = FALSE)
+  
+  
   # funs----
   ec_sched <- function(lon_in, lat_in, time_ny){
     # time logic
@@ -344,9 +350,21 @@ server <- function(input, output) {
   output$map <- renderPlot({
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
     
-    ggplot() + 
-      geom_sf(data = usa.states, 
-              fill = "dark grey", color = "white")+
+    usa48.bbox <- c(left   = -124.76307, 
+                    bottom =   24.52310, 
+                    right  = - 66.94989, 
+                    top    =   49.38436)
+    bm.stadia <- get_stadiamap(bbox = usa48.bbox, 
+                               zoom = 4, 
+                               maptype = "stamen_terrain",#"stamen_toner_lite",                            
+                               crop = T, 
+                               color = "color",
+                               force = T,
+                               size = 1.04)
+    ggmap(bm.stadia)+
+    #ggplot() + 
+      # geom_sf(data = usa.states, 
+      #         fill = "dark grey", color = "white")+
       geom_path(data = all.paths[all.paths$yr <= 2024,], 
                 aes(x = lon, y = lat, color = factor(yr)), 
                 linewidth = 2)+
@@ -356,7 +374,7 @@ server <- function(input, output) {
                  size = 4, color = "white", fill = "red")+
       theme_void()+
       theme(text = element_text(size = 12))+
-      coord_sf()+
+      #coord_sf()+
       scale_color_discrete(name = "Eclipse Path")+
       labs(title = "Eclipse Path")
   })
