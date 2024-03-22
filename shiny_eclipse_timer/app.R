@@ -32,6 +32,9 @@ ui <- fluidPage(
   # Application title
   titlePanel("April 8th, 2024 Eclipse Planning Tool -
              Find out if and when a specific location will see totality."),
+  # div(h4("Proof of Concept Shiny Dashboard Demonstrating the following:"),
+  #     ("* Ability to add [dummy] data table(s) to dashboard"),
+  #     br("* Ability to add map(s) to dashboard")),
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
@@ -76,10 +79,10 @@ ui <- fluidPage(
     ),
     mainPanel(
       wellPanel(
-        fluidRow("SEARCH RESULTS:"),
+        fluidRow(div(h5(strong("ADDRESS INFORMATION:")))),
         fluidRow(shiny::textOutput(outputId = "return_matched.addr")), # returned address
         fluidRow(textOutput(outputId = "return_suncov")), # max sun coverage
-        fluidRow(textOutput(outputId = "return_totality")) #totality? goes here
+        fluidRow(div(h4(strong(textOutput(outputId = "return_totality"))))) #totality? goes here
       ),
       # panel for timeline plot----
       wellPanel(
@@ -309,7 +312,12 @@ server <- function(input, output) {
                                                                   y = lat_in,
                                                                   z = 10), 
                                                     backward = F)$attr[1]
-    glue("Totality Visible: {as.character(sol_cov >= 1)}")
+    #glue("Totality Visible: {as.character(sol_cov >= 1)}")
+    
+    ifelse(sol_cov >= 1, 
+           "Within Zone of Totality", 
+           "Outside Zone of Totality")
+    
   })
   output$return_totality <- renderText({
     get_totality()
@@ -408,8 +416,8 @@ server <- function(input, output) {
                          breaks = seq(0, 2, by = 0.2))+
       scale_x_datetime(name = "Time", 
                        date_labels = "%I:%M %p %Z", 
-                       date_breaks = "15 min", 
-                       date_minor_breaks = "5 min")+
+                       date_breaks = "30 min", 
+                       date_minor_breaks = "15 min")+
       theme(title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
