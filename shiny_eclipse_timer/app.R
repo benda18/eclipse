@@ -40,48 +40,37 @@ ui <- fluidPage(
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH ADDRESS"), 
       wellPanel(
-        fluidRow(" "),
-        fluidRow("ACKNOWLEDGEMENTS"),
+        shiny::plotOutput(outputId = "sched"),
+      ),
+      wellPanel(
         wellPanel(
-          fluidRow("The geocoding utility relies on a library develped by and described in a 2021 paper in \"Transactions in GIS\" by Prener and Fox, and uses the US Census Bureau's Geocoder API")
-        ),
-        fluidRow("SOURCES"),
-        wellPanel(
-          fluidRow(uiOutput("tab.res")),
-          fluidRow(uiOutput("tab.api")),
-          fluidRow(uiOutput("tab.cxy")),
-          fluidRow(uiOutput("tab.src"))
-        ),
-        fluidRow("CONTACT INFO"),
-        wellPanel(
-          fluidRow("Developed by Tim Bender, last updated 3-21-24"), 
-          fluidRow(uiOutput("tab.github")),
+          fluidRow("Developed by Tim Bender"), 
           fluidRow(uiOutput("tab.linkedin")),
-          # fluidRow(uiOutput("tab.res")),
-          # fluidRow(uiOutput("tab.api")),
-          # fluidRow(uiOutput("tab.cxy")),
-          # fluidRow(uiOutput("tab.src"))
+          fluidRow(uiOutput("tab.github"))
         ),
+        fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
+        
         wellPanel(
-          fluidRow(
-            uiOutput("tab")
-          )
+          fluidRow("SOURCES"),
+          fluidRow(uiOutput("tab.res"))
         ),
-        fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'))
       )
     ),
     mainPanel(
       wellPanel(
-        fluidRow("SEARCH RESULTS:"),
+        fluidRow(div(h5(strong("ADDRESS INFORMATION:")))),
         fluidRow(shiny::textOutput(outputId = "return_matched.addr")), # returned address
         fluidRow(textOutput(outputId = "return_suncov")), # max sun coverage
-        fluidRow(textOutput(outputId = "return_totality")) #totality? goes here
+        fluidRow(div(h4(strong(textOutput(outputId = "return_totality"))))) #totality? goes here
       ),
       # panel for timeline plot----
       wellPanel(
-        shiny::plotOutput(outputId = "sched"),
-        shiny::plotOutput(outputId = "map")
-        
+        shiny::plotOutput(outputId = "map"),
+        wellPanel(
+          fluidRow(
+            uiOutput("tab")
+          )
+        )
       )
     )
   )
@@ -91,7 +80,7 @@ ui <- fluidPage(
 server <- function(input, output) {
   # api keys----
   #stadiamap set api
-  apikey <- "[STADIAMAPS.COM API KEY HERE]"
+  apikey <- "5b522e9b-4ea1-4168-b0b9-3294c85af004" # GET YOUR OWN KEY!
   register_stadiamaps(key = apikey, write = FALSE)
   
   
@@ -210,30 +199,15 @@ server <- function(input, output) {
   }
   all.paths <- all.paths |> transform(yr = year(ed))
   
-  url <- a("link to interactive map from National Solar Observatory", 
+  url <- a("Interactive map from National Solar Observatory", 
            href="https://nso.edu/for-public/eclipse-map-2024/", 
            target="_blank")
   output$tab <- renderUI({
     tagList("See Also:", url)
   })
   
-  url.source <- a("Source Code on GitHub", 
-                  href = "https://github.com/benda18/shiny_misc/blob/main/eclipse/shiny_eclipse_timer/app.R", 
-                  target = "_blank")
-  output$tab.src <- renderUI({
-    tagList(url.source)
-  })
-  
-  url.cxy <- a("censusxy Library for R on Github", 
-               href = "https://github.com/chris-prener/censusxy", 
-               target = "_blank")
-  output$tab.cxy <- renderUI({
-    tagList(url.cxy)
-  })
-  
-  
   url.github <- a("GitHub", 
-                  href = "https://github.com/benda18", 
+                  href = "https://github.com/benda18/eclipse/", 
                   target = "_blank")
   output$tab.github <- renderUI({
     tagList(url.github)
@@ -244,13 +218,6 @@ server <- function(input, output) {
                     target = "_blank")
   output$tab.linkedin <- renderUI({
     tagList(url.linkedin)
-  })
-  
-  url.api <- a("US Census Bureau's Geocoder API", 
-               href = "https://geocoding.geo.census.gov/geocoder/", 
-               target = "_blank")
-  output$tab.api <- renderUI({
-    tagList(url.api)
   })
   
   url.res <- a("Creating open source composite geocoders: Pitfalls and opportunities (Prener & Fox)", 
@@ -301,7 +268,12 @@ server <- function(input, output) {
                                                                   y = lat_in,
                                                                   z = 10), 
                                                     backward = F)$attr[1]
-    glue("Totality Visible: {as.character(sol_cov >= 1)}")
+    #glue("Totality Visible: {as.character(sol_cov >= 1)}")
+    
+    ifelse(sol_cov >= 1, 
+           "Within Zone of Totality", 
+           "Outside Zone of Totality")
+    
   })
   output$return_totality <- renderText({
     get_totality()
@@ -383,8 +355,8 @@ server <- function(input, output) {
     
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
     
-    # error happening here - if censusxy does not find an appropriate address, a
-    # null value gets input into the function below
+    # undesirable behavior happening here - if censusxy does not find an
+    # appropriate address, a null value gets input into the function below
     
     df.sched <- ec_sched(addr.coords$coordinates.x, 
                          addr.coords$coordinates.y, 
@@ -400,12 +372,12 @@ server <- function(input, output) {
                          breaks = seq(0, 2, by = 0.2))+
       scale_x_datetime(name = "Time", 
                        date_labels = "%I:%M %p %Z", 
-                       date_breaks = "10 min", 
-                       date_minor_breaks = "5 min")+
+                       date_breaks = "30 min", 
+                       date_minor_breaks = "15 min")+
       theme(title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
-       labs(title = "Percentage of Sun Covered by Moon by Time of Day")
+       labs(title = "Percentage of Sun Covered by Time-of-Day")
   })
   
 }
