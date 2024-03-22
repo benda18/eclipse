@@ -24,37 +24,40 @@ library(showtext)
 library(rcartocolor)
 rm(list=ls());cat('\f')
 
-renv::status(
-  
-)
+# renv::status(
+#   
+# )
+# 
+# renv::snapshot()
 
-renv::snapshot()
+# goldilocks <- tibble(from = c("Goldilocks",
+#                               "Porridge", "Porridge", "Porridge",
+#                               "Just right",
+#                               "Chairs", "Chairs", "Chairs",
+#                               "Just right2",
+#                               "Beds", "Beds", "Beds",
+#                               "Just right3"),
+#                      to   = c("Porridge",
+#                               "Too cold", "Too hot", "Just right",
+#                               "Chairs",
+#                               "Still too big", "Too big", "Just right2",
+#                               "Beds",
+#                               "Too soft", "Too hard", "Just right3",
+#                               "Bears!"))
 
-goldilocks <- tibble(from = c("Goldilocks",
-                              "Porridge", "Porridge", "Porridge",
-                              "Just right",
-                              "Chairs", "Chairs", "Chairs",
-                              "Just right2",
-                              "Beds", "Beds", "Beds",
-                              "Just right3"),
-                     to   = c("Porridge",
-                              "Too cold", "Too hot", "Just right",
-                              "Chairs",
-                              "Still too big", "Too big", "Just right2",
-                              "Beds",
-                              "Too soft", "Too hard", "Just right3",
-                              "Bears!"))
-goldilocks <- as_tibble(data.frame(from = c("Mailing Address", 
-                              "Lon-Lat", "Swiss Ephemeris", 
-                              "NASA JPL", 
-                              "Eclipse Calculations",
-                              "Eclipse Calculations"), 
-                     to   = c("Lon-Lat", 
-                              "Swiss Ephemeris", 
-                              "Eclipse Calculations",
-                              "Swiss Ephemeris", 
-                              "Obscuration", 
-                              "Timeline")))
+goldilocks <- as_tibble(data.frame(from = c("Mailing Address", "Census Geocoder",
+                                            "Lon-Lat", "Swiss Ephemeris", 
+                                            "NASA JPL", 
+                                            "Eclipse Calculations",
+                                            "Eclipse Calculations", 
+                                            "Timeline", "Obscuration"), 
+                                   to   = c("Census Geocoder","Lon-Lat", 
+                                            "Swiss Ephemeris", 
+                                            "Eclipse Calculations",
+                                            "Swiss Ephemeris", 
+                                            "Obscuration", 
+                                            "Timeline", 
+                                            "Chart", "Plot")))
 
 
 
@@ -66,7 +69,10 @@ output_df = as_tibble(coords) %>%
   mutate(step = vertex_attr(g, "name"),
          label = gsub("\\d+$", "", step),
          x = x*-1,
-         type = factor(c(1)))
+         type = factor(c("input", "agcy", "calc", "agcy", 
+                         "agcy", "calc", "calc", 
+                         "calc", rep("output",2)), 
+                       levels = c("input", "agcy", "calc", "output")))
 
 plot_nodes = output_df %>%
   mutate(xmin = x - 0.35,
