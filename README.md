@@ -14,6 +14,9 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 ### Sources
 * https://www.astro.com/swisseph/swephinfo_e.htm
 * https://en.wikipedia.org/wiki/Jet_Propulsion_Laboratory_Development_Ephemeris
+* https://geocoding.geo.census.gov/geocoder/
+* https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741
+* https://github.com/chris-prener/censusxy
 
 ### Other Links
-[to be added at a future date]
+* https://nso.edu/for-public/eclipse-map-2024/
