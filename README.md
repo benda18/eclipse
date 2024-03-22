@@ -13,6 +13,8 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 ### Sources
 * https://www.astro.com/swisseph/swephinfo_e.htm
+* https://www.astro.com/swisseph/swephprg.htm
+* https://www.astro.com/swisseph/swisseph.htm
 * https://en.wikipedia.org/wiki/Jet_Propulsion_Laboratory_Development_Ephemeris
 * https://geocoding.geo.census.gov/geocoder/
 * https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741
