@@ -43,34 +43,35 @@ ui <- fluidPage(
         shiny::plotOutput(outputId = "sched"),
       ),
       wellPanel(
-        fluidRow(" "),
-        fluidRow("ACKNOWLEDGEMENTS"),
+        # fluidRow(" "),
+        # fluidRow("ACKNOWLEDGEMENTS"),
+        # wellPanel(
+        #   fluidRow("The geocoding utility relies on a library develped by and described in a 2021 paper in \"Transactions in GIS\" by Prener and Fox, and uses the US Census Bureau's Geocoder API")
+        # ),
+        #fluidRow("CONTACT INFO"),
         wellPanel(
-          fluidRow("The geocoding utility relies on a library develped by and described in a 2021 paper in \"Transactions in GIS\" by Prener and Fox, and uses the US Census Bureau's Geocoder API")
-        ),
-        fluidRow("SOURCES"),
-        wellPanel(
-          fluidRow(uiOutput("tab.res")),
-          fluidRow(uiOutput("tab.api")),
-          fluidRow(uiOutput("tab.cxy")),
-          fluidRow(uiOutput("tab.src"))
-        ),
-        fluidRow("CONTACT INFO"),
-        wellPanel(
-          fluidRow("Developed by Tim Bender, last updated 3-21-24"), 
-          fluidRow(uiOutput("tab.github")),
+          fluidRow("Developed by Tim Bender"), 
           fluidRow(uiOutput("tab.linkedin")),
+          fluidRow(uiOutput("tab.github")),
           # fluidRow(uiOutput("tab.res")),
           # fluidRow(uiOutput("tab.api")),
           # fluidRow(uiOutput("tab.cxy")),
           # fluidRow(uiOutput("tab.src"))
         ),
+        # wellPanel(
+        #   fluidRow(
+        #     uiOutput("tab")
+        #   )
+        # ),
+        fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
+        
         wellPanel(
-          fluidRow(
-            uiOutput("tab")
-          )
+          fluidRow("SOURCES"),
+          fluidRow(uiOutput("tab.res")),
+          fluidRow(uiOutput("tab.api")),
+          fluidRow(uiOutput("tab.cxy")),
+          fluidRow(uiOutput("tab.src"))
         ),
-        fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'))
       )
     ),
     mainPanel(
@@ -83,7 +84,12 @@ ui <- fluidPage(
       # panel for timeline plot----
       wellPanel(
         # shiny::plotOutput(outputId = "sched"),
-        shiny::plotOutput(outputId = "map")
+        shiny::plotOutput(outputId = "map"),
+        wellPanel(
+          fluidRow(
+            uiOutput("tab")
+          )
+        )
         
       )
     )
