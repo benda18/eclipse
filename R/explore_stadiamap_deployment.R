@@ -21,7 +21,7 @@ renv::snapshot()
 
 
 #stadiamap set api----
-apikey <- "[STADIA MAP API KEY HERE]"
+apikey <- "5b522e9b-4ea1-4168-b0b9-3294c85af004" # GET YOUR OWN KEY!
 register_stadiamaps(key = apikey, write = FALSE)
 
 us.states <- tigris::states(T) %>%
