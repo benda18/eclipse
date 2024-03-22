@@ -70,10 +70,10 @@ ui <- fluidPage(
         
         wellPanel(
           fluidRow("SOURCES"),
-          fluidRow(uiOutput("tab.res")),
-          fluidRow(uiOutput("tab.api")),
-          fluidRow(uiOutput("tab.cxy")),
-          fluidRow(uiOutput("tab.src"))
+          fluidRow(uiOutput("tab.res"))#,
+          #fluidRow(uiOutput("tab.api")),
+          #fluidRow(uiOutput("tab.cxy")),
+          #fluidRow(uiOutput("tab.src"))
         ),
       )
     ),
@@ -221,30 +221,30 @@ server <- function(input, output) {
   }
   all.paths <- all.paths |> transform(yr = year(ed))
   
-  url <- a("link to interactive map from National Solar Observatory", 
+  url <- a("Interactive map from National Solar Observatory", 
            href="https://nso.edu/for-public/eclipse-map-2024/", 
            target="_blank")
   output$tab <- renderUI({
     tagList("See Also:", url)
   })
   
-  url.source <- a("Source Code on GitHub", 
-                  href = "https://github.com/benda18/shiny_misc/blob/main/eclipse/shiny_eclipse_timer/app.R", 
-                  target = "_blank")
-  output$tab.src <- renderUI({
-    tagList(url.source)
-  })
+  # url.source <- a("Source Code on GitHub", 
+  #                 href = "https://github.com/benda18/shiny_misc/blob/main/eclipse/shiny_eclipse_timer/app.R", 
+  #                 target = "_blank")
+  # output$tab.src <- renderUI({
+  #   tagList(url.source)
+  # })
   
-  url.cxy <- a("censusxy Library for R on Github", 
-               href = "https://github.com/chris-prener/censusxy", 
-               target = "_blank")
-  output$tab.cxy <- renderUI({
-    tagList(url.cxy)
-  })
+  # url.cxy <- a("censusxy Library for R on Github", 
+  #              href = "https://github.com/chris-prener/censusxy", 
+  #              target = "_blank")
+  # output$tab.cxy <- renderUI({
+  #   tagList(url.cxy)
+  # })
   
   
   url.github <- a("GitHub", 
-                  href = "https://github.com/benda18", 
+                  href = "https://github.com/benda18/eclipse/", 
                   target = "_blank")
   output$tab.github <- renderUI({
     tagList(url.github)
@@ -257,12 +257,12 @@ server <- function(input, output) {
     tagList(url.linkedin)
   })
   
-  url.api <- a("US Census Bureau's Geocoder API", 
-               href = "https://geocoding.geo.census.gov/geocoder/", 
-               target = "_blank")
-  output$tab.api <- renderUI({
-    tagList(url.api)
-  })
+  # url.api <- a("US Census Bureau's Geocoder API", 
+  #              href = "https://geocoding.geo.census.gov/geocoder/", 
+  #              target = "_blank")
+  # output$tab.api <- renderUI({
+  #   tagList(url.api)
+  # })
   
   url.res <- a("Creating open source composite geocoders: Pitfalls and opportunities (Prener & Fox)", 
                href = "https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741", 
