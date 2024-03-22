@@ -58,9 +58,9 @@ ui <- fluidPage(
     ),
     mainPanel(
       wellPanel(
-        fluidRow(div(h5(strong("ADDRESS INFORMATION:")))),
-        fluidRow(shiny::textOutput(outputId = "return_matched.addr")), # returned address
-        fluidRow(textOutput(outputId = "return_suncov")), # max sun coverage
+        #fluidRow(div(h5(strong("ADDRESS INFORMATION:")))),
+        fluidRow(div(h4(strong(shiny::textOutput(outputId = "return_matched.addr"))))), # returned address
+        fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(strong(textOutput(outputId = "return_totality"))))) #totality? goes here
       ),
       # panel for timeline plot----
