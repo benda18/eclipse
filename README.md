@@ -12,7 +12,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 
 ### Sources
-[to be added at a future date]
+* https://www.astro.com/swisseph/swephinfo_e.htm
 
 ### Other Links
 [to be added at a future date]
