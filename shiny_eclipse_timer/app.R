@@ -90,7 +90,6 @@ ui <- fluidPage(
             uiOutput("tab")
           )
         )
-        
       )
     )
   )
@@ -392,8 +391,8 @@ server <- function(input, output) {
     
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
     
-    # error happening here - if censusxy does not find an appropriate address, a
-    # null value gets input into the function below
+    # undesirable behavior happening here - if censusxy does not find an
+    # appropriate address, a null value gets input into the function below
     
     df.sched <- ec_sched(addr.coords$coordinates.x, 
                          addr.coords$coordinates.y, 
