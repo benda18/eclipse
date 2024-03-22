@@ -32,9 +32,6 @@ ui <- fluidPage(
   # Application title
   titlePanel("April 8th, 2024 Eclipse Planning Tool -
              Find out if and when a specific location will see totality."),
-  # div(h4("Proof of Concept Shiny Dashboard Demonstrating the following:"),
-  #     ("* Ability to add [dummy] data table(s) to dashboard"),
-  #     br("* Ability to add map(s) to dashboard")),
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
@@ -46,34 +43,16 @@ ui <- fluidPage(
         shiny::plotOutput(outputId = "sched"),
       ),
       wellPanel(
-        # fluidRow(" "),
-        # fluidRow("ACKNOWLEDGEMENTS"),
-        # wellPanel(
-        #   fluidRow("The geocoding utility relies on a library develped by and described in a 2021 paper in \"Transactions in GIS\" by Prener and Fox, and uses the US Census Bureau's Geocoder API")
-        # ),
-        #fluidRow("CONTACT INFO"),
         wellPanel(
           fluidRow("Developed by Tim Bender"), 
           fluidRow(uiOutput("tab.linkedin")),
-          fluidRow(uiOutput("tab.github")),
-          # fluidRow(uiOutput("tab.res")),
-          # fluidRow(uiOutput("tab.api")),
-          # fluidRow(uiOutput("tab.cxy")),
-          # fluidRow(uiOutput("tab.src"))
+          fluidRow(uiOutput("tab.github"))
         ),
-        # wellPanel(
-        #   fluidRow(
-        #     uiOutput("tab")
-        #   )
-        # ),
         fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
         
         wellPanel(
           fluidRow("SOURCES"),
-          fluidRow(uiOutput("tab.res"))#,
-          #fluidRow(uiOutput("tab.api")),
-          #fluidRow(uiOutput("tab.cxy")),
-          #fluidRow(uiOutput("tab.src"))
+          fluidRow(uiOutput("tab.res"))
         ),
       )
     ),
@@ -86,7 +65,6 @@ ui <- fluidPage(
       ),
       # panel for timeline plot----
       wellPanel(
-        # shiny::plotOutput(outputId = "sched"),
         shiny::plotOutput(outputId = "map"),
         wellPanel(
           fluidRow(
@@ -228,21 +206,6 @@ server <- function(input, output) {
     tagList("See Also:", url)
   })
   
-  # url.source <- a("Source Code on GitHub", 
-  #                 href = "https://github.com/benda18/shiny_misc/blob/main/eclipse/shiny_eclipse_timer/app.R", 
-  #                 target = "_blank")
-  # output$tab.src <- renderUI({
-  #   tagList(url.source)
-  # })
-  
-  # url.cxy <- a("censusxy Library for R on Github", 
-  #              href = "https://github.com/chris-prener/censusxy", 
-  #              target = "_blank")
-  # output$tab.cxy <- renderUI({
-  #   tagList(url.cxy)
-  # })
-  
-  
   url.github <- a("GitHub", 
                   href = "https://github.com/benda18/eclipse/", 
                   target = "_blank")
@@ -256,13 +219,6 @@ server <- function(input, output) {
   output$tab.linkedin <- renderUI({
     tagList(url.linkedin)
   })
-  
-  # url.api <- a("US Census Bureau's Geocoder API", 
-  #              href = "https://geocoding.geo.census.gov/geocoder/", 
-  #              target = "_blank")
-  # output$tab.api <- renderUI({
-  #   tagList(url.api)
-  # })
   
   url.res <- a("Creating open source composite geocoders: Pitfalls and opportunities (Prener & Fox)", 
                href = "https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741", 
