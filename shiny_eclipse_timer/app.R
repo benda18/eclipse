@@ -40,6 +40,9 @@ ui <- fluidPage(
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH ADDRESS"), 
       wellPanel(
+        shiny::plotOutput(outputId = "sched"),
+      ),
+      wellPanel(
         fluidRow(" "),
         fluidRow("ACKNOWLEDGEMENTS"),
         wellPanel(
@@ -79,7 +82,7 @@ ui <- fluidPage(
       ),
       # panel for timeline plot----
       wellPanel(
-        shiny::plotOutput(outputId = "sched"),
+        # shiny::plotOutput(outputId = "sched"),
         shiny::plotOutput(outputId = "map")
         
       )
@@ -400,12 +403,12 @@ server <- function(input, output) {
                          breaks = seq(0, 2, by = 0.2))+
       scale_x_datetime(name = "Time", 
                        date_labels = "%I:%M %p %Z", 
-                       date_breaks = "10 min", 
+                       date_breaks = "15 min", 
                        date_minor_breaks = "5 min")+
       theme(title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
-       labs(title = "Percentage of Sun Covered by Moon by Time of Day")
+       labs(title = "Percentage of Sun Covered by Time-of-Day")
   })
   
 }
