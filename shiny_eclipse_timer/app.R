@@ -94,7 +94,7 @@ ui <- fluidPage(
 server <- function(input, output) {
   # api keys----
   #stadiamap set api
-  apikey <- "[STADIAMAPS.COM API KEY HERE]"
+  apikey <- "5b522e9b-4ea1-4168-b0b9-3294c85af004" #"[STADIAMAPS.COM API KEY HERE]"
   register_stadiamaps(key = apikey, write = FALSE)
   
   
