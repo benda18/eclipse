@@ -45,23 +45,27 @@ rm(list=ls());cat('\f')
 #                               "Too soft", "Too hard", "Just right3",
 #                               "Bears!"))
 
-goldilocks <- as_tibble(data.frame(from = c("Mailing Address", "Census Geocoder",
+goldilocks <- as_tibble(data.frame(from = c("Mailing Address", "Census Bureau",
                                             "Lon-Lat", "Swiss Ephemeris", 
                                             "NASA JPL", 
                                             "Eclipse Calculations",
                                             "Eclipse Calculations", 
-                                            "Timeline", "Obscuration"), 
-                                   to   = c("Census Geocoder","Lon-Lat", 
+                                            "Timeline", "Obscuration",
+                                            "Obscuration"), 
+                                   to   = c("Census Bureau","Lon-Lat", 
                                             "Swiss Ephemeris", 
                                             "Eclipse Calculations",
                                             "Swiss Ephemeris", 
                                             "Obscuration", 
                                             "Timeline", 
-                                            "Chart", "Plot")))
+                                            "Chart", "Plot", 
+                                            "Textbox")))
 
 
 
 g = graph_from_data_frame(goldilocks, directed = TRUE)
+
+
 coords = layout_as_tree(g)
 colnames(coords) = c("x", "y")
 
@@ -69,9 +73,7 @@ output_df = as_tibble(coords) %>%
   mutate(step = vertex_attr(g, "name"),
          label = gsub("\\d+$", "", step),
          x = x*-1,
-         type = factor(c("input", "agcy", "calc", "agcy", 
-                         "agcy", "calc", "calc", 
-                         "calc", rep("output",2)), 
+         type = factor(c("input"), 
                        levels = c("input", "agcy", "calc", "output")))
 
 plot_nodes = output_df %>%
