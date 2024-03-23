@@ -63,7 +63,6 @@ ui <- fluidPage(
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(strong(textOutput(outputId = "return_totality"))))) #totality? goes here
       ),
-      # panel for timeline plot----
       wellPanel(
         shiny::plotOutput(outputId = "map"),
         wellPanel(
@@ -94,8 +93,6 @@ server <- function(input, output) {
   # key. Additionally, api keys can be deleted and re-created fairly easily for
   # projects like this and if at some point in the future I change my mind I can
   # implement a more secure setup.
-  
-  
   
   register_stadiamaps(key = apikey, write = FALSE)
   
