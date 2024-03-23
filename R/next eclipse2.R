@@ -19,12 +19,12 @@ rm(list=ls()[ls() != "earth.coast"]);cat('\f')
 
 
 # vars----
-start.date <- Sys.Date()
+start.date <- ymd(20240409)
 
-get.addr <- censusxy::cxy_oneline(address = "882 alnetta, cincinnati, oh")
+get.addr <- censusxy::cxy_oneline(address = "7318 overland park court, west chester, oh")
 
-var.lon <- get.addr["coordinates.x"]
-var.lat <- get.addr["coordinates.y"]
+var.lon <- unlist(unname(get.addr["coordinates.x"]))
+var.lat <- unlist(unname(get.addr["coordinates.y"]))
 
 # # data import----
 # if(!"earth.coast" %in% ls()){
@@ -51,72 +51,90 @@ a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date),
                                    sec   = 0, 
                                    gregflag = 1)$dret[2]
 
-out.df       <- NULL
-is_total_ecl <- F
-n <- 0
-while(!is_total_ecl){
-  n <- n + 1
-  if(n > 1000){
-    stop("broken")
-  }
-  
-  if(n > 1){
-    a.date.ju <- when_next$tret[1]+1
-  }
-  
-  when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
-                                        ephe_flag = 4, 
-                                        geopos = c(x = var.lon, 
-                                                   y = var.lat, 
-                                                   z = 10), 
-                                        backward = F)
-  
-  
-  temp.nextdate <- when_next$tret[1] %>% # time of maximum eclipse 
-    swephR::swe_jdet_to_utc(., 1) %>%
-    paste(., sep = "-", collapse = "-") %>%
-    ymd_hms()
-  
-  temp.nextobs <- when_next$attr[1] # pct obscred
-  
-  # is partial or total? 
-  
-  if(n == 1 | 
-     ifelse(temp.nextobs < 1, 
-            "partial", "total") == "total"){
-    out.df <- rbind(out.df, 
-                    data.frame(from_date = start.date,
-                               nth_ecl   = n,
-                               lon = var.lon,
-                               lat = var.lat,
-                               ecl_date = temp.nextdate, 
-                               ecl_obsc = temp.nextobs, 
-                               ecl_type = ifelse(temp.nextobs < 1, 
-                                                 "partial", "total")))
-  }
-  
-  if(ifelse(temp.nextobs < 1, 
-            "partial", "total") == "total"){
-    is_total_ecl <- T
-  }
-  
-}
+when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
+                                      ephe_flag = 4, 
+                                      geopos = c(x = var.lon, 
+                                                 y = var.lat, 
+                                                 z = 10), 
+                                      backward = F)
 
-out.df
+temp.nextdate <- when_next$tret[1] %>% # time of maximum eclipse 
+  swephR::swe_jdet_to_utc(., 1) %>%
+  paste(., sep = "-", collapse = "-") %>%
+  ymd_hms()
 
-# next eclipse of any kind
-ne.difftime <- (first(as_date(out.df$ecl_date)) - start.date )
-if(units(ne.difftime) == "days"){
-  next.eclipse.yrs <- as.numeric(ne.difftime)/365.25
-}else{
-  stop("1 units returned other than 'days' - check code")
-}
+temp.nextobs <- when_next$attr[1] # p
+
+temp.dur <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[5], 1), sep = "-", collapse = "-")) -
+  ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[2], 1), sep = "-", collapse = "-"))
 
 
-# next total eclipse
-nte.difftime <- (as_date(out.df$ecl_date[out.df$ecl_type == "total"]) - start.date )
-if(units(nte.difftime) == "days"){
-  next.teclipse.yrs <- as.numeric(nte.difftime)/365.25
-}else{
-  stop("2 units returned other than 'days' - check code")
-}
+# out.df       <- NULL
+# is_total_ecl <- F
+# n <- 0
+# while(!is_total_ecl){
+#   n <- n + 1
+#   if(n > 1000){
+#     stop("broken")
+#   }
+#   
+#   if(n > 1){
+#     a.date.ju <- when_next$tret[1]+1
+#   }
+#   
+#   when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
+#                                         ephe_flag = 4, 
+#                                         geopos = c(x = var.lon, 
+#                                                    y = var.lat, 
+#                                                    z = 10), 
+#                                         backward = F)
+#   
+#   
+#   temp.nextdate <- when_next$tret[1] %>% # time of maximum eclipse 
+#     swephR::swe_jdet_to_utc(., 1) %>%
+#     paste(., sep = "-", collapse = "-") %>%
+#     ymd_hms()
+#   
+#   temp.nextobs <- when_next$attr[1] # pct obscred
+#   
+#   # is partial or total? 
+#   
+#   if(n == 1 | 
+#      ifelse(temp.nextobs < 1, 
+#             "partial", "total") == "total"){
+#     out.df <- rbind(out.df, 
+#                     data.frame(from_date = start.date,
+#                                nth_ecl   = n,
+#                                lon = var.lon,
+#                                lat = var.lat,
+#                                ecl_date = temp.nextdate, 
+#                                ecl_obsc = temp.nextobs, 
+#                                ecl_type = ifelse(temp.nextobs < 1, 
+#                                                  "partial", "total")))
+#   }
+#   
+#   if(ifelse(temp.nextobs < 1, 
+#             "partial", "total") == "total"){
+#     is_total_ecl <- T
+#   }
+#   
+# }
+# 
+# out.df
+# 
+# # next eclipse of any kind
+# ne.difftime <- (first(as_date(out.df$ecl_date)) - start.date )
+# if(units(ne.difftime) == "days"){
+#   next.eclipse.yrs <- as.numeric(ne.difftime)/365.25
+# }else{
+#   stop("1 units returned other than 'days' - check code")
+# }
+# 
+# 
+# # next total eclipse
+# nte.difftime <- (as_date(out.df$ecl_date[out.df$ecl_type == "total"]) - start.date )
+# if(units(nte.difftime) == "days"){
+#   next.teclipse.yrs <- as.numeric(nte.difftime)/365.25
+# }else{
+#   stop("2 units returned other than 'days' - check code")
+# }
