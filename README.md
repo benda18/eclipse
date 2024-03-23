@@ -22,5 +22,6 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * https://www.r-bloggers.com/2022/06/creating-flowcharts-with-ggplot2/
 
 ### Other Links
-* https://nso.edu/for-public/eclipse-map-2024/
+* [National Solar Observatory interactive eclipse map](https://nso.edu/for-public/eclipse-map-2024/)
 * NASA's Five Millennium Catalog of Solar Eclipses ([pdf download](http://eclipse.gsfc.nasa.gov/5MCSE/TP2009-214174.pdf))
+* [Webpages on the History of Astronomy by Robert Harry van Gent](https://webspace.science.uu.nl/~gent0113/)
