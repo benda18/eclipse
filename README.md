@@ -23,6 +23,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * https://shiny.posit.co/
 * https://cran.r-project.org/web/packages/gggibbous/vignettes/gggibbous.html
 * https://danielberecz.rbind.io/2017/07/12/recreating-washing-post-s-solar-eclipse-plot-in-r/
+* https://mathworld.wolfram.com/Circle-CircleIntersection.html
 
 ### Other Links
 * [National Solar Observatory interactive eclipse map](https://nso.edu/for-public/eclipse-map-2024/)
