@@ -21,7 +21,6 @@ rm(list=ls()[ls() != "earth.coast"]);cat('\f')
 # vars----
 a.date <- Sys.Date()
 
-#a.num <- runif(1, min = 0, max = 10000000) %>% floor()
 set.seed(3481851)
 
 var.lon <- runif(1, -180, 180)
