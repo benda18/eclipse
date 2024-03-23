@@ -69,3 +69,5 @@ temp.nextobs <- when_next$attr[1] # pct obscred
 
 data.frame(ecl_date = temp.nextdate, 
            ecl_obsc = temp.nextobs)
+
+temp.nextdate - with_tz(Sys.time(), tzone = "UTC") 
