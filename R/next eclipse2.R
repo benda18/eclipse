@@ -104,3 +104,19 @@ while(!is_total_ecl){
 
 out.df
 
+# next eclipse of any kind
+ne.difftime <- (first(as_date(out.df$ecl_date)) - start.date )
+if(units(ne.difftime) == "days"){
+  next.eclipse.yrs <- as.numeric(ne.difftime)/365.25
+}else{
+  stop("1 units returned other than 'days' - check code")
+}
+
+
+# next total eclipse
+nte.difftime <- (as_date(out.df$ecl_date[out.df$ecl_type == "total"]) - start.date )
+if(units(nte.difftime) == "days"){
+  next.teclipse.yrs <- as.numeric(nte.difftime)/365.25
+}else{
+  stop("2 units returned other than 'days' - check code")
+}
