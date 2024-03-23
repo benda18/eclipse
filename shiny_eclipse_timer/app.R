@@ -30,8 +30,7 @@ library(ggmap)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("April 8th, 2024 Eclipse Planning Tool -
-             Find out if and when a specific location will see totality."),
+  titlePanel("Total Eclipse of April 8, 2024 - What to Expect from Your Address"),
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
@@ -51,6 +50,8 @@ ui <- fluidPage(
         fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
         
         wellPanel(
+          fluidRow("RESOURCES"),
+          fluidRow(uiOutput("tab.res2")),
           fluidRow("SOURCES"),
           fluidRow(uiOutput("tab.res"))
         ),
@@ -58,12 +59,12 @@ ui <- fluidPage(
     ),
     mainPanel(
       wellPanel(
-        #fluidRow(div(h5(strong("ADDRESS INFORMATION:")))),
-        fluidRow(div(h4(strong(shiny::textOutput(outputId = "return_matched.addr"))))), # returned address
-        fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
-        fluidRow(div(h4(strong(textOutput(outputId = "return_totality"))))) #totality? goes here
+        fluidRow(div(h5(strong("WHAT TO EXPECT:")))),
+        fluidRow(div(h6(strong(shiny::textOutput(outputId = "return_matched.addr"))))), # returned address
+        fluidRow(div(h6(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
+        fluidRow(div(h6(strong(textOutput(outputId = "return_totality"))))), #totality? goes here
+        fluidRow(div(h6(strong(textOutput(outputId = "return_nextecl")))))
       ),
-      # panel for timeline plot----
       wellPanel(
         shiny::plotOutput(outputId = "map"),
         wellPanel(
@@ -80,7 +81,21 @@ ui <- fluidPage(
 server <- function(input, output) {
   # api keys----
   #stadiamap set api
+  
   apikey <- "5b522e9b-4ea1-4168-b0b9-3294c85af004" # GET YOUR OWN KEY!
+  
+  # NOTE - it is not best practices to keep the api key visible here in your
+  # public repo.  Ideally you would save it in a separate file and add that file
+  # to your .gitignore so it doesn't get pushed to github.  that way the key
+  # still gets deployed to the server but remains relatively hidden otherwise.
+  # THAT SAID for the sake of simplicity, and because this is a free account
+  # that anyone could setup, and because the risk of abuse affecting anyone
+  # personally is so low I chose to keep it in the code so that it was clear to
+  # someone trying to replicate this project how and where to dump their own API
+  # key. Additionally, api keys can be deleted and re-created fairly easily for
+  # projects like this and if at some point in the future I change my mind I can
+  # implement a more secure setup.
+  
   register_stadiamaps(key = apikey, write = FALSE)
   
   
@@ -220,11 +235,18 @@ server <- function(input, output) {
     tagList(url.linkedin)
   })
   
-  url.res <- a("Creating open source composite geocoders: Pitfalls and opportunities (Prener & Fox)", 
-               href = "https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741", 
+  url.res <- a("All Sources are cited on the project's GitHub README", 
+               href = "https://github.com/benda18/eclipse/blob/main/README.md#sources", 
                target = "_blank")
   output$tab.res <- renderUI({
     tagList(url.res)
+  })
+  
+  url.res2 <- a("The American Astronomical Society's \"Suppliers of Safe Solar Viewers & Filters\" list", 
+                href = "https://eclipse.aas.org/eye-safety/viewers-filters", 
+                target = "_blank")
+  output$tab.res2 <- renderUI({
+    tagList(url.res2)
   })
   
   # get eclipse times----
@@ -279,6 +301,38 @@ server <- function(input, output) {
     get_totality()
   })
   
+  get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
+    start.date <- ymd(20240409)
+    get.addr <- get_cxyinfo()
+    var.lon <- unlist(unname(get.addr["coordinates.x"]))
+    var.lat <- unlist(unname(get.addr["coordinates.y"]))
+    
+    a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
+                                       month = lubridate::month(start.date), 
+                                       day   = mday(start.date), 
+                                       houri = 0, 
+                                       min   = 30, 
+                                       sec   = 0, 
+                                       gregflag = 1)$dret[2]
+    
+    when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
+                                          ephe_flag = 4, 
+                                          geopos = c(x = var.lon, 
+                                                     y = var.lat, 
+                                                     z = 10), 
+                                          backward = F)
+    
+    temp.nextdate <- as_date(ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), sep = "-", collapse = "-")))
+    temp.nextdate <- strftime(x = temp.nextdate, format = "%b %d, %Y")
+    
+    temp.nextobs <- scales::percent(when_next$attr[1]) 
+    
+    glue("Next Eclipse Visible Here: {temp.nextdate} ({temp.nextobs} obscuration)")
+    })
+  
+  output$return_nextecl <- renderText({
+    get_nextecl()
+  })
   
   # get sun coverage
   get_suncov <- eventReactive(eventExpr = input$cxy_go, {
@@ -320,7 +374,7 @@ server <- function(input, output) {
   })
   
   output$map <- renderPlot({
-    addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
+    addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y", "matchedAddress")]
     
     usa48.bbox <- c(left   = -124.76307, 
                     bottom =   24.52310, 
@@ -353,7 +407,7 @@ server <- function(input, output) {
   
   output$sched <- renderPlot({
     
-    addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
+    addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y", "matchedAddress")]
     
     # undesirable behavior happening here - if censusxy does not find an
     # appropriate address, a null value gets input into the function below
@@ -366,18 +420,19 @@ server <- function(input, output) {
       geom_polygon(data = df.sched, 
                  aes(x = time, y = coverage), 
                  alpha = 0.5) +
-      scale_y_continuous(name = "Sun Coverage (%)", 
+      scale_y_continuous(name = "% of Sun Obscured by Moon", 
                          labels = scales::percent, 
                          limits = c(0, 1), 
                          breaks = seq(0, 2, by = 0.2))+
-      scale_x_datetime(name = "Time", 
+      scale_x_datetime(name = "Time (Eastern Daylight Time)", 
                        date_labels = "%I:%M %p %Z", 
                        date_breaks = "30 min", 
                        date_minor_breaks = "15 min")+
       theme(title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
-       labs(title = "Percentage of Sun Covered by Time-of-Day")
+       labs(title = "Eclipse Progress Throughout the Day", 
+            subtitle = addr.coords$matchedAddress)
   })
   
 }

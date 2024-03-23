@@ -7,8 +7,8 @@ library(scales)
 library(ggplot2)
 library(sf)
 library(renv)
-library(rnaturalearth)
-library(rnaturalearthdata)
+#library(rnaturalearth)
+#library(rnaturalearthdata)
 
 
 getwd()
@@ -19,34 +19,16 @@ rm(list=ls()[ls() != "earth.coast"]);cat('\f')
 
 
 # vars----
-a.date <- Sys.Date()
+start.date <- ymd(20240409)
 
-#a.num <- runif(1, min = 0, max = 10000000) %>% floor()
-set.seed(3481851)
+get.addr <- censusxy::cxy_oneline(address = "7318 overland park court, west chester, oh")
 
-var.lon <- runif(1, -180, 180)
-var.lat <- runif(1,   -90,  90)
+var.lon <- unlist(unname(get.addr["coordinates.x"]))
+var.lat <- unlist(unname(get.addr["coordinates.y"]))
 
-# data import----
-if(!"earth.coast" %in% ls()){
-  earth.coast <- ne_coastline(110) 
-}
-
-# map----
-basemap <- ggplot() + 
-  geom_sf(data = earth.coast) +
-  geom_point(aes(x = var.lon, y = var.lat), 
-             color = "white", fill = "red", 
-             shape = 23, size =4) +
-  coord_sf()
-
-print(basemap)
-
-# work----
-
-a.date.ju <- swephR::swe_utc_to_jd(year = year(a.date), 
-                                   month = lubridate::month(a.date), 
-                                   day   = mday(a.date), 
+a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
+                                   month = lubridate::month(start.date), 
+                                   day   = mday(start.date), 
                                    houri = 0, 
                                    min   = 30, 
                                    sec   = 0, 
@@ -64,8 +46,9 @@ temp.nextdate <- when_next$tret[1] %>% # time of maximum eclipse
   paste(., sep = "-", collapse = "-") %>%
   ymd_hms()
 
-temp.nextobs <- when_next$attr[1] # pct obscred
+temp.nextobs <- when_next$attr[1] # p
+
+temp.dur <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[5], 1), sep = "-", collapse = "-")) -
+  ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[2], 1), sep = "-", collapse = "-"))
 
 
-data.frame(ecl_date = temp.nextdate, 
-           ecl_obsc = temp.nextobs)
