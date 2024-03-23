@@ -20,6 +20,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741
 * https://github.com/chris-prener/censusxy
 * https://www.r-bloggers.com/2022/06/creating-flowcharts-with-ggplot2/
+* https://shiny.posit.co/
 
 ### Other Links
 * [National Solar Observatory interactive eclipse map](https://nso.edu/for-public/eclipse-map-2024/)
