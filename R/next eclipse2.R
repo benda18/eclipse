@@ -21,10 +21,10 @@ rm(list=ls()[ls() != "earth.coast"]);cat('\f')
 # vars----
 start.date <- Sys.Date()
 
-#set.seed(3481851)
+get.addr <- censusxy::cxy_oneline(address = "882 alnetta, cincinnati, oh")
 
-var.lon <- runif(1, -180, 180)
-var.lat <- runif(1,   -90,  90)
+var.lon <- get.addr["coordinates.x"]
+var.lat <- get.addr["coordinates.y"]
 
 # # data import----
 # if(!"earth.coast" %in% ls()){
