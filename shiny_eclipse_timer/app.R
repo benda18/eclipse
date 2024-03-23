@@ -80,7 +80,21 @@ ui <- fluidPage(
 server <- function(input, output) {
   # api keys----
   #stadiamap set api
+  
+  # NOTE - it is not best practices to keep the api key visible here in your
+  # public repo.  Ideally you would save it in a separate file and add that file
+  # to .gitignore so it doesn't get pushed to github.  that way the key still
+  # gets deployed to the server but remains relatively hidden otherwise.  THAT
+  # SAID for the sake of simplicity, and because this is a free account that
+  # anyone could setup, and because the risk of abuse affecting anyone
+  # personally is so low I wanted to keep it in the code so that it was clear to
+  # someone trying to replicate this project how and where to dump their own API
+  # key. Additionally, api keys can be deleted and re-created fairly easily for
+  # projects like this and if at some point in the future I change my mind I can
+  # implement a more secure setup.
   apikey <- "5b522e9b-4ea1-4168-b0b9-3294c85af004" # GET YOUR OWN KEY!
+  
+  
   register_stadiamaps(key = apikey, write = FALSE)
   
   
