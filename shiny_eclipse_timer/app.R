@@ -59,10 +59,11 @@ ui <- fluidPage(
     ),
     mainPanel(
       wellPanel(
-        #fluidRow(div(h5(strong("ADDRESS INFORMATION:")))),
-        fluidRow(div(h4(strong(shiny::textOutput(outputId = "return_matched.addr"))))), # returned address
-        fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
-        fluidRow(div(h4(strong(textOutput(outputId = "return_totality"))))) #totality? goes here
+        fluidRow(div(h5(strong("WHAT TO EXPECT:")))),
+        fluidRow(div(h6(strong(shiny::textOutput(outputId = "return_matched.addr"))))), # returned address
+        fluidRow(div(h6(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
+        fluidRow(div(h6(strong(textOutput(outputId = "return_totality"))))), #totality? goes here
+        fluidRow(div(h6(strong(textOutput(outputId = "return_nextecl")))))
       ),
       wellPanel(
         shiny::plotOutput(outputId = "map"),
@@ -300,6 +301,38 @@ server <- function(input, output) {
     get_totality()
   })
   
+  get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
+    start.date <- ymd(20240409)
+    get.addr <- get_cxyinfo()
+    var.lon <- unlist(unname(get.addr["coordinates.x"]))
+    var.lat <- unlist(unname(get.addr["coordinates.y"]))
+    
+    a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
+                                       month = lubridate::month(start.date), 
+                                       day   = mday(start.date), 
+                                       houri = 0, 
+                                       min   = 30, 
+                                       sec   = 0, 
+                                       gregflag = 1)$dret[2]
+    
+    when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
+                                          ephe_flag = 4, 
+                                          geopos = c(x = var.lon, 
+                                                     y = var.lat, 
+                                                     z = 10), 
+                                          backward = F)
+    
+    temp.nextdate <- as_date(ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), sep = "-", collapse = "-")))
+    temp.nextdate <- strftime(x = temp.nextdate, format = "%b %d, %Y")
+    
+    temp.nextobs <- scales::percent(when_next$attr[1]) 
+    
+    glue("Next Eclipse Visible Here: {temp.nextdate} ({temp.nextobs} obscuration)")
+    })
+  
+  output$return_nextecl <- renderText({
+    get_nextecl()
+  })
   
   # get sun coverage
   get_suncov <- eventReactive(eventExpr = input$cxy_go, {
