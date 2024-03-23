@@ -19,33 +19,33 @@ rm(list=ls()[ls() != "earth.coast"]);cat('\f')
 
 
 # vars----
-a.date <- Sys.Date()
+start.date <- Sys.Date()
 
-set.seed(3481851)
+#set.seed(3481851)
 
 var.lon <- runif(1, -180, 180)
 var.lat <- runif(1,   -90,  90)
 
-# data import----
-if(!"earth.coast" %in% ls()){
-  earth.coast <- ne_coastline(110) 
-}
-
-# map----
-basemap <- ggplot() + 
-  geom_sf(data = earth.coast) +
-  geom_point(aes(x = var.lon, y = var.lat), 
-             color = "white", fill = "red", 
-             shape = 23, size =4) +
-  coord_sf()
-
-print(basemap)
+# # data import----
+# if(!"earth.coast" %in% ls()){
+#   earth.coast <- ne_coastline(110) 
+# }
+# 
+# # map----
+# basemap <- ggplot() + 
+#   geom_sf(data = earth.coast) +
+#   geom_point(aes(x = var.lon, y = var.lat), 
+#              color = "white", fill = "red", 
+#              shape = 23, size =4) +
+#   coord_sf()
+# 
+# print(basemap)
 
 # work----
 
-a.date.ju <- swephR::swe_utc_to_jd(year = year(a.date), 
-                                   month = lubridate::month(a.date), 
-                                   day   = mday(a.date), 
+a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
+                                   month = lubridate::month(start.date), 
+                                   day   = mday(start.date), 
                                    houri = 0, 
                                    min   = 30, 
                                    sec   = 0, 
