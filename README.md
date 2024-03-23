@@ -23,3 +23,4 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 ### Other Links
 * https://nso.edu/for-public/eclipse-map-2024/
+* NASA's Five Millennium Catalog of Solar Eclipses ([pdf download](file:///C:/Users/bende/Downloads/TP2009-214174.pdf))
