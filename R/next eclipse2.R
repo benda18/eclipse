@@ -26,23 +26,6 @@ get.addr <- censusxy::cxy_oneline(address = "7318 overland park court, west ches
 var.lon <- unlist(unname(get.addr["coordinates.x"]))
 var.lat <- unlist(unname(get.addr["coordinates.y"]))
 
-# # data import----
-# if(!"earth.coast" %in% ls()){
-#   earth.coast <- ne_coastline(110) 
-# }
-# 
-# # map----
-# basemap <- ggplot() + 
-#   geom_sf(data = earth.coast) +
-#   geom_point(aes(x = var.lon, y = var.lat), 
-#              color = "white", fill = "red", 
-#              shape = 23, size =4) +
-#   coord_sf()
-# 
-# print(basemap)
-
-# work----
-
 a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
                                    month = lubridate::month(start.date), 
                                    day   = mday(start.date), 
