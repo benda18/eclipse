@@ -30,8 +30,7 @@ library(ggmap)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("April 8th, 2024 Eclipse Planning Tool -
-             Find out if and when a specific location will see totality."),
+  titlePanel("Total Eclipse of April 8, 2024 - What to Expect from Your Address"),
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
@@ -51,6 +50,8 @@ ui <- fluidPage(
         fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
         
         wellPanel(
+          fluidRow("RESOURCES"),
+          fluidRow(uiOutput("tab.res2")),
           fluidRow("SOURCES"),
           fluidRow(uiOutput("tab.res"))
         ),
@@ -233,11 +234,18 @@ server <- function(input, output) {
     tagList(url.linkedin)
   })
   
-  url.res <- a("Creating open source composite geocoders: Pitfalls and opportunities (Prener & Fox)", 
-               href = "https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741", 
+  url.res <- a("All Sources are cited on the project's GitHub README", 
+               href = "https://github.com/benda18/eclipse/blob/main/README.md#sources", 
                target = "_blank")
   output$tab.res <- renderUI({
     tagList(url.res)
+  })
+  
+  url.res2 <- a("The American Astronomical Society's \"Suppliers of Safe Solar Viewers & Filters\" list", 
+                href = "https://eclipse.aas.org/eye-safety/viewers-filters", 
+                target = "_blank")
+  output$tab.res2 <- renderUI({
+    tagList(url.res2)
   })
   
   # get eclipse times----
@@ -333,7 +341,7 @@ server <- function(input, output) {
   })
   
   output$map <- renderPlot({
-    addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
+    addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y", "matchedAddress")]
     
     usa48.bbox <- c(left   = -124.76307, 
                     bottom =   24.52310, 
@@ -366,7 +374,7 @@ server <- function(input, output) {
   
   output$sched <- renderPlot({
     
-    addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y")]
+    addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y", "matchedAddress")]
     
     # undesirable behavior happening here - if censusxy does not find an
     # appropriate address, a null value gets input into the function below
@@ -379,18 +387,19 @@ server <- function(input, output) {
       geom_polygon(data = df.sched, 
                  aes(x = time, y = coverage), 
                  alpha = 0.5) +
-      scale_y_continuous(name = "Sun Coverage (%)", 
+      scale_y_continuous(name = "% of Sun Obscured by Moon", 
                          labels = scales::percent, 
                          limits = c(0, 1), 
                          breaks = seq(0, 2, by = 0.2))+
-      scale_x_datetime(name = "Time", 
+      scale_x_datetime(name = "Time (Eastern Daylight Time)", 
                        date_labels = "%I:%M %p %Z", 
                        date_breaks = "30 min", 
                        date_minor_breaks = "15 min")+
       theme(title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
-       labs(title = "Percentage of Sun Covered by Time-of-Day")
+       labs(title = "Eclipse Progress Throughout the Day", 
+            subtitle = addr.coords$matchedAddress)
   })
   
 }
