@@ -24,6 +24,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161. ([link](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf))
 
 ### Other Links
+* [The American Astronomical Society's "Suppliers of Safe Solar Viewers & Filters" list with purchasing links](https://eclipse.aas.org/eye-safety/viewers-filters)
 * [National Solar Observatory interactive eclipse map](https://nso.edu/for-public/eclipse-map-2024/)
 * NASA's Five Millennium Catalog of Solar Eclipses ([pdf download](http://eclipse.gsfc.nasa.gov/5MCSE/TP2009-214174.pdf))
 * [Webpages on the History of Astronomy by Robert Harry van Gent](https://webspace.science.uu.nl/~gent0113/)
