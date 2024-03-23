@@ -22,6 +22,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * https://www.r-bloggers.com/2022/06/creating-flowcharts-with-ggplot2/
 * https://shiny.posit.co/
 * https://cran.r-project.org/web/packages/gggibbous/vignettes/gggibbous.html
+* https://danielberecz.rbind.io/2017/07/12/recreating-washing-post-s-solar-eclipse-plot-in-r/
 
 ### Other Links
 * [National Solar Observatory interactive eclipse map](https://nso.edu/for-public/eclipse-map-2024/)
