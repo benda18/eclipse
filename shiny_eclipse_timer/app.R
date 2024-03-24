@@ -419,7 +419,8 @@ server <- function(input, output) {
                  shape = 21,
                  size = 4, color = "white", fill = "red")+
       theme_void()+
-      theme(text = element_text(size = 12))+
+      theme(text = element_text(size = 12), 
+            legend.position = "bottom")+
       #coord_sf()+
       scale_color_discrete(name = "Eclipse Path")+
       labs(title = "Eclipse Path")
