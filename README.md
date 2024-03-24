@@ -20,7 +20,8 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * ggmap: spatial visualization with ggplot2 ([link to CRAN](https://cran.r-project.org/package=ggmap)) ([link to D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161.](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf))
 * censusxy: easy access to the U.S. Census Bureau Geocoding Tools ([link to github](https://github.com/chris-prener/censusxy)) ([link to Census Bureau](https://geocoding.geo.census.gov/geocoder/)) ([link to "Creating open source composite geocoders: Pitfalls and opportunities" by Prener & Fox](https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741))
 * shiny: Web Application Framework for R ([link to CRAN](https://cran.r-project.org/web/packages/shiny/index.html)) (https://shiny.posit.co)
-* tigris: Download TIGER/Line shapefiles from the United States Census Bureau ([link to CRAN](https://cran.r-project.org/package=tigris))  
+* tigris: Download TIGER/Line shapefiles from the United States Census Bureau ([link to CRAN](https://cran.r-project.org/package=tigris))
+* lubridate: Make Dealing with Dates a Little Easier ([link to CRAN](https://cran.r-project.org/package=lubridate))
 
 ### Other Links
 * [The American Astronomical Society's "Suppliers of Safe Solar Viewers & Filters" list with purchasing links](https://eclipse.aas.org/eye-safety/viewers-filters)
