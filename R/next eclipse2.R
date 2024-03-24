@@ -19,14 +19,14 @@ rm(list=ls()[ls() != "earth.coast"]);cat('\f')
 
 
 # vars----
-start.date <- ymd(20240409)
+
 
 get.addr <- censusxy::cxy_oneline(address = "7318 Overland Park Court, west chester, oh")
 
 var.lon <- unlist(unname(get.addr["coordinates.x"]))
 var.lat <- unlist(unname(get.addr["coordinates.y"]))
 
-
+start.date <- ymd(20240409)
 is_totality <- F
 n <- 0
 while(!is_totality & year(start.date) < 3001){
@@ -54,9 +54,11 @@ while(!is_totality & year(start.date) < 3001){
   
   temp.nextobs <- max(when_next$attr[c(1,3)]) # p
   
-  ecl_type <- ifelse(temp.nextobs >= 1, "total", "partial")
+  # check to see if total eclipse or partial
+  ecl_type <- ifelse(when_next$attr[2] >= 1, "total", "partial")
   
-  if(ecl_type == "total"){
+  
+  if(temp.nextobs >= 0.5){
     is_totality <- T
   }else{
     start.date <- as_date(temp.nextdate) + days(2)
