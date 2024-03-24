@@ -21,7 +21,7 @@ rm(list=ls()[ls() != "earth.coast"]);cat('\f')
 # vars----
 start.date <- ymd(20240409)
 
-get.addr <- censusxy::cxy_oneline(address = "882 alnetta, cincinnati, oh")
+get.addr <- censusxy::cxy_oneline(address = "7318 Overland Park Court, west chester, oh")
 
 var.lon <- unlist(unname(get.addr["coordinates.x"]))
 var.lat <- unlist(unname(get.addr["coordinates.y"]))
@@ -29,10 +29,10 @@ var.lat <- unlist(unname(get.addr["coordinates.y"]))
 
 is_totality <- F
 n <- 0
-while(!is_totality){
+while(!is_totality & year(start.date) < 3001){
   n <- n + 1
-  if(n > 5000){
-    stop("too many searches - something wrong")
+  if(n > 2000){
+    stop("too many searches - ERROR")
   }
   a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
                                      month = lubridate::month(start.date), 
@@ -49,12 +49,8 @@ while(!is_totality){
                                                    z = 10), 
                                         backward = F)
   
-  
-  
-  temp.nextdate <- when_next$tret[1] %>% # time of maximum eclipse 
-    swephR::swe_jdet_to_utc(., 1) %>%
-    paste(., sep = "-", collapse = "-") %>%
-    ymd_hms()
+  temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
+                                 sep = "-", collapse = "-"))
   
   temp.nextobs <- max(when_next$attr[c(1,3)]) # p
   
@@ -65,11 +61,14 @@ while(!is_totality){
   }else{
     start.date <- as_date(temp.nextdate) + days(2)
   }
-  
-  # temp.dur <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[5], 1), sep = "-", collapse = "-")) -
-  #   ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[2], 1), sep = "-", collapse = "-"))
 }
 
+if(temp.nextobs < 1 & 
+   year(start.date) > 3000){
+  next.total.eclipse <- "Sometime after the year 3000"
+}else{
+  next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
+}
 
 
 
