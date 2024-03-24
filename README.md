@@ -19,8 +19,8 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * swephR: High Precision Swiss Ephemeris ([link](https://cran.r-project.org/package=swephR))
 
 * "Creating open source composite geocoders: Pitfalls and opportunities" by Prener & Fox ([link](https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741))
-* * US Census Bureau Geocoding Services API ([link](https://geocoding.geo.census.gov/geocoder/))
-* https://github.com/chris-prener/censusxy
+* US Census Bureau Geocoding Services API ([link](https://geocoding.geo.census.gov/geocoder/))
+* censusxy: easy access to the U.S. Census Bureau Geocoding Tools ([link](https://github.com/chris-prener/censusxy))
 * https://www.r-bloggers.com/2022/06/creating-flowcharts-with-ggplot2/
 * https://shiny.posit.co/
 * D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161. ([link](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf))
