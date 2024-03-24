@@ -16,7 +16,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 
 ### Sources
-* shiny: Web Application Framework for R ([link to CRAN](https://cran.r-project.org/web/packages/shiny/index.html))
+* shiny: Web Application Framework for R ([link to CRAN](https://cran.r-project.org/web/packages/shiny/index.html)) (https://shiny.posit.com)
 * tigris: Download TIGER/Line shapefiles from the United States Census Bureau ([link to CRAN](https://cran.r-project.org/package=tigris))
 * swephR: High Precision Swiss Ephemeris ([link to CRAN](https://cran.r-project.org/package=swephR))
 * ggmap: spatial visualization with ggplot2 ([link to CRAN](https://cran.r-project.org/package=ggmap))
