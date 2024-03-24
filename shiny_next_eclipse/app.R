@@ -7,44 +7,59 @@
 #    https://shiny.posit.co/
 #
 
+library(renv)
+library(swephR)
+library(lubridate)
+#library(dplyr)
+#library(tigris)
 library(shiny)
+library(censusxy)
+library(scales)
+library(ggplot2)
+library(sf)
+library(glue)
+#library(rsconnect)
+#library(ggmap)
+
+# renv::status()
+# renv::snapshot()
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
+  
+  # Application title
+  titlePanel("Find Future Eclipse"),
+  
+  # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+      shiny::textInput(inputId = "addr_in", 
+                       label = "Enter Address", 
+                       value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
+      shiny::sliderInput(inputId = "pctobsc_in", 
+                         label = "Mininum Sun Obscuration Percent", 
+                         min = 0, 
+                         max = 100, 
+                         step = 1, 
+                         animate = T, 
+                         post = "%",
+                         value = 98),
+      actionButton(inputId = "cxy_go", 
+                   label   = "SEARCH ADDRESS")
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      
     )
+  )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
+  
+  
 }
 
 # Run the application 
