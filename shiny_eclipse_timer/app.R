@@ -62,7 +62,7 @@ ui <- fluidPage(
         fluidRow(div(h4(strong("WHAT TO EXPECT:")))),
         #fluidRow(div(h6(strong(shiny::textOutput(outputId = "return_matched.addr"))))), # returned address
         fluidRow(div(h5(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
-        fluidRow(div(h5(strong(textOutput(outputId = "return_totality"))))), #totality? goes here
+        #fluidRow(div(h5(strong(textOutput(outputId = "return_totality"))))), #totality? goes here
         fluidRow(div(h5(strong(textOutput(outputId = "return_nextecl")))))
       ),
       wellPanel(
@@ -414,12 +414,13 @@ server <- function(input, output) {
                                                                   y = lat_in,
                                                                   z = 10), 
                                                     backward = F)$attr[1]
-    
+    sol_cov <- ifelse(sol_cov > 1, 1, sol_cov)
     glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
   })
   
   output$return_suncov <- renderText({
-    get_suncov()
+    paste(get_suncov(), get_totality(), sep = " | ", collapse = " | ")
+    
   })
   
   # output$return_matched.addr <- renderText({
