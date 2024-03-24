@@ -37,7 +37,12 @@ ui <- fluidPage(
                        label = "Enter Address", 
                        value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
       actionButton(inputId = "cxy_go", 
-                   label   = "SEARCH ADDRESS"), 
+                   label   = "SEARCH ADDRESS"),
+      wellPanel(
+        #fluidRow(div(h4(strong("WHAT TO EXPECT:")))),
+        fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
+        fluidRow(div(h5(strong(textOutput(outputId = "return_nextecl")))))
+      ),
       wellPanel(
         shiny::plotOutput(outputId = "sched"),
       ),
@@ -48,7 +53,6 @@ ui <- fluidPage(
           fluidRow(uiOutput("tab.github"))
         ),
         fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
-        
         wellPanel(
           fluidRow("RESOURCES"),
           fluidRow(uiOutput("tab.res2")),
@@ -58,13 +62,11 @@ ui <- fluidPage(
       )
     ),
     mainPanel(
-      wellPanel(
-        fluidRow(div(h4(strong("WHAT TO EXPECT:")))),
-        #fluidRow(div(h6(strong(shiny::textOutput(outputId = "return_matched.addr"))))), # returned address
-        fluidRow(div(h5(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
-        #fluidRow(div(h5(strong(textOutput(outputId = "return_totality"))))), #totality? goes here
-        fluidRow(div(h5(strong(textOutput(outputId = "return_nextecl")))))
-      ),
+      # wellPanel(
+      #   fluidRow(div(h4(strong("WHAT TO EXPECT:")))),
+      #   fluidRow(div(h5(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
+      #   fluidRow(div(h5(strong(textOutput(outputId = "return_nextecl")))))
+      # ),
       wellPanel(
         shiny::plotOutput(outputId = "map"),
         wellPanel(
@@ -263,16 +265,6 @@ server <- function(input, output) {
     censusxy::cxy_oneline(address = input$addr_in)
   })
   
-  # matched_addr <- eventReactive(eventExpr = input$cxy_go, {  # returned address
-  #   temp <- get_cxyinfo()
-  #   if(!is.null(temp)){
-  #     matched.addr <- temp$matchedAddress
-  #   }else{
-  #     matched.addr <- "<<< NO ADDRESS MATCH FOUND - TRY AGAIN >>>"
-  #   }
-  #   matched.addr
-  # })
-  
   # get totality
   get_totality <- eventReactive(eventExpr = input$cxy_go, {
     temp          <- get_cxyinfo()
@@ -298,7 +290,7 @@ server <- function(input, output) {
                                                                   y = lat_in,
                                                                   z = 10), 
                                                     backward = F)$attr[1]
-    #glue("Totality Visible: {as.character(sol_cov >= 1)}")
+    
     
     ifelse(sol_cov >= 1, 
            "Within Path of Totality", 
@@ -415,17 +407,13 @@ server <- function(input, output) {
                                                                   z = 10), 
                                                     backward = F)$attr[1]
     sol_cov <- ifelse(sol_cov > 1, 1, sol_cov)
-    glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
+    glue("{ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
   })
   
   output$return_suncov <- renderText({
     paste(get_suncov(), get_totality(), sep = " | ", collapse = " | ")
     
   })
-  
-  # output$return_matched.addr <- renderText({
-  #   matched_addr()  # returned address
-  # })
   
   output$map <- renderPlot({
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y", "matchedAddress")]
@@ -485,7 +473,7 @@ server <- function(input, output) {
       theme(title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
-      labs(title = "Eclipse Progress Throughout the Day", 
+      labs(title = "Eclipse Timeline", 
            subtitle = addr.coords$matchedAddress)
   })
   
