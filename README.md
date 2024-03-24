@@ -16,10 +16,11 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 
 ### Sources
-* tigris: Download TIGER/Line shapefiles from the United States Census Bureau ([link](https://cran.r-project.org/package=tigris))
-* swephR: High Precision Swiss Ephemeris ([link](https://cran.r-project.org/package=swephR))
-* ggmap: spatial visualization with ggplot2 ([link](https://cran.r-project.org/package=ggmap))
-* censusxy: easy access to the U.S. Census Bureau Geocoding Tools ([link](https://github.com/chris-prener/censusxy))
+* shiny: Web Application Framework for R ([link to CRAN](https://cran.r-project.org/web/packages/shiny/index.html))
+* tigris: Download TIGER/Line shapefiles from the United States Census Bureau ([link to CRAN](https://cran.r-project.org/package=tigris))
+* swephR: High Precision Swiss Ephemeris ([link to CRAN](https://cran.r-project.org/package=swephR))
+* ggmap: spatial visualization with ggplot2 ([link to CRAN](https://cran.r-project.org/package=ggmap))
+* censusxy: easy access to the U.S. Census Bureau Geocoding Tools ([link to github](https://github.com/chris-prener/censusxy))
 * "Creating open source composite geocoders: Pitfalls and opportunities" by Prener & Fox ([link](https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741))
 * US Census Bureau Geocoding Services API ([link](https://geocoding.geo.census.gov/geocoder/))
 * https://www.r-bloggers.com/2022/06/creating-flowcharts-with-ggplot2/
