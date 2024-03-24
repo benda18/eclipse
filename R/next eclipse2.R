@@ -31,8 +31,8 @@ is_totality <- F
 n <- 0
 while(!is_totality & year(start.date) < 3001){
   n <- n + 1
-  if(n > 5000){
-    stop("too many searches - something wrong")
+  if(n > 2000){
+    stop("too many searches - ERROR")
   }
   a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
                                      month = lubridate::month(start.date), 
@@ -49,8 +49,6 @@ while(!is_totality & year(start.date) < 3001){
                                                    z = 10), 
                                         backward = F)
   
-  
-  
   temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
                                  sep = "-", collapse = "-"))
   
@@ -63,9 +61,6 @@ while(!is_totality & year(start.date) < 3001){
   }else{
     start.date <- as_date(temp.nextdate) + days(2)
   }
-  
-  # temp.dur <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[5], 1), sep = "-", collapse = "-")) -
-  #   ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[2], 1), sep = "-", collapse = "-"))
 }
 
 if(temp.nextobs < 1 & 
