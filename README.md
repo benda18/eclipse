@@ -23,8 +23,9 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * tigris: Download TIGER/Line shapefiles from the United States Census Bureau ([link to CRAN](https://cran.r-project.org/package=tigris))
 * lubridate: Make Dealing with Dates a Little Easier ([link to CRAN](https://cran.r-project.org/package=lubridate))
 
-### Other Links
+### Other Useful Links
 * [The American Astronomical Society's "Suppliers of Safe Solar Viewers & Filters" list with purchasing links](https://eclipse.aas.org/eye-safety/viewers-filters)
 * [National Solar Observatory interactive eclipse map](https://nso.edu/for-public/eclipse-map-2024/)
+* [NASA's 2024 Eclipse Website](https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/)
 * NASA's Five Millennium Catalog of Solar Eclipses ([pdf download](http://eclipse.gsfc.nasa.gov/5MCSE/TP2009-214174.pdf))
 * [Webpages on the History of Astronomy by Robert Harry van Gent](https://webspace.science.uu.nl/~gent0113/)
