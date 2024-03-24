@@ -307,28 +307,6 @@ server <- function(input, output) {
     var.lon <- unlist(unname(get.addr["coordinates.x"]))
     var.lat <- unlist(unname(get.addr["coordinates.y"]))
     
-    # a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
-    #                                    month = lubridate::month(start.date), 
-    #                                    day   = mday(start.date), 
-    #                                    houri = 0, 
-    #                                    min   = 30, 
-    #                                    sec   = 0, 
-    #                                    gregflag = 1)$dret[2]
-    # 
-    # when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
-    #                                       ephe_flag = 4, 
-    #                                       geopos = c(x = var.lon, 
-    #                                                  y = var.lat, 
-    #                                                  z = 10), 
-    #                                       backward = F)
-    # 
-    # temp.nextdate <- as_date(ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), sep = "-", collapse = "-")))
-    # temp.nextdate <- strftime(x = temp.nextdate, format = "%b %d, %Y")
-    # 
-    # temp.nextobs <- scales::percent(when_next$attr[1]) 
-    # 
-    # glue("Next Eclipse Visible Here: {temp.nextdate} ({temp.nextobs} obscuration)")
-    
     is_totality <- F
     n <- 0
     while(!is_totality & year(start.date) < 3001){
