@@ -68,8 +68,9 @@ ui <- fluidPage(
       wellPanel(
         shiny::plotOutput(outputId = "map"),
         wellPanel(
-          fluidRow(
-            uiOutput("tab")
+          fluidRow("Other Useful Maps:",
+            uiOutput("tab"),
+            uiOutput("tab.nasa")
           )
         )
       )
@@ -83,18 +84,17 @@ server <- function(input, output) {
   #stadiamap set api
   
   apikey <- "5b522e9b-4ea1-4168-b0b9-3294c85af004" # GET YOUR OWN KEY!
-  
   # NOTE - it is not best practices to keep the api key visible here in your
   # public repo.  Ideally you would save it in a separate file and add that file
   # to your .gitignore so it doesn't get pushed to github.  that way the key
   # still gets deployed to the server but remains relatively hidden otherwise.
-  # THAT SAID for the sake of simplicity, and because this is a free account
-  # that anyone could setup, and because the risk of abuse affecting anyone
-  # personally is so low I chose to keep it in the code so that it was clear to
-  # someone trying to replicate this project how and where to dump their own API
-  # key. Additionally, api keys can be deleted and re-created fairly easily for
-  # projects like this and if at some point in the future I change my mind I can
-  # implement a more secure setup.
+  # THAT SAID for the sake of simplicity, and because stadiamaps is a free
+  # service (for this kind of limited usage) that anyone can setup, and because
+  # the risk of abuse affecting anyonse personally is so low I chose to keep it
+  # in the code so that it was clear to someone trying to replicate this project
+  # how and where to dump their own API key. Additionally, api keys can be
+  # generated fairly easily for projects like this and if at some point in the
+  # future I change my mind I can implement a more secure setup.
   
   register_stadiamaps(key = apikey, write = FALSE)
   
@@ -189,14 +189,14 @@ server <- function(input, output) {
                                                 ephe_flag = 4, 
                                                 geopos = c(x = lon_in, 
                                                            y = lat_in, 
-                                                           z = 10))$attr[1])
+                                                           z = 10))$attr[3])
     }
     
     out <- data.frame(time = ecsched.times, 
                       coverage = ecsuncov)
     
     out[nrow(out),]$coverage <- 0
-    out$coverage[out$coverage >= 1] <- 1.14
+    #out$coverage[out$coverage >= 1] <- 1.14
     return(out)
   }
   # other stuff---
@@ -214,11 +214,18 @@ server <- function(input, output) {
   }
   all.paths <- all.paths |> transform(yr = year(ed))
   
+  url.nasa <- a("NASA's 2024 Solar Eclipse Website", 
+                href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/", 
+                target = "_blank")
+  output$tab.nasa <- renderUI({
+    tagList(url.nasa)
+  })
+  
   url <- a("Interactive map from National Solar Observatory", 
            href="https://nso.edu/for-public/eclipse-map-2024/", 
            target="_blank")
   output$tab <- renderUI({
-    tagList("See Also:", url)
+    tagList(url)
   })
   
   url.github <- a("GitHub", 
@@ -289,8 +296,8 @@ server <- function(input, output) {
                                                     geopos    = c(x = lon_in,
                                                                   y = lat_in,
                                                                   z = 10), 
-                                                    backward = F)$attr[1]
-    #glue("Totality Visible: {as.character(sol_cov >= 1)}")
+                                                    backward = F)$attr[3]
+    
     
     ifelse(sol_cov >= 1, 
            "Within Zone of Totality", 
@@ -325,7 +332,7 @@ server <- function(input, output) {
     temp.nextdate <- as_date(ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), sep = "-", collapse = "-")))
     temp.nextdate <- strftime(x = temp.nextdate, format = "%b %d, %Y")
     
-    temp.nextobs <- scales::percent(when_next$attr[1]) 
+    temp.nextobs <- scales::percent(when_next$attr[3]) 
     
     glue("Next Eclipse Visible Here: {temp.nextdate} ({temp.nextobs} obscuration)")
     })
@@ -360,9 +367,10 @@ server <- function(input, output) {
                                                     geopos    = c(x = lon_in,
                                                                   y = lat_in,
                                                                   z = 10), 
-                                                    backward = F)$attr[1]
+                                                    backward = F)$attr[3]
     
-    glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
+    sol_cov <- ifelse(sol_cov >= 1, 1, sol_cov)
+    glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.995, \"99.5%\", scales::percent(sol_cov,accuracy = 0.1))}")
   })
   
   output$return_suncov <- renderText({
