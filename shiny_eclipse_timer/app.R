@@ -189,14 +189,14 @@ server <- function(input, output) {
                                                 ephe_flag = 4, 
                                                 geopos = c(x = lon_in, 
                                                            y = lat_in, 
-                                                           z = 10))$attr[1])
+                                                           z = 10))$attr[3])
     }
     
     out <- data.frame(time = ecsched.times, 
                       coverage = ecsuncov)
     
     out[nrow(out),]$coverage <- 0
-    out$coverage[out$coverage >= 1] <- 1.14
+    #out$coverage[out$coverage >= 1] <- 1.14
     return(out)
   }
   # other stuff---
@@ -289,8 +289,8 @@ server <- function(input, output) {
                                                     geopos    = c(x = lon_in,
                                                                   y = lat_in,
                                                                   z = 10), 
-                                                    backward = F)$attr[1]
-    #glue("Totality Visible: {as.character(sol_cov >= 1)}")
+                                                    backward = F)$attr[3]
+    
     
     ifelse(sol_cov >= 1, 
            "Within Zone of Totality", 
@@ -325,7 +325,7 @@ server <- function(input, output) {
     temp.nextdate <- as_date(ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), sep = "-", collapse = "-")))
     temp.nextdate <- strftime(x = temp.nextdate, format = "%b %d, %Y")
     
-    temp.nextobs <- scales::percent(when_next$attr[1]) 
+    temp.nextobs <- scales::percent(when_next$attr[3]) 
     
     glue("Next Eclipse Visible Here: {temp.nextdate} ({temp.nextobs} obscuration)")
     })
@@ -360,9 +360,10 @@ server <- function(input, output) {
                                                     geopos    = c(x = lon_in,
                                                                   y = lat_in,
                                                                   z = 10), 
-                                                    backward = F)$attr[1]
+                                                    backward = F)$attr[3]
     
-    glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
+    sol_cov <- ifelse(sol_cov >= 1, 1, sol_cov)
+    glue("Maximum Sun Coverage: {ifelse(sol_cov < 1 & sol_cov > 0.995, \"99.5%\", scales::percent(sol_cov,accuracy = 0.1))}")
   })
   
   output$return_suncov <- renderText({
