@@ -17,7 +17,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 ### Sources
 * swephR: High Precision Swiss Ephemeris ([link](https://cran.r-project.org/package=swephR))
-
+* ggmap: spatial visualization with ggplot2 ([link](https://cran.r-project.org/package=ggmap))
 * "Creating open source composite geocoders: Pitfalls and opportunities" by Prener & Fox ([link](https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741))
 * US Census Bureau Geocoding Services API ([link](https://geocoding.geo.census.gov/geocoder/))
 * censusxy: easy access to the U.S. Census Bureau Geocoding Tools ([link](https://github.com/chris-prener/censusxy))
