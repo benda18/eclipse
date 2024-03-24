@@ -16,6 +16,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 
 ### Sources
+* tigris: Download TIGER/Line shapefiles from the United States Census Bureau ([link](https://cran.r-project.org/package=tigris))
 * swephR: High Precision Swiss Ephemeris ([link](https://cran.r-project.org/package=swephR))
 * ggmap: spatial visualization with ggplot2 ([link](https://cran.r-project.org/package=ggmap))
 * censusxy: easy access to the U.S. Census Bureau Geocoding Tools ([link](https://github.com/chris-prener/censusxy))
