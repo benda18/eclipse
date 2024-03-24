@@ -54,7 +54,9 @@ while(!is_totality & year(start.date) < 3001){
   
   temp.nextobs <- max(when_next$attr[c(1,3)]) # p
   
+  # check to see if total eclipse or partial
   ecl_type <- ifelse(temp.nextobs >= 1, "total", "partial")
+  
   
   if(ecl_type == "total"){
     is_totality <- T
