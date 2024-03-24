@@ -69,6 +69,7 @@ ui <- fluidPage(
         shiny::plotOutput(outputId = "map"),
         wellPanel(
           fluidRow(
+            uiOutput("tab.nasa"),
             uiOutput("tab")
           )
         )
@@ -218,7 +219,14 @@ server <- function(input, output) {
            href="https://nso.edu/for-public/eclipse-map-2024/", 
            target="_blank")
   output$tab <- renderUI({
-    tagList("See Also:", url)
+    tagList(url)
+  })
+  
+  url.nasa <- a("NASA's 2024 Eclipse Website", 
+                href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/", 
+                target = "_blank")
+  output$tab.nasa <- renderUI({
+    tagList(url.nasa)
   })
   
   url.github <- a("GitHub", 
