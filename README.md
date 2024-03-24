@@ -19,13 +19,10 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * shiny: Web Application Framework for R ([link to CRAN](https://cran.r-project.org/web/packages/shiny/index.html)) (https://shiny.posit.co)
 * tigris: Download TIGER/Line shapefiles from the United States Census Bureau ([link to CRAN](https://cran.r-project.org/package=tigris))
 * swephR: High Precision Swiss Ephemeris ([link to CRAN](https://cran.r-project.org/package=swephR))
-* ggmap: spatial visualization with ggplot2 ([link to CRAN](https://cran.r-project.org/package=ggmap))
-* censusxy: easy access to the U.S. Census Bureau Geocoding Tools ([link to github](https://github.com/chris-prener/censusxy))
+* ggmap: spatial visualization with ggplot2 ([link to CRAN](https://cran.r-project.org/package=ggmap)) ([link to D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161.](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf))
+* censusxy: easy access to the U.S. Census Bureau Geocoding Tools ([link to github](https://github.com/chris-prener/censusxy)) ([link to Census Bureau](https://geocoding.geo.census.gov/geocoder/))
 * "Creating open source composite geocoders: Pitfalls and opportunities" by Prener & Fox ([link](https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741))
-* US Census Bureau Geocoding Services API ([link](https://geocoding.geo.census.gov/geocoder/))
-* https://www.r-bloggers.com/2022/06/creating-flowcharts-with-ggplot2/
-* https://shiny.posit.co/
-* D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161. ([link](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf))
+  
 
 ### Other Links
 * [The American Astronomical Society's "Suppliers of Safe Solar Viewers & Filters" list with purchasing links](https://eclipse.aas.org/eye-safety/viewers-filters)
