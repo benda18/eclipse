@@ -49,8 +49,13 @@ ui <- fluidPage(
       #                     label = "Search for Future or Past Eclipse?", 
       #                     choices = list("Future Eclipse(s)" = F,  
       #                                    "Past Eclipse(s)" = T)),
+      shiny::dateInput(inputId = "in_startdate", 
+                       label = "Search From Date", 
+                       value = Sys.Date(), 
+                       min = ymd(18500101), 
+                       max = ymd(21500101)),
       actionButton(inputId = "cxy_go", 
-                   label   = "SEARCH ADDRESS")
+                   label   = "SEARCH")
     ),
     
     # Show a plot of the generated distribution
@@ -71,7 +76,7 @@ server <- function(input, output) {
   })
   
   get_nextSOL <- eventReactive(eventExpr = input$cxy_go, {
-    start.date <- Sys.Date()
+    start.date <- input$in_startdate
     get.addr <- get_cxyinfo()
     var.lon <- unlist(unname(get.addr["coordinates.x"]))
     var.lat <- unlist(unname(get.addr["coordinates.y"]))
