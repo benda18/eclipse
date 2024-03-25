@@ -30,7 +30,7 @@ library(ggmap)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("Total Eclipse of April 8, 2024 - What to Expect from Your Address"),
+  titlePanel("Total Eclipse of April 8, 2024 - What to Expect from Your Location"),
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
