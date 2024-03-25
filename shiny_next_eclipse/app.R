@@ -45,6 +45,10 @@ ui <- fluidPage(
                           choices = list("At Address" = 0, 
                                          "~1 hour drive" = 0.99, 
                                          "~2 hour drive" = 0.98)),
+      shiny::radioButtons(inputId = "radio_bw", 
+                          label = "Search for Future or Past Eclipse?", 
+                          choices = list("Future Eclipse(s)" = F,  
+                                         "Past Eclipse(s)" = T)),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH ADDRESS")
     ),
@@ -61,7 +65,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
- 
+  
 }
 
 # Run the application 
