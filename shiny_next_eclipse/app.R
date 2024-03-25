@@ -34,12 +34,15 @@ ui <- fluidPage(
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
+      wellPanel(
+        fluidRow("<describe webapp>")
+      ),
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Address", 
                        value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
       shiny::sliderInput(inputId = "pctobsc_in", 
                          label = "Mininum Sun Obscuration Percent", 
-                         min = 0, 
+                         min = 80, 
                          max = 100, 
                          step = 1, 
                          animate = T, 
@@ -51,7 +54,9 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      
+      wellPanel(
+        fluidRow("title")
+      )
     )
   )
 )
@@ -59,7 +64,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  
+ 
 }
 
 # Run the application 
