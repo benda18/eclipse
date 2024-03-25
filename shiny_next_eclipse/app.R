@@ -29,17 +29,18 @@ library(glue)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("Find Future Eclipse"),
+  titlePanel("Find the Next Solar and Lunar Eclipse for a Location"),
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
       wellPanel(
-        fluidRow("<describe webapp>")
+        fluidRow("Find the next Solar and Lunar eclipses for any US mailing address. Enter an address and a date to search from (defaults to today) below.")
       ),
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Address", 
-                       value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
+                       #value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
+                       value = "1060 West Addison, Chicago IL"),
       # shiny::radioButtons(inputId = "radio_obsc",
       #                     label = "Search Radius", 
       #                     choices = list("At Address" = 1, 
@@ -57,13 +58,25 @@ ui <- fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       wellPanel(
-        fluidRow("title"), 
         wellPanel(
-          fluidRow(tableOutput(outputId = "return_nextSOL"))  
+          fluidRow(textOutput(outputId = "addr_input")), 
+          fluidRow(textOutput(outputId = "addr_output"))
+        ),
+        
+        wellPanel(
+          fluidRow(div(h4(strong("NEXT SOLAR ECLIPSE")))),
+          fluidRow(tableOutput(outputId = "return_nextSOL")), 
+          #fluidRow(uiOutput(outputId = "tab.nasa"))
         ),
         wellPanel(
+          fluidRow(div(h4(strong("NEXT LUNAR ECLIPSE")))),
           fluidRow(tableOutput(outputId = "return_nextLUN"))
         ),
+        wellPanel(
+          fluidRow(
+            div(h4(strong("How It Works")))
+          )
+        )
       )
     )
   )
@@ -87,8 +100,24 @@ server <- function(input, output) {
     out <- names(out)
     return(out)
   }
+  
+  get_addr_input <- eventReactive(input$cxy_go, {
+    input$addr_in
+  })
+  
+  output$addr_input <- renderText({
+    paste("Address Searched:", get_addr_input(), sep = " ", collapse = " ")
+  })
+  
   get_cxyinfo <- eventReactive(input$cxy_go, {
     censusxy::cxy_oneline(address = input$addr_in)
+  })
+  
+  output$addr_output <- renderText({
+    get.addr   <- get_cxyinfo()
+    paste("Address Returned:", 
+          unlist(unname(get.addr["matchedAddress"])), 
+          sep = " ", collapse = " ")
   })
   
   get_nextLUN <- eventReactive(eventExpr = input$cxy_go, {{
@@ -121,9 +150,9 @@ server <- function(input, output) {
     
     ecl_type <- le_type(when_lunar$attr[1])
     
-    data.frame(date_time = next_lunar, 
-               type = ecl_type, 
-               degrees_above_horizon = round(app_alt_deg,1))
+    data.frame(Date_Time = next_lunar, 
+               Eclipse_Type = ecl_type, 
+               Degrees_Above_Horizon = scales::comma(round(app_alt_deg,digits = 0)))
     
   }})
   output$return_nextLUN <- renderTable({
@@ -152,22 +181,32 @@ server <- function(input, output) {
                                                        z = 10), 
                                             backward = F)
       
-      ecl_date <- strftime(as_date(ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
+      ecl_date <- strftime((ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
                                                  sep = "-", collapse = "-"))), 
-                           format = "%B %d, %Y")
+                           format = "%B %d, %Y at %I:%M%p %Z")
       ecl_type <- ifelse(when_next$attr[2] >= 1, "Total Solar", "Annular Solar")
       ecl_obs  <- when_next$attr[3]
       
-      df_ecl <- data.frame(date = ecl_date, 
-                           type = ecl_type, 
-                           obscuration = scales::percent(floor(ifelse(ecl_obs >=1, 1, ecl_obs)*100)/100))
+      df_ecl <- data.frame(Date_Time = ecl_date, 
+                           Eclipse_Type = ecl_type, 
+                           Percent_of_Sun_Obscured = scales::percent(floor(ifelse(ecl_obs >=1, 1, ecl_obs)*100)/100))
   })
   
   output$return_nextSOL <- renderTable({
     get_nextSOL()
   })
   
+  # # urls
+  # url.nasa <- a("link to this eclipse on Wikipedia", 
+  #               href = glue(""), 
+  #               target = "_blank")
+  # output$tab.nasa <- renderUI({
+  #   tagList(url.nasa)
+  # })
   
+  
+  
+  swe_close()
 }
 
 # Run the application 

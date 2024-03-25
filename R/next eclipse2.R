@@ -131,7 +131,7 @@ data.frame(date_time = next_lunar,
            degrees_above_horizon = round(app_alt_deg,1))
 
 #mag_u <- mag.umb  <- when_lunar$attr[1]
-
+swe_close()
 
 
 
