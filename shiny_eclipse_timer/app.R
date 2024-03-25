@@ -235,7 +235,7 @@ server <- function(input, output) {
   })
   
   url.github <- a("GitHub", 
-                  href = "https://github.com/benda18/eclipse/", 
+                  href = "https://github.com/benda18/eclipse/blob/main/shiny_eclipse_timer/app.R", 
                   target = "_blank")
   output$tab.github <- renderUI({
     tagList(url.github)
