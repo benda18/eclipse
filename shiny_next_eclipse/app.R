@@ -45,10 +45,10 @@ ui <- fluidPage(
                           choices = list("At Address" = 0, 
                                          "~1 hour drive" = 0.99, 
                                          "~2 hour drive" = 0.98)),
-      shiny::radioButtons(inputId = "radio_bw", 
-                          label = "Search for Future or Past Eclipse?", 
-                          choices = list("Future Eclipse(s)" = F,  
-                                         "Past Eclipse(s)" = T)),
+      # shiny::radioButtons(inputId = "radio_bw", 
+      #                     label = "Search for Future or Past Eclipse?", 
+      #                     choices = list("Future Eclipse(s)" = F,  
+      #                                    "Past Eclipse(s)" = T)),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH ADDRESS")
     ),
@@ -57,7 +57,7 @@ ui <- fluidPage(
     mainPanel(
       wellPanel(
         fluidRow("title"), 
-        fluidRow(textOutput(outputId = "return_nextecl"))
+        fluidRow(textOutput(outputId = "return_nextSOL"))
         
       )
     )
@@ -70,7 +70,7 @@ server <- function(input, output) {
     censusxy::cxy_oneline(address = input$addr_in)
   })
   
-  get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
+  get_nextSOL <- eventReactive(eventExpr = input$cxy_go, {
     start.date <- Sys.Date()
     get.addr <- get_cxyinfo()
     var.lon <- unlist(unname(get.addr["coordinates.x"]))
@@ -105,6 +105,8 @@ server <- function(input, output) {
       
       ecl_type <- ifelse(temp.nextobs >= 1, "total", "partial")
       
+      # DO OUR FILTERING HERE
+      
       if(ecl_type == "total"){
         is_totality <- T
       }else{
@@ -122,8 +124,8 @@ server <- function(input, output) {
     glue("Next View of Totality: {next.total.eclipse}")
   })
   
-  output$return_nextecl <- renderText({
-    get_nextecl()
+  output$return_nextSOL <- renderText({
+    get_nextSOL()
   })
   
 }
