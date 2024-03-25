@@ -52,7 +52,14 @@ ui <- fluidPage(
                        min = ymd(18500101), 
                        max = ymd(21500101)),
       actionButton(inputId = "cxy_go", 
-                   label   = "SEARCH")
+                   label   = "SEARCH"), 
+      wellPanel(
+        fluidRow("Developed by Tim Bender"), 
+        fluidRow(uiOutput("tab.linkedin")),
+        fluidRow(uiOutput("tab.github")), 
+        fluidRow("Other Work Examples You Might Enjoy:"), 
+        fluidRow("[COMING SOON]")
+      )
     ),
     
     # Show a plot of the generated distribution
@@ -204,7 +211,19 @@ server <- function(input, output) {
   #   tagList(url.nasa)
   # })
   
+  url.github <- a("GitHub", 
+                  href = "https://github.com/benda18/eclipse/", 
+                  target = "_blank")
+  output$tab.github <- renderUI({
+    tagList(url.github)
+  })
   
+  url.linkedin <- a("LinkedIn", 
+                    href = "www.linkedin.com/in/tim-bender-238870171", 
+                    target = "_blank")
+  output$tab.linkedin <- renderUI({
+    tagList(url.linkedin)
+  })
   
   swe_close()
 }
