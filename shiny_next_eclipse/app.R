@@ -40,11 +40,11 @@ ui <- fluidPage(
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Address", 
                        value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
-      shiny::radioButtons(inputId = "radio_obsc",
-                          label = "Search Radius", 
-                          choices = list("At Address" = 0, 
-                                         "~1 hour drive" = 0.99, 
-                                         "~2 hour drive" = 0.98)),
+      # shiny::radioButtons(inputId = "radio_obsc",
+      #                     label = "Search Radius", 
+      #                     choices = list("At Address" = 1, 
+      #                                    "~1 hour drive" = 0.99, 
+      #                                    "~2 hour drive" = 0.98)),
       # shiny::radioButtons(inputId = "radio_bw", 
       #                     label = "Search for Future or Past Eclipse?", 
       #                     choices = list("Future Eclipse(s)" = F,  
@@ -62,7 +62,8 @@ ui <- fluidPage(
     mainPanel(
       wellPanel(
         fluidRow("title"), 
-        fluidRow(textOutput(outputId = "return_nextSOL"))
+        #fluidRow(textOutput(outputId = "return_nextSOL")),
+        fluidRow(tableOutput(outputId = "return_nextSOL"))
         
       )
     )
@@ -78,16 +79,15 @@ server <- function(input, output) {
   get_nextSOL <- eventReactive(eventExpr = input$cxy_go, {
     start.date <- input$in_startdate
     get.addr <- get_cxyinfo()
-    var.lon <- unlist(unname(get.addr["coordinates.x"]))
-    var.lat <- unlist(unname(get.addr["coordinates.y"]))
+    var.lon <- unlist(unname(get.addr["coordinates.x"])) # -78.9
+    var.lat <- unlist(unname(get.addr["coordinates.y"])) #  36.0
     
-    is_totality <- F
-    n <- 0
-    while(!is_totality & year(start.date) < 3001){
-      n <- n + 1
-      if(n > 2000){
-        stop("too many searches - ERROR")
-      }
+    
+    #df_ecl <- NULL
+    #ecl_found <- F
+    #for(i in 1:10){ # just look for the next 5 
+    #while(start.date <= ymd(21500101)){
+    #while(!ecl_found){
       a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
                                          month = lubridate::month(start.date), 
                                          day   = mday(start.date), 
@@ -103,35 +103,33 @@ server <- function(input, output) {
                                                        z = 10), 
                                             backward = F)
       
-      temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
-                                     sep = "-", collapse = "-"))
-      
-      temp.nextobs <- max(when_next$attr[c(1,3)]) # p
-      
-      ecl_type <- ifelse(temp.nextobs >= 1, "total", "partial")
-      
-      # DO OUR FILTERING HERE
-      
-      if(ecl_type == "total"){
-        is_totality <- T
-      }else{
-        start.date <- as_date(temp.nextdate) + days(2)
-      }
-    }
+      ecl_date <- strftime(as_date(ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
+                                                 sep = "-", collapse = "-"))), 
+                           format = "%B %d, %Y")
+      ## filter for obscuration
+      #if(when_next$attr[3] >= input$radio_obsc){
+        ecl_type <- ifelse(when_next$attr[2] >= 1, "Total Solar", "Annular Solar")
+        ecl_obs  <- when_next$attr[3]
+        
+        df_ecl <- data.frame(date = ecl_date, 
+                                   type = ecl_type, 
+                                   obscuration = scales::percent(floor(ifelse(ecl_obs >=1, 1, ecl_obs)*100)/100))
+      #}
+      #start.date <- ecl_date + days(2)
+      #}
     
-    if(temp.nextobs < 1 & 
-       year(start.date) > 3000){
-      next.total.eclipse <- "Sometime after the year 3000"
-    }else{
-      next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
-    }
     
-    glue("Next View of Totality: {next.total.eclipse}")
+      #df_ecl$date <- as_date(df_ecl$date)
+     
   })
   
-  output$return_nextSOL <- renderText({
+  # output$return_nextSOL <- renderText({
+  #   get_nextSOL()
+  # })
+  output$return_nextSOL <- renderTable({
     get_nextSOL()
   })
+  
   
 }
 
