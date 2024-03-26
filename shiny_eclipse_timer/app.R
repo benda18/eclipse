@@ -39,12 +39,15 @@ ui <- fluidPage(
                        value = "1060 W Addison, Chicago IL"),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH ADDRESS"),
+      
       wellPanel(
         #fluidRow(div(h4(strong("WHAT TO EXPECT:")))),
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
-        fluidRow(div(h5(strong(textOutput(outputId = "return_nextecl")))))
+        fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
+        fluidRow(uiOutput("nextecl_dash")),
       ),
       wellPanel(
+        
         shiny::plotOutput(outputId = "sched"),
       ),
       wellPanel(
@@ -52,8 +55,8 @@ ui <- fluidPage(
           fluidRow("Developed by Tim Bender"), 
           fluidRow(uiOutput("tab.linkedin")),
           fluidRow(uiOutput("tab.github")), 
-          fluidRow("Other Work Examples You Might Enjoy:"), 
-          fluidRow("[COMING SOON]")
+          #fluidRow("Other Work Examples You Might Enjoy:"), 
+          #fluidRow(uiOutput("nextecl_dash"))
         ),
         fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
         wellPanel(
@@ -225,6 +228,13 @@ server <- function(input, output) {
            target="_blank")
   output$tab <- renderUI({
     tagList(url)
+  })
+  
+  url.nextecl_dash <- a("Want to know more? Click here to find the next solar and lunar eclipse for any location at any point in history", 
+                   href="https://tim-bender.shinyapps.io/shiny_next_eclipse/", 
+                   target="_blank")
+  output$nextecl_dash <- renderUI({
+    tagList(url.nextecl_dash)
   })
   
   url.nasa <- a("NASA's 2024 Eclipse Website", 
