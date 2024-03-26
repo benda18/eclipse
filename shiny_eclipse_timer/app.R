@@ -457,7 +457,7 @@ server <- function(input, output) {
     ggplot() + 
       geom_hline(aes(yintercept = 1, 
                      color = "Totality"), 
-                 linetype = 2232)+
+                 linetype = 2, linewidth = 1)+
       geom_line(data = df.sched, 
                    aes(x = time, y = coverage), 
                 linewidth = 1) +
