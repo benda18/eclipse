@@ -25,6 +25,7 @@ Many useful web tools and resources exist to help plan where and when to go to b
 * lubridate: Make Dealing with Dates a Little Easier ([link to CRAN](https://cran.r-project.org/package=lubridate))
 
 ### Other Useful Links
+* https://www.space.com/why-99-percent-totality-does-not-exist-need-to-be-on-total-solar-eclipse-path-april-2024
 * https://www.si.com/extra-mustard/2013/12/30/the-extra-mustard-trivia-hour-when-a-calendar-defeated-russia-in-the-1908-olympics
 * History of the Gregorian Calendar ([from the American National Standards Institute blog](https://blog.ansi.org/2016/02/history-of-standard-gregorian-calendar/))
 * [The American Astronomical Society's "Suppliers of Safe Solar Viewers & Filters" list with purchasing links](https://eclipse.aas.org/eye-safety/viewers-filters)
