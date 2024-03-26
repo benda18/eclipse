@@ -37,7 +37,6 @@ ui <- fluidPage(
                        label = "Enter Address", 
                        value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
                                             "1060 W Addison, Chicago IL",               
-                                            "932 Zion – Mount Carmel Hwy, Springdale, UT", 
                                             "1 Bear Valley Rd, Point Reyes Station, CA",  
                                             "250 E Franklin St, Chapel Hill, NC",          
                                             "100 Joe Nuxhall Wy, Cincinnati, OH",        
@@ -56,7 +55,6 @@ ui <- fluidPage(
                    label   = "SEARCH ADDRESS"),
       
       wellPanel(
-        #fluidRow(div(h4(strong("WHAT TO EXPECT:")))),
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
         fluidRow(uiOutput("nextecl_dash")),
@@ -69,9 +67,7 @@ ui <- fluidPage(
         wellPanel(
           fluidRow("Developed by Tim Bender"), 
           fluidRow(uiOutput("tab.linkedin")),
-          fluidRow(uiOutput("tab.github")), 
-          #fluidRow("Other Work Examples You Might Enjoy:"), 
-          #fluidRow(uiOutput("nextecl_dash"))
+          fluidRow(uiOutput("tab.github"))
         ),
         fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
         wellPanel(
@@ -85,19 +81,8 @@ ui <- fluidPage(
       )
     ),
     mainPanel(
-      # wellPanel(
-      #   fluidRow(div(h4(strong("WHAT TO EXPECT:")))),
-      #   fluidRow(div(h5(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
-      #   fluidRow(div(h5(strong(textOutput(outputId = "return_nextecl")))))
-      # ),
       wellPanel(
         shiny::plotOutput(outputId = "map"),
-        # wellPanel(
-        #   fluidRow(
-        #     uiOutput("tab.nasa"),
-        #     uiOutput("tab")
-        #   )
-        #)
       )
     )
   )
@@ -183,8 +168,6 @@ server <- function(input, output) {
       if(n > 1000){
         stop("error - N")
       }
-      
-      
       end_time <- end_time %m+% minutes(break_mins)
       
       if(end_time < ecl_times2$et){
@@ -320,7 +303,6 @@ server <- function(input, output) {
                                                                   y = lat_in,
                                                                   z = 10), 
                                                     backward = F)$attr[1]
-    
     
     ifelse(sol_cov >= 1, 
            "Within Path of Totality", 

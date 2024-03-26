@@ -42,7 +42,7 @@ ui <- fluidPage(
                        #value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
                        value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
                                             "1060 W Addison, Chicago IL",               
-                                            "932 Zion – Mount Carmel Hwy, Springdale, UT", 
+                                            #"932 Zion – Mount Carmel Hwy, Springdale, UT", 
                                             "1 Bear Valley Rd, Point Reyes Station, CA",  
                                             "250 E Franklin St, Chapel Hill, NC",          
                                             "100 Joe Nuxhall Wy, Cincinnati, OH",        
@@ -89,15 +89,12 @@ ui <- fluidPage(
         wellPanel(
           fluidRow(div(h4(strong("NEXT SOLAR ECLIPSE")))),
           fluidRow(tableOutput(outputId = "return_nextSOL")), 
-          #fluidRow(uiOutput(outputId = "tab.nasa"))
-        ),
+           ),
         wellPanel(
           fluidRow(div(h4(strong("NEXT LUNAR ECLIPSE")))),
           fluidRow(tableOutput(outputId = "return_nextLUN"))
         ),
         wellPanel(
-          # fluidRow(div(h4(strong("How It Works")))),
-          # fluidRow(div(("The mailing address is run through the US Census Bureau's Geocoder API using the censusxy library for R. Longitude and Latitude coordinates are returned, and along with the input date are input into a function from the swephR library that uses a plenetary orbit model from NASA's JPL to calculate dates and times of the next solar and lunar eclipses that will be visible from the input address on or after the input date, as well as other attributes of the eclipses."))), 
           fluidRow(div(h4(strong("A NOTE ON CALENDAR CALCULATIONS")))),
           fluidRow("The modern Gregorian calendar was adopted beginning in AD 1582.  Attempting to reconcile earlier historical events with these types of astronomical calculations at minimum requires additional verification. The scientific effort to perfect the calendar has caused at least 1 country's Olympic delegation to arrive at the contest 2 weeks late, entirely missing out on participating in some events (https://www.si.com/extra-mustard/2013/12/30/the-extra-mustard-trivia-hour-when-a-calendar-defeated-russia-in-the-1908-olympics)." )
         )
@@ -219,14 +216,6 @@ server <- function(input, output) {
   output$return_nextSOL <- renderTable({
     get_nextSOL()
   })
-  
-  # # urls
-  # url.nasa <- a("link to this eclipse on Wikipedia", 
-  #               href = glue(""), 
-  #               target = "_blank")
-  # output$tab.nasa <- renderUI({
-  #   tagList(url.nasa)
-  # })
   
   url.github <- a("GitHub Source Code", 
                   href = "https://github.com/benda18/eclipse/blob/main/shiny_next_eclipse/app.R", 
