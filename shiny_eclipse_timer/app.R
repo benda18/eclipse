@@ -247,7 +247,7 @@ server <- function(input, output) {
     tagList(url)
   })
   
-  url.nextecl_dash <- a("Want to know more? Click here to find the next solar and lunar eclipse for any location at any point in history", 
+  url.nextecl_dash <- a("Want to know more? Click here to find the next solar and lunar eclipse for any location at any point in recent history (today +/- 1000 years)", 
                    href="https://tim-bender.shinyapps.io/shiny_next_eclipse/", 
                    target="_blank")
   output$nextecl_dash <- renderUI({
