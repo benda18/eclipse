@@ -11,8 +11,8 @@ Many useful web tools and resources exist to help plan where and when to go to b
 
 [to be updated]
 
-### Web App 
-https://tim-bender.shinyapps.io/shiny_eclipse_planner/
+### Web Apps 
+[link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_eclipse_planner/)
 
 
 ### Sources
