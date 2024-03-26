@@ -246,7 +246,7 @@ server <- function(input, output) {
     tagList(url.nasa)
   })
   
-  url.github <- a("GitHub", 
+  url.github <- a("GitHub Source Code", 
                   href = "https://github.com/benda18/eclipse/blob/main/shiny_eclipse_timer/app.R", 
                   target = "_blank")
   output$tab.github <- renderUI({
