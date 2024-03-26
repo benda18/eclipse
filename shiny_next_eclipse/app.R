@@ -35,7 +35,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       wellPanel(
-        fluidRow("Find the next Solar and Lunar eclipses for any US mailing address. Enter an address and a date to search from (defaults to today) below.")
+        fluidRow("Find the next Solar and Lunar eclipses for any US mailing address. Enter an address and a date to search from below.")
       ),
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Address", 
