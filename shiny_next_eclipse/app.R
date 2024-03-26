@@ -152,7 +152,7 @@ server <- function(input, output) {
     # https://www.astro.com/swisseph/swephprg.htm#_Toc112948992
     
     next_lunar <- strftime(x = with_tz(ymd_hms(paste(swephR::swe_jdet_to_utc(when_lunar$tret[1], 1), 
-                                             sep = "-", collapse = "-")), tzone = "America/New_York"), 
+                                             sep = "-", collapse = "-"))), 
                            format = "%B %d, %Y at %I:%M%p %Z")
     app_alt_deg <- when_lunar$attr[7]
     
@@ -190,7 +190,7 @@ server <- function(input, output) {
                                             backward = F)
       
       ecl_date <- strftime(with_tz(ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
-                                                 sep = "-", collapse = "-")), tzone = "America/New_York"), 
+                                                 sep = "-", collapse = "-"))), 
                            format = "%B %d, %Y at %I:%M%p %Z")
       ecl_type <- ifelse(when_next$attr[2] >= 1, "Total Solar", "Annular Solar")
       ecl_obs  <- when_next$attr[3]

@@ -435,9 +435,10 @@ server <- function(input, output) {
                  size = 4, color = "white", fill = "red")+
       theme_void()+
       theme(text = element_text(size = 12), 
-            legend.position = "bottom")+
+            legend.position = "bottom", 
+            legend.text = element_text(size = 12))+
       #coord_sf()+
-      scale_color_discrete(name = "Eclipse Path")+
+      scale_color_discrete(name = NULL)+
       labs(title = "Eclipse Path")
   })
   
@@ -453,18 +454,24 @@ server <- function(input, output) {
                          ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
     
     ggplot() + 
-      geom_polygon(data = df.sched, 
+      geom_hline(aes(yintercept = 1, 
+                     color = "Totality"), 
+                 linetype = 2232)+
+      geom_line(data = df.sched, 
                    aes(x = time, y = coverage), 
-                   alpha = 0.5) +
+                size = 1) +
       scale_y_continuous(name = "% of Sun Obscured by Moon", 
                          labels = scales::percent, 
-                         limits = c(0, 1), 
+                         limits = c(0, NA), 
                          breaks = seq(0, 2, by = 0.2))+
       scale_x_datetime(name = "Time (Eastern Daylight Time)", 
                        date_labels = "%I:%M %p %Z", 
                        date_breaks = "30 min", 
                        date_minor_breaks = "15 min")+
-      theme(title = element_text(size = 12), 
+      scale_color_discrete(name = NULL)+
+      theme(legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
       labs(title = "Eclipse Timeline", 
