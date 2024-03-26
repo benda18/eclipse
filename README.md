@@ -22,6 +22,7 @@ https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 * shiny: Web Application Framework for R ([link to CRAN](https://cran.r-project.org/web/packages/shiny/index.html)) (https://shiny.posit.co)
 * tigris: Download TIGER/Line shapefiles from the United States Census Bureau ([link to CRAN](https://cran.r-project.org/package=tigris))
 * lubridate: Make Dealing with Dates a Little Easier ([link to CRAN](https://cran.r-project.org/package=lubridate))
+* https://blog.ansi.org/2016/02/history-of-standard-gregorian-calendar/
 
 ### Other Useful Links
 * [The American Astronomical Society's "Suppliers of Safe Solar Viewers & Filters" list with purchasing links](https://eclipse.aas.org/eye-safety/viewers-filters)
