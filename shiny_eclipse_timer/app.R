@@ -91,7 +91,7 @@ server <- function(input, output) {
   # api keys----
   #stadiamap set api
   
-  apikey <- "5b522e9b-4ea1-4168-b0b9-3294c85af004" # GET YOUR OWN KEY!
+  apikey <- "abcdefghijklmnopqrstuvwxyz0123456789" # GET YOUR OWN KEY!
   
   # NOTE - it is not best practices to keep the api key visible here in your
   # public repo.  Ideally you would save it in a separate file and add that file
@@ -409,21 +409,21 @@ server <- function(input, output) {
   output$map <- renderPlot({
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y", "matchedAddress")]
     
-    usa48.bbox <- c(left   = -124.76307, 
-                    bottom =   24.52310, 
-                    right  = - 66.94989, 
-                    top    =   49.38436)
-    bm.stadia <- get_stadiamap(bbox = usa48.bbox, 
-                               zoom = 4, 
-                               maptype = "stamen_terrain",#"stamen_toner_lite",                            
-                               crop = T, 
-                               color = "color",
-                               force = T,
-                               size = 1.04)
-    ggmap(bm.stadia)+
-      #ggplot() + 
-      # geom_sf(data = usa.states, 
-      #         fill = "dark grey", color = "white")+
+    # usa48.bbox <- c(left   = -124.76307, 
+    #                 bottom =   24.52310, 
+    #                 right  = - 66.94989, 
+    #                 top    =   49.38436)
+    # bm.stadia <- get_stadiamap(bbox = usa48.bbox, 
+    #                            zoom = 4, 
+    #                            maptype = "stamen_terrain",#"stamen_toner_lite",                            
+    #                            crop = T, 
+    #                            color = "color",
+    #                            force = T,
+    #                            size = 1.04)
+    # ggmap(bm.stadia)+
+      ggplot() +
+      geom_sf(data = usa.states,
+              fill = "dark grey", color = "white")+
       geom_path(data = all.paths[all.paths$yr <= 2024,], 
                 aes(x = lon, y = lat, color = factor(yr)), 
                 linewidth = 2)+
