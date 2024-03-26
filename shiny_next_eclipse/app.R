@@ -49,8 +49,8 @@ ui <- fluidPage(
       shiny::dateInput(inputId = "in_startdate", 
                        label = "Search From Date", 
                        value = Sys.Date(), 
-                       min = ymd(18500101), 
-                       max = ymd(21500101)),
+                       min = ymd(10000101), #ymd(18500101), 
+                       max = ymd(30001231)), #ymd(21500101)),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH"), 
       wellPanel(
@@ -83,7 +83,8 @@ ui <- fluidPage(
           fluidRow(
             div(h4(strong("How It Works")))
           ),
-          fluidRow(div(("The mailing address is run through the US Census Bureau's Geocoder API using the censusxy library for R. Longitude and Latitude coordinates are returned, and along with the input date are input into a function from the swephR library that uses a plenetary orbit model from NASA's JPL to calculate dates and times of the next solar and lunar eclipses that will be visible from the input address on or after the input date, as well as other attributes of the eclipses.")))
+          fluidRow(div(("The mailing address is run through the US Census Bureau's Geocoder API using the censusxy library for R. Longitude and Latitude coordinates are returned, and along with the input date are input into a function from the swephR library that uses a plenetary orbit model from NASA's JPL to calculate dates and times of the next solar and lunar eclipses that will be visible from the input address on or after the input date, as well as other attributes of the eclipses."))), 
+          fluidRow("NOTE: The modern Gregorian calendar was adopted beginning in AD 1582.  Attempting to reconcile earlier historical events with these types of astronomical calculations at minimum requires additional verification and at worse can be erroneous." )
         )
       )
     )
