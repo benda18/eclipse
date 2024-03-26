@@ -62,6 +62,8 @@ ui <- fluidPage(
         wellPanel(
           fluidRow("RESOURCES"),
           fluidRow(uiOutput("tab.res2")),
+          fluidRow(uiOutput("tab.nasa")),
+          fluidRow(uiOutput("tab")),
           fluidRow("SOURCES"),
           fluidRow(uiOutput("tab.res"))
         ),
@@ -75,12 +77,12 @@ ui <- fluidPage(
       # ),
       wellPanel(
         shiny::plotOutput(outputId = "map"),
-        wellPanel(
-          fluidRow(
-            uiOutput("tab.nasa"),
-            uiOutput("tab")
-          )
-        )
+        # wellPanel(
+        #   fluidRow(
+        #     uiOutput("tab.nasa"),
+        #     uiOutput("tab")
+        #   )
+        #)
       )
     )
   )
