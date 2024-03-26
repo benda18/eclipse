@@ -207,7 +207,7 @@ server <- function(input, output) {
                       coverage = ecsuncov)
     
     out[nrow(out),]$coverage <- 0
-    out$coverage[out$coverage >= 1] <- 1.14
+    #out$coverage[out$coverage >= 1] <- 1.14
     return(out)
   }
   # other stuff---
@@ -362,7 +362,8 @@ server <- function(input, output) {
        year(start.date) > 3000){
       next.total.eclipse <- "Sometime after the year 3000"
     }else{
-      next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
+      next.total.eclipse <-  strftime(start.date - days(2),  # had to subtract 2 days bc calculations were off by 2 due to way logic progressed above 
+                                      format = "%B %d, %Y")
     }
     
     glue("Next View of Totality: {next.total.eclipse}")
