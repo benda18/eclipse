@@ -93,7 +93,7 @@ server <- function(input, output) {
   # api keys----
   #stadiamap set api
   
-  apikey <- "abcdefghijklmnopqrstuvwxyz0123456789" # GET YOUR OWN KEY!
+  #apikey <- "abcdefghijklmnopqrstuvwxyz0123456789" # GET YOUR OWN KEY!
   
   # NOTE - it is not best practices to keep the api key visible here in your
   # public repo.  Ideally you would save it in a separate file and add that file
@@ -107,7 +107,7 @@ server <- function(input, output) {
   # projects like this and if at some point in the future I change my mind I can
   # implement a more secure setup.
   
-  register_stadiamaps(key = apikey, write = FALSE)
+  #register_stadiamaps(key = apikey, write = FALSE)
   
   
   # funs----
@@ -158,8 +158,8 @@ server <- function(input, output) {
     ecl_times2 <- as.vector(ecl_times)
     
     break_mins <- 10
-    end_time <- ecl_times2$st 
-    n        <- 0
+    end_time   <- ecl_times2$st 
+    n          <- 0
     
     out.times <- unlist(unname(ecl_times2))
     
@@ -178,7 +178,7 @@ server <- function(input, output) {
       }
     }
     
-    out.times <- with_tz(as_datetime(sort(unique(out.times))), tzone = "America/New_York") 
+    out.times <- with_tz(as_datetime(sort(unique(out.times))), tzone = "America/New_York")  
     
     # / start, max, end
     ecsched.times <- out.times
@@ -449,8 +449,8 @@ server <- function(input, output) {
     # undesirable behavior happening here - if censusxy does not find an
     # appropriate address, a null value gets input into the function below
     
-    df.sched <- ec_sched(addr.coords$coordinates.x, 
-                         addr.coords$coordinates.y, 
+    df.sched <- ec_sched(unname(unlist(addr.coords$coordinates.x)), 
+                         unname(unlist(addr.coords$coordinates.y)), 
                          ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
     
     ggplot() + 
@@ -459,7 +459,7 @@ server <- function(input, output) {
                  linetype = 2232)+
       geom_line(data = df.sched, 
                    aes(x = time, y = coverage), 
-                size = 1) +
+                linewidth = 1) +
       scale_y_continuous(name = "% of Sun Obscured by Moon", 
                          labels = scales::percent, 
                          limits = c(0, NA), 
@@ -475,7 +475,7 @@ server <- function(input, output) {
             axis.text.y = element_text(size = 12), 
             axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
       labs(title = "Eclipse Timeline", 
-           subtitle = addr.coords$matchedAddress)
+           subtitle = unname(unlist(addr.coords$matchedAddress)))
   })
   
 }
