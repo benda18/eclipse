@@ -24,7 +24,7 @@ Many useful web tools and resources exist to help plan where and when to go to b
 * lubridate: Make Dealing with Dates a Little Easier ([link to CRAN](https://cran.r-project.org/package=lubridate))
 
 ### Other Useful Links
-* History of the Gregorian Calendar ([link to ANSI blog](https://blog.ansi.org/2016/02/history-of-standard-gregorian-calendar/))
+* History of the Gregorian Calendar ([from the American National Standards Institute blog](https://blog.ansi.org/2016/02/history-of-standard-gregorian-calendar/))
 * [The American Astronomical Society's "Suppliers of Safe Solar Viewers & Filters" list with purchasing links](https://eclipse.aas.org/eye-safety/viewers-filters)
 * [National Solar Observatory interactive eclipse map](https://nso.edu/for-public/eclipse-map-2024/)
 * [NASA's 2024 Eclipse Website](https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/)
