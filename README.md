@@ -17,6 +17,7 @@ Many useful web tools and resources exist to help plan where and when to go to b
 
 
 ### Sources
+* https://www.linkedin.com/pulse/building-simple-eclipse-planning-tool-tim-bender-e0hrf
 * swephR: High Precision Swiss Ephemeris ([link to CRAN](https://cran.r-project.org/package=swephR))
 * ggmap: spatial visualization with ggplot2 ([link to CRAN](https://cran.r-project.org/package=ggmap)) ([link to D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161.](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf))
 * censusxy: easy access to the U.S. Census Bureau Geocoding Tools ([link to github](https://github.com/chris-prener/censusxy)) ([link to Census Bureau](https://geocoding.geo.census.gov/geocoder/)) ([link to "Creating open source composite geocoders: Pitfalls and opportunities" by Prener & Fox](https://onlinelibrary.wiley.com/doi/abs/10.1111/tgis.12741))
