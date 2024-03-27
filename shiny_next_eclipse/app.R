@@ -23,7 +23,7 @@ library(glue)
 
 # renv::status()
 # renv::snapshot()
-
+#https://stackoverflow.com/questions/49190820/create-data-set-from-clicks-in-shiny-ggplot
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -41,22 +41,22 @@ ui <- fluidPage(
         fluidRow(textOutput(outputId = "lon_id")), 
         fluidRow(textOutput(outputId = "lat_id"))
       ),
-      shiny::numericInput(inputId = "lon_in", 
-                          label = "Longitude(x)", 
-                          value = 0, 
-                          min = -180, 
-                          max = 180),
-      shiny::numericInput(inputId = "lat_in", 
-                          label = "Latitude(y)", 
-                          value = 0, 
-                          min = -90, 
-                          max = 90),
+      # shiny::numericInput(inputId = "lon_in", 
+      #                     label = "Longitude(x)", 
+      #                     value = -79, 
+      #                     min = -180, 
+      #                     max = 180),
+      # shiny::numericInput(inputId = "lat_in", 
+      #                     label = "Latitude(y)", 
+      #                     value = 35.5, 
+      #                     min = -90, 
+      #                     max = 90),
       # [hold for] obscuration filter----
       shiny::radioButtons(inputId = "radio_obsc",
                           label = "Search Radius",
                           choices = list("At Address (i.e. Within Totality)" = 1,
-                                         "~1 hr drive (> ~99% Sun Obscured)" = 0.99,
-                                         "~2 hr drive (> ~98% Sun Obscured)" = 0.98)),
+                                         "~1 hr drive (~99+% Sun Obscured)" = 0.99,
+                                         "~2 hr drive (~98+% Sun Obscured)" = 0.98)),
       shiny::dateInput(inputId = "in_startdate", 
                        label = "Search From Date", 
                        value = Sys.Date(), 
@@ -79,7 +79,8 @@ ui <- fluidPage(
     mainPanel(
       wellPanel(
         wellPanel(
-          plotOutput(outputId = "map_xy")
+          plotOutput(outputId = "map_xy", 
+                     click = clickOpts(id = "plot_click"))
         ),
         wellPanel(
           fluidRow(div(h4(strong("NEXT SOLAR ECLIPSE")))),
@@ -116,16 +117,20 @@ server <- function(input, output) {
   
   # print lon and lat inputs----
   output$lon_id <- renderText({
-    input$lon_in
+    #input$lon_in
+    unlist(input$plot_click["x"])
   })
   output$lat_id <- renderText({
-    input$lat_in
+    #input$lat_in
+    unlist(input$plot_click["y"])
   })
   
   output$return_nextLUN <- renderTable({
     start.date <- input$in_startdate
-    var.lon    <- input$lon_in
-    var.lat    <- input$lat_in
+    # var.lon    <- input$lon_in
+    var.lon    <- as.numeric(unlist(input$plot_click["x"]))
+    # var.lat    <- input$lat_in
+    var.lat    <- as.numeric(unlist(input$plot_click["y"]))
     a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
                                        month = lubridate::month(start.date), 
                                        day   = mday(start.date), 
@@ -157,8 +162,10 @@ server <- function(input, output) {
   
   output$return_nextSOL <- renderTable({
     start.date <- input$in_startdate
-    var.lon   <- input$lon_in
-    var.lat   <- input$lat_in
+    # var.lon    <- input$lon_in
+    var.lon    <- as.numeric(unlist(input$plot_click["x"]))
+    # var.lat    <- input$lat_in
+    var.lat    <- as.numeric(unlist(input$plot_click["y"]))
     a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
                                        month = lubridate::month(start.date), 
                                        day   = mday(start.date), 
@@ -201,9 +208,11 @@ server <- function(input, output) {
   })
   
   output$map_xy <- renderPlot({
-    ggplot() + 
+    plot <- ggplot() + 
       geom_sf(data = usa.states)+
       theme_void()
+    
+    plot
   })
   
   
