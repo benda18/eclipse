@@ -47,6 +47,7 @@ ui <- fluidPage(
                           value = 0, 
                           min = -90, 
                           max = 90),
+      # [hold for] obscuration filter----
       # shiny::radioButtons(inputId = "radio_obsc",
       #                     label = "Search Radius", 
       #                     choices = list("At Address" = 1, 
@@ -57,8 +58,6 @@ ui <- fluidPage(
                        value = Sys.Date(), 
                        min = ymd(10000101), 
                        max = ymd(30001231)), 
-      # actionButton(inputId = "cxy_go", 
-      #              label   = "SEARCH"), 
       wellPanel(
         fluidRow("Developed by Tim Bender"), 
         fluidRow(uiOutput("tab.linkedin")),
