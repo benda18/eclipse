@@ -71,10 +71,6 @@ ui <- fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       wellPanel(
-        # wellPanel(
-        #   fluidRow(textOutput(outputId = "addr_input")), 
-        #   fluidRow(textOutput(outputId = "addr_output"))
-        # ),
         wellPanel(
           fluidRow(textOutput(outputId = "lon_id")), 
           fluidRow(textOutput(outputId = "lat_id"))
@@ -116,82 +112,18 @@ server <- function(input, output) {
   }
   
   
-  # get_addr_input <- eventReactive(input$cxy_go, {
-  #   input$addr_in
-  # })
-  
-  # output$addr_input <- renderText({
-  #   paste("Address Searched:", get_addr_input(), sep = " ", collapse = " ")
-  # })
-  
-  # get_cxyinfo <- eventReactive(input$cxy_go, {
-  #   censusxy::cxy_oneline(address = input$addr_in)
-  # })
-  
   # print lon and lat inputs----
   output$lon_id <- renderText({
-    #get_cxyinfo()["coordinates.x"] |> unlist()
     input$lon_in
   })
   output$lat_id <- renderText({
-    #get_cxyinfo()["coordinates.y"] |> unlist()
     input$lat_in
   })
   
-  # output$addr_output <- renderText({
-  #   get.addr   <- get_cxyinfo()
-  #   paste("Address Returned:", 
-  #         unlist(unname(get.addr["matchedAddress"])), 
-  #         sep = " ", collapse = " ")
-  # })
-  
-  # get_nextLUN <- eventReactive(eventExpr = input$cxy_go, {
-  #   start.date <- input$in_startdate
-  #   #get.addr   <- get_cxyinfo()
-  #   #var.lon    <- unlist(unname(get.addr["coordinates.x"])) # -78.9
-  #   var.lon    <- input$lon_in
-  #   #var.lat    <- unlist(unname(get.addr["coordinates.y"])) #  36.0
-  #   var.lat    <- input$lat_in
-  #   
-  #   a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
-  #                                      month = lubridate::month(start.date), 
-  #                                      day   = mday(start.date), 
-  #                                      houri = 0, 
-  #                                      min   = 30, 
-  #                                      sec   = 0, 
-  #                                      gregflag = 1)$dret[2]
-  #   
-  #   when_lunar <- swephR::swe_lun_eclipse_when_loc(jd_start = a.date.ju, 
-  #                                                  ephe_flag = 4, 
-  #                                                  geopos = c(x = var.lon, 
-  #                                                             y = var.lat, 
-  #                                                             z = 10), 
-  #                                                  backward = F)
-  #   
-  #   # https://www.astro.com/swisseph/swephprg.htm#_Toc112948992
-  #   
-  #   next_lunar <- strftime(x = with_tz(ymd_hms(paste(swephR::swe_jdet_to_utc(when_lunar$tret[1], 1), 
-  #                                            sep = "-", collapse = "-"))), 
-  #                          format = "%B %d, %Y at %I:%M%p %Z")
-  #   app_alt_deg <- when_lunar$attr[7]
-  #   
-  #   ecl_type <- le_type(when_lunar$attr[1])
-  #   
-  #   data.frame(Date_Time = next_lunar, 
-  #              Eclipse_Type = ecl_type, 
-  #              Degrees_Above_Horizon = scales::comma(round(app_alt_deg,digits = 0)))
-  #   
-  # })
   output$return_nextLUN <- renderTable({
-    #get_nextLUN()
-    
     start.date <- input$in_startdate
-    #get.addr   <- get_cxyinfo()
-    #var.lon    <- unlist(unname(get.addr["coordinates.x"])) # -78.9
     var.lon    <- input$lon_in
-    #var.lat    <- unlist(unname(get.addr["coordinates.y"])) #  36.0
     var.lat    <- input$lat_in
-    
     a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
                                        month = lubridate::month(start.date), 
                                        day   = mday(start.date), 
@@ -221,49 +153,10 @@ server <- function(input, output) {
                Degrees_Above_Horizon = scales::comma(round(app_alt_deg,digits = 0)))
   })
   
-  # get_nextSOL <- eventReactive(eventExpr = input$cxy_go, {
-  #   start.date <- input$in_startdate
-  #   # get.addr <- get_cxyinfo()
-  #   # var.lon <- unlist(unname(get.addr["coordinates.x"])) # -78.9
-  #   # var.lat <- unlist(unname(get.addr["coordinates.y"])) #  36.0
-  #   var.lon   <- input$lon_in
-  #   var.lat   <- input$lat_in
-  #   
-  #   a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
-  #                                        month = lubridate::month(start.date), 
-  #                                        day   = mday(start.date), 
-  #                                        houri = 0, 
-  #                                        min   = 30, 
-  #                                        sec   = 0, 
-  #                                        gregflag = 1)$dret[2]
-  #     
-  #     when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
-  #                                           ephe_flag = 4, 
-  #                                           geopos = c(x = var.lon, 
-  #                                                      y = var.lat, 
-  #                                                      z = 10), 
-  #                                           backward = F)
-  #     
-  #     ecl_date <- strftime(with_tz(ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
-  #                                                sep = "-", collapse = "-"))), 
-  #                          format = "%B %d, %Y at %I:%M%p %Z")
-  #     ecl_type <- ifelse(when_next$attr[2] >= 1, "Total Solar", "Annular Solar")
-  #     ecl_obs  <- when_next$attr[3]
-  #     
-  #     df_ecl <- data.frame(Date_Time = ecl_date, 
-  #                          Eclipse_Type = ecl_type, 
-  #                          Percent_of_Sun_Obscured = scales::percent(floor(ifelse(ecl_obs >=1, 1, ecl_obs)*100)/100))
-  # })
-  
   output$return_nextSOL <- renderTable({
-    #get_nextSOL()
     start.date <- input$in_startdate
-    # get.addr <- get_cxyinfo()
-    # var.lon <- unlist(unname(get.addr["coordinates.x"])) # -78.9
-    # var.lat <- unlist(unname(get.addr["coordinates.y"])) #  36.0
     var.lon   <- input$lon_in
     var.lat   <- input$lat_in
-    
     a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
                                        month = lubridate::month(start.date), 
                                        day   = mday(start.date), 
