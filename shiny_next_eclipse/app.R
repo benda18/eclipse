@@ -70,7 +70,6 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      
       wellPanel(
         # wellPanel(
         #   fluidRow(textOutput(outputId = "addr_input")), 
@@ -90,7 +89,7 @@ ui <- fluidPage(
         ),
         wellPanel(
           fluidRow(div(h4(strong("A NOTE ON CALENDAR CALCULATIONS")))),
-          fluidRow("The modern Gregorian calendar was adopted beginning in AD 1582.  Attempting to reconcile earlier historical events with these types of astronomical calculations at minimum requires additional verification. The scientific effort to perfect the calendar has caused at least 1 country's Olympic delegation to arrive at the contest 2 weeks late, entirely missing out on participating in some events (https://www.si.com/extra-mustard/2013/12/30/the-extra-mustard-trivia-hour-when-a-calendar-defeated-russia-in-the-1908-olympics)." )
+          fluidRow("Reconciling historical events with these types of astronomical calculations at minimum requires additional verification." )
         )
       )
     )
