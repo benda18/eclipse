@@ -82,8 +82,6 @@ ui <- fluidPage(
         wellPanel(
           fluidRow(div(h4(strong("NEXT SOLAR ECLIPSE")))),
           fluidRow(tableOutput(outputId = "return_nextSOL")), 
-           ),
-        wellPanel(
           fluidRow(div(h4(strong("NEXT LUNAR ECLIPSE")))),
           fluidRow(tableOutput(outputId = "return_nextLUN"))
         )
