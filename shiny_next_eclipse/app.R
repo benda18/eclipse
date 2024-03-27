@@ -37,6 +37,10 @@ ui <- fluidPage(
       wellPanel(
         fluidRow("Find the next Solar and Lunar eclipses by clicking on the map")
       ),
+      wellPanel(
+        fluidRow(textOutput(outputId = "lon_id")), 
+        fluidRow(textOutput(outputId = "lat_id"))
+      ),
       shiny::numericInput(inputId = "lon_in", 
                           label = "Longitude(x)", 
                           value = 0, 
@@ -75,8 +79,7 @@ ui <- fluidPage(
     mainPanel(
       wellPanel(
         wellPanel(
-          fluidRow(textOutput(outputId = "lon_id")), 
-          fluidRow(textOutput(outputId = "lat_id"))
+          plotOutput(outputId = "map_xy")
         ),
         wellPanel(
           fluidRow(div(h4(strong("NEXT SOLAR ECLIPSE")))),
@@ -91,6 +94,8 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  usa.states <- readRDS("usastates.rds")
+  
   le_type <- function(mag_u){
     # total 
     tot_ecl <- mag_u >= 1
@@ -194,6 +199,13 @@ server <- function(input, output) {
   output$tab.linkedin <- renderUI({
     tagList(url.linkedin)
   })
+  
+  output$map_xy <- renderPlot({
+    ggplot() + 
+      geom_sf(data = usa.states)+
+      theme_void()
+  })
+  
   
   swe_close()
 }
