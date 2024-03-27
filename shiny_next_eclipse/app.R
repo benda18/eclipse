@@ -70,16 +70,16 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
+      
       wellPanel(
-        fluidRow(textOutput(outputId = "lon_id")), 
-        fluidRow(textOutput(outputId = "lat_id"))
-      ),
-      wellPanel(
+        # wellPanel(
+        #   fluidRow(textOutput(outputId = "addr_input")), 
+        #   fluidRow(textOutput(outputId = "addr_output"))
+        # ),
         wellPanel(
-          fluidRow(textOutput(outputId = "addr_input")), 
-          fluidRow(textOutput(outputId = "addr_output"))
+          fluidRow(textOutput(outputId = "lon_id")), 
+          fluidRow(textOutput(outputId = "lat_id"))
         ),
-        
         wellPanel(
           fluidRow(div(h4(strong("NEXT SOLAR ECLIPSE")))),
           fluidRow(tableOutput(outputId = "return_nextSOL")), 
