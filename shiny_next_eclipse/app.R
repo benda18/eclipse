@@ -35,7 +35,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       wellPanel(
-        fluidRow("Find the next Solar and Lunar eclipses for any US mailing address. Enter an address and a date to search from below.")
+        fluidRow("Find the next Solar and Lunar eclipses by clicking on the map")
       ),
       shiny::numericInput(inputId = "lon_in", 
                           label = "Longitude(x)", 
@@ -65,6 +65,10 @@ ui <- fluidPage(
         fluidRow(uiOutput("tab.github")), 
         fluidRow("Other Work Examples You Might Enjoy:"), 
         fluidRow("[COMING SOON]")
+      ),
+      wellPanel(
+        fluidRow(div(h4(strong("A NOTE ON CALENDAR CALCULATIONS")))),
+        fluidRow("Reconciling historical events with these types of astronomical calculations at minimum requires additional verification." )
       )
     ),
     
@@ -82,10 +86,6 @@ ui <- fluidPage(
         wellPanel(
           fluidRow(div(h4(strong("NEXT LUNAR ECLIPSE")))),
           fluidRow(tableOutput(outputId = "return_nextLUN"))
-        ),
-        wellPanel(
-          fluidRow(div(h4(strong("A NOTE ON CALENDAR CALCULATIONS")))),
-          fluidRow("Reconciling historical events with these types of astronomical calculations at minimum requires additional verification." )
         )
       )
     )
