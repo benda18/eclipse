@@ -37,26 +37,16 @@ ui <- fluidPage(
       wellPanel(
         fluidRow("Find the next Solar and Lunar eclipses for any US mailing address. Enter an address and a date to search from below.")
       ),
-      shiny::textInput(inputId = "addr_in", 
-                       label = "Enter Address", 
-                       #value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
-                       value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
-                                            "1060 W Addison, Chicago IL",               
-                                            #"932 Zion – Mount Carmel Hwy, Springdale, UT", 
-                                            "1 Bear Valley Rd, Point Reyes Station, CA",  
-                                            "250 E Franklin St, Chapel Hill, NC",          
-                                            "100 Joe Nuxhall Wy, Cincinnati, OH",        
-                                            "281 W Lane Ave, Columbus, OH",               
-                                            "300 Alamo Plaza, San Antonio, TX",           
-                                            "2634 Main St, Lake Placid, NY",             
-                                            "1047 Main St, Buffalo, NY" ,                 
-                                            "2610 University Cir, Cincinnati, OH",     
-                                            "3159 W 11th St, Cleveland, OH",              
-                                            "4001 W 2nd St, Roswell, NM",              
-                                            "926 E McLemore Ave, Memphis, TN",           
-                                            "369 Central Ave, Hot Springs, AR",         
-                                            "4790 W 16th St, Indianapolis, IN"), 
-                                      size = 1)),
+      shiny::numericInput(inputId = "lon_in", 
+                          label = "Longitude(x)", 
+                          value = 0, 
+                          min = -180, 
+                          max = 180),
+      shiny::numericInput(inputId = "lat_in", 
+                          label = "Latitude(y)", 
+                          value = 0, 
+                          min = -90, 
+                          max = 90),
       # shiny::radioButtons(inputId = "radio_obsc",
       #                     label = "Search Radius", 
       #                     choices = list("At Address" = 1, 
@@ -65,10 +55,10 @@ ui <- fluidPage(
       shiny::dateInput(inputId = "in_startdate", 
                        label = "Search From Date", 
                        value = Sys.Date(), 
-                       min = ymd(10000101), #ymd(18500101), 
-                       max = ymd(30001231)), #ymd(21500101)),
-      actionButton(inputId = "cxy_go", 
-                   label   = "SEARCH"), 
+                       min = ymd(10000101), 
+                       max = ymd(30001231)), 
+      # actionButton(inputId = "cxy_go", 
+      #              label   = "SEARCH"), 
       wellPanel(
         fluidRow("Developed by Tim Bender"), 
         fluidRow(uiOutput("tab.linkedin")),
@@ -80,6 +70,10 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
+      wellPanel(
+        fluidRow(textOutput(outputId = "lon_id")), 
+        fluidRow(textOutput(outputId = "lat_id"))
+      ),
       wellPanel(
         wellPanel(
           fluidRow(textOutput(outputId = "addr_input")), 
@@ -122,6 +116,7 @@ server <- function(input, output) {
     return(out)
   }
   
+  
   get_addr_input <- eventReactive(input$cxy_go, {
     input$addr_in
   })
@@ -134,12 +129,20 @@ server <- function(input, output) {
     censusxy::cxy_oneline(address = input$addr_in)
   })
   
-  output$addr_output <- renderText({
-    get.addr   <- get_cxyinfo()
-    paste("Address Returned:", 
-          unlist(unname(get.addr["matchedAddress"])), 
-          sep = " ", collapse = " ")
+  # print lon and lat inputs----
+  output$lon_id <- renderText({
+    get_cxyinfo()["coordinates.x"] |> unlist()
   })
+  output$lat_id <- renderText({
+    get_cxyinfo()["coordinates.y"] |> unlist()
+  })
+  
+  # output$addr_output <- renderText({
+  #   get.addr   <- get_cxyinfo()
+  #   paste("Address Returned:", 
+  #         unlist(unname(get.addr["matchedAddress"])), 
+  #         sep = " ", collapse = " ")
+  # })
   
   get_nextLUN <- eventReactive(eventExpr = input$cxy_go, {{
     start.date <- input$in_startdate
