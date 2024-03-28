@@ -150,7 +150,7 @@ server <- function(input, output) {
   output$return_nextSOL <- renderTable({
     start.date <- input$in_startdate
     
-    # working.date <- start.date
+    working.date <- start.date
     # 
     # while(F == T){
     #   
