@@ -41,17 +41,6 @@ ui <- fluidPage(
         fluidRow(textOutput(outputId = "lon_id")), 
         fluidRow(textOutput(outputId = "lat_id"))
       ),
-      # shiny::numericInput(inputId = "lon_in", 
-      #                     label = "Longitude(x)", 
-      #                     value = -79, 
-      #                     min = -180, 
-      #                     max = 180),
-      # shiny::numericInput(inputId = "lat_in", 
-      #                     label = "Latitude(y)", 
-      #                     value = 35.5, 
-      #                     min = -90, 
-      #                     max = 90),
-      # [hold for] obscuration filter----
       shiny::radioButtons(inputId = "radio_obsc",
                           label = "Search Radius",
                           choices = list("At Address (i.e. Within Totality)" = 1,
@@ -74,8 +63,6 @@ ui <- fluidPage(
         fluidRow("Reconciling historical events with these types of astronomical calculations at minimum requires additional verification." )
       )
     ),
-    
-    # Show a plot of the generated distribution
     mainPanel(
       wellPanel(
         wellPanel(
@@ -162,13 +149,20 @@ server <- function(input, output) {
   
   output$return_nextSOL <- renderTable({
     start.date <- input$in_startdate
+    
+    # working.date <- start.date
+    # 
+    # while(F == T){
+    #   
+    # }
+    
     # var.lon    <- input$lon_in
     var.lon    <- as.numeric(unlist(input$plot_click["x"]))
     # var.lat    <- input$lat_in
     var.lat    <- as.numeric(unlist(input$plot_click["y"]))
-    a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
-                                       month = lubridate::month(start.date), 
-                                       day   = mday(start.date), 
+    a.date.ju <- swephR::swe_utc_to_jd(year = year(working.date), 
+                                       month = lubridate::month(working.date), 
+                                       day   = mday(working.date), 
                                        houri = 0, 
                                        min   = 30, 
                                        sec   = 0, 
