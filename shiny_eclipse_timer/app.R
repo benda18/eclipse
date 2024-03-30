@@ -442,13 +442,22 @@ server <- function(input, output) {
                                                                gregflag = 1), 
                                        sep = "-", collapse = "-")), 
                          tz = "America/New_York")
-    out.time.dec <- as.numeric(tot_end - tot_start)
+    out.time.dec <- tot_end - tot_start
     
-    out.time <- c("mins" = floor(out.time.dec), 
-                  "secs" = floor((out.time.dec - floor(out.time.dec))*60))
+    if(attributes(out.time.dec)$units == "mins"){
+      out.time.dec <- as.numeric(out.time.dec)
+      out.time <- c("mins" = floor(out.time.dec), 
+                    "secs" = floor((out.time.dec - floor(out.time.dec))*60))
+    }else{
+      out.time <- c("mins" = "00", 
+                    "secs" = as.character(abs(floor(as.numeric(out.time.dec)))))
+    }
+    
+    #out.time <- ifelse(out.time == "00:0", "00:00", out.time)
     
     out <- paste(out.time, sep = ":", collapse = ":")
-    paste("Length of Totality (mins): ", out, sep = "", collapse = "")
+    ifelse(out == "00:0", "", paste("Length of Totality (mm:ss): ", out, sep = "", collapse = ""))
+    
     })
   
   output$return_tot.dur <- renderText({
