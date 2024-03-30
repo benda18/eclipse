@@ -55,6 +55,7 @@ ui <- fluidPage(
                    label   = "SEARCH ADDRESS"),
       
       wellPanel(
+        fluidRow(textOutput(outputId = "return_tot.dur")),
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
         fluidRow(uiOutput("nextecl_dash")),
@@ -296,6 +297,8 @@ server <- function(input, output) {
                                           (second(greg_dt.utc)/60/60), 
                                         gregflag = 1)
     
+    # tret 3 & 4 = begin and end of totality
+    
     # do eclipse math
     sol_cov     <- swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
                                                     ephe_flag = 4, 
@@ -309,9 +312,9 @@ server <- function(input, output) {
            "Outside Path of Totality")
     
   })
-  output$return_totality <- renderText({
-    get_totality()
-  })
+  # output$return_totality <- renderText({
+  #   get_totality()
+  # })
   
   get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
     start.date <- ymd(20240409)
@@ -400,6 +403,67 @@ server <- function(input, output) {
     sol_cov <- ifelse(sol_cov > 1, 1, sol_cov)
     glue("{ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
   })
+  
+  get_tot.dur <- eventReactive(eventExpr = input$cxy_go, {
+    #if(as.numeric(gsub("%", "", x = get_suncov())) >= 100){
+    #out <- "yes"
+    start.datetime <- ymd_hms("2024-04-07 08:30:00", tz = "America/New_York")
+    get.addr <- get_cxyinfo()
+    var.lon <- unlist(unname(get.addr["coordinates.x"]))
+    var.lat <- unlist(unname(get.addr["coordinates.y"]))
+    
+    greg_dt.local <- start.datetime
+    tz.local      <- tz(greg_dt.local)
+    
+    # do the time conversions
+    # convert to utc
+    greg_dt.utc <- with_tz(greg_dt.local, tz = "UTC")
+    jul_dt.utc  <- swephR::swe_julday(year  = year(greg_dt.utc), 
+                                      month = lubridate::month(greg_dt.utc, label = F), 
+                                      day   = mday(greg_dt.utc), 
+                                      hourd = hour(greg_dt.utc) + 
+                                        (minute(greg_dt.utc)/60) + 
+                                        (second(greg_dt.utc)/60/60), 
+                                      gregflag = 1)
+    
+    out.dur <- swephR::swe_sol_eclipse_when_loc(jd_start = jul_dt.utc, 
+                                                ephe_flag = 4, 
+                                                geopos = c(x = var.lon, 
+                                                           y = var.lat, 
+                                                           z = 10), 
+                                                backward = F)
+    
+    difftimes.jul <- out.dur$tret[c(3,4)]
+    tot_start <- with_tz(ymd_hms(paste(swephR::swe_jdet_to_utc(difftimes.jul[1], 
+                                                               gregflag = 1), 
+                                       sep = "-", collapse = "-")), 
+                         tz = "America/New_York")
+    tot_end   <- with_tz(ymd_hms(paste(swephR::swe_jdet_to_utc(difftimes.jul[2], 
+                                                               gregflag = 1), 
+                                       sep = "-", collapse = "-")), 
+                         tz = "America/New_York")
+    out.time.dec <- tot_end - tot_start
+    
+    if(attributes(out.time.dec)$units == "mins"){
+      out.time.dec <- as.numeric(out.time.dec)
+      out.time <- c("mins" = floor(out.time.dec), 
+                    "secs" = floor((out.time.dec - floor(out.time.dec))*60))
+    }else{
+      out.time <- c("mins" = "00", 
+                    "secs" = as.character(abs(floor(as.numeric(out.time.dec)))))
+    }
+    
+    #out.time <- ifelse(out.time == "00:0", "00:00", out.time)
+    
+    out <- paste(out.time, sep = ":", collapse = ":")
+    ifelse(out == "00:0", "", paste("Length of Totality (mm:ss): ", out, sep = "", collapse = ""))
+    
+    })
+  
+  output$return_tot.dur <- renderText({
+    get_tot.dur()
+  })
+  
   
   output$return_suncov <- renderText({
     paste(get_suncov(), get_totality(), sep = " | ", collapse = " | ")
