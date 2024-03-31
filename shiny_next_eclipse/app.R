@@ -225,7 +225,7 @@ server <- function(input, output) {
   })
   
   url.linkedin <- a("LinkedIn", 
-                    href = "www.linkedin.com/in/tim-bender-238870171", 
+                    href = "https://www.linkedin.com/in/tim-bender-238870171/", 
                     target = "_blank")
   output$tab.linkedin <- renderUI({
     tagList(url.linkedin)
