@@ -55,8 +55,8 @@ ui <- fluidPage(
                    label   = "SEARCH ADDRESS"),
       
       wellPanel(
-        fluidRow(textOutput(outputId = "return_tot.dur")),
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
+        fluidRow(div(h4(span(textOutput(outputId = "return_tot.dur"), style = "color:red")))),
         fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
         fluidRow(uiOutput("nextecl_dash")),
       ),
