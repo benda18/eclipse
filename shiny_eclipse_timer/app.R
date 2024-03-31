@@ -519,6 +519,9 @@ server <- function(input, output) {
       geom_hline(aes(yintercept = 1, 
                      color = "Totality"), 
                  linetype = 2, linewidth = 1)+
+      geom_polygon(data = df.sched, alpha = 0.8,
+                aes(x = time, y = coverage), 
+                linewidth = 1) +
       geom_line(data = df.sched, 
                    aes(x = time, y = coverage), 
                 linewidth = 1) +
@@ -535,7 +538,9 @@ server <- function(input, output) {
             legend.text = element_text(size = 12),
             title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
-            axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
+            axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12), 
+            #panel.background = element_rect(fill = "yellow")
+            )+
       labs(title = "Eclipse Timeline", 
            subtitle = unname(unlist(addr.coords$matchedAddress)))
   })
