@@ -401,7 +401,7 @@ server <- function(input, output) {
                                                                   z = 10), 
                                                     backward = F)$attr[1]
     sol_cov <- ifelse(sol_cov > 1, 1, sol_cov)
-    glue("{ifelse(sol_cov < 1 & sol_cov > 0.99, \"99.0%\", scales::percent(sol_cov,accuracy = 0.1))}")
+    glue("{ifelse(sol_cov < 1 & sol_cov > 0.99, \"99%\", scales::percent(sol_cov,accuracy = 0.1))}")
   })
   
   get_tot.dur <- eventReactive(eventExpr = input$cxy_go, {
