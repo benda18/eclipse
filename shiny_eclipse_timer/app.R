@@ -59,7 +59,7 @@ ui <- fluidPage(
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(span(textOutput(outputId = "return_tot.dur"), style = "color:red")))),
         fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
-        fluidRow(uiOutput("nextecl_dash")),
+        fluidRow(uiOutput("nextecl_dash"))
       ),
       wellPanel(
         
@@ -85,6 +85,7 @@ ui <- fluidPage(
     mainPanel(
       wellPanel(
         shiny::plotOutput(outputId = "map"),
+        #fluidRow(img(src="flawless.png"))
       )
     )
   )
