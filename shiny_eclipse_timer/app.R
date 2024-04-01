@@ -86,6 +86,7 @@ ui <- fluidPage(
       wellPanel(
         shiny::plotOutput(outputId = "map"),
         #fluidRow(img(src="flawless.png"))
+        #shiny::imageOutput("ren_flaw")
       )
     )
   )
@@ -239,6 +240,10 @@ server <- function(input, output) {
   output$nextecl_dash <- renderUI({
     tagList(url.nextecl_dash)
   })
+  
+  # output$ren_flaw <- renderImage({
+  #   print("flawless.png")
+  # })
   
   url.nasa <- a("NASA's 2024 Eclipse Website", 
                 href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/", 
