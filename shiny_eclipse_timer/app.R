@@ -87,7 +87,8 @@ ui <- fluidPage(
         shiny::plotOutput(outputId = "map"),
         #fluidRow(img(src="flawless.png"))
         #shiny::imageOutput("ren_flaw")
-        fluidRow(img(src="ecl2017b.jpg"))
+        #fluidRow(uiOutput("tab.img17b")),
+        #fluidRow(img(src="ecl2017b.jpg", width = "400px", height = "auto"))
       )
     )
   )
@@ -244,6 +245,13 @@ server <- function(input, output) {
   
   # output$ren_flaw <- renderImage({
   #   print("flawless.png")
+  # })
+  
+  # img.2017eclb <- a("image 92pct Obscuration from 2017 Total Eclipse", 
+  #                   href = "./ecl2017b.jpg", 
+  #                   target = "_blank")
+  # output$tab.img17b <- renderUI({
+  #   tagList(img.2017eclb)
   # })
   
   url.nasa <- a("NASA's 2024 Eclipse Website", 
