@@ -24,6 +24,8 @@ library(glue)
 library(ggmap)
 #library(shinyalert)
 #library(jpeg)
+library(png)
+library(grid)
 
 # renv::status()
 # renv::snapshot()
@@ -479,33 +481,68 @@ server <- function(input, output) {
     df.sched <- ec_sched(unname(unlist(addr.coords$coordinates.x)), 
                          unname(unlist(addr.coords$coordinates.y)), 
                          ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
+    if(max(df.sched$coverage) >= 1){
+      # img <- readPNG(system.file(#"img", 
+      #                            "flawless.png", package="png"))
+      # g <- rasterGrob(img, interpolate=TRUE)
+      
+      ggplot() + 
+        geom_hline(aes(yintercept = 1, 
+                       color = "Totality"), 
+                   linetype = 2, linewidth = 1)+
+        geom_polygon(data = df.sched, alpha = 0.8,
+                     aes(x = time, y = coverage), 
+                     linewidth = 1) +
+        geom_line(data = df.sched, 
+                  aes(x = time, y = coverage), 
+                  linewidth = 1) +
+        scale_y_continuous(name = "% of Sun Obscured by Moon", 
+                           labels = scales::percent, 
+                           limits = c(0, NA), 
+                           breaks = seq(0, 2, by = 0.2))+
+        scale_x_datetime(name = "Time (Eastern Daylight Time)", 
+                         date_labels = "%I:%M %p %Z", 
+                         date_breaks = "30 min", 
+                         date_minor_breaks = "15 min")+
+        scale_color_discrete(name = NULL)+
+        theme(legend.position = "bottom",
+              legend.text = element_text(size = 12),
+              title = element_text(size = 12), 
+              axis.text.y = element_text(size = 12), 
+              axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
+        labs(title = "Eclipse Timeline", 
+             subtitle = unname(unlist(addr.coords$matchedAddress))) #+
+        #annotation_custom(g, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf) 
+    }else{
+      ggplot() + 
+        geom_hline(aes(yintercept = 1, 
+                       color = "Totality"), 
+                   linetype = 2, linewidth = 1)+
+        geom_polygon(data = df.sched, alpha = 0.8,
+                     aes(x = time, y = coverage), 
+                     linewidth = 1) +
+        geom_line(data = df.sched, 
+                  aes(x = time, y = coverage), 
+                  linewidth = 1) +
+        scale_y_continuous(name = "% of Sun Obscured by Moon", 
+                           labels = scales::percent, 
+                           limits = c(0, NA), 
+                           breaks = seq(0, 2, by = 0.2))+
+        scale_x_datetime(name = "Time (Eastern Daylight Time)", 
+                         date_labels = "%I:%M %p %Z", 
+                         date_breaks = "30 min", 
+                         date_minor_breaks = "15 min")+
+        scale_color_discrete(name = NULL)+
+        theme(legend.position = "bottom",
+              legend.text = element_text(size = 12),
+              title = element_text(size = 12), 
+              axis.text.y = element_text(size = 12), 
+              axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
+        labs(title = "Eclipse Timeline", 
+             subtitle = unname(unlist(addr.coords$matchedAddress)))
+    }
     
-    ggplot() + 
-      geom_hline(aes(yintercept = 1, 
-                     color = "Totality"), 
-                 linetype = 2, linewidth = 1)+
-      geom_polygon(data = df.sched, alpha = 0.8,
-                aes(x = time, y = coverage), 
-                linewidth = 1) +
-      geom_line(data = df.sched, 
-                   aes(x = time, y = coverage), 
-                linewidth = 1) +
-      scale_y_continuous(name = "% of Sun Obscured by Moon", 
-                         labels = scales::percent, 
-                         limits = c(0, NA), 
-                         breaks = seq(0, 2, by = 0.2))+
-      scale_x_datetime(name = "Time (Eastern Daylight Time)", 
-                       date_labels = "%I:%M %p %Z", 
-                       date_breaks = "30 min", 
-                       date_minor_breaks = "15 min")+
-      scale_color_discrete(name = NULL)+
-      theme(legend.position = "bottom",
-            legend.text = element_text(size = 12),
-            title = element_text(size = 12), 
-            axis.text.y = element_text(size = 12), 
-            axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
-      labs(title = "Eclipse Timeline", 
-           subtitle = unname(unlist(addr.coords$matchedAddress)))
+    
   })
   
 }
