@@ -482,9 +482,9 @@ server <- function(input, output) {
                          unname(unlist(addr.coords$coordinates.y)), 
                          ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
     if(max(df.sched$coverage) >= 1){
-      # img <- readPNG(system.file(#"img", 
-      #                            "flawless.png", package="png"))
-      # g <- rasterGrob(img, interpolate=TRUE)
+      # img <- readPNG(system.file(#"img", "flawless.png", package="png"))
+      img <- readPNG("flawless.png")
+      g <- rasterGrob(img, interpolate=TRUE)
       
       ggplot() + 
         geom_hline(aes(yintercept = 1, 
@@ -511,8 +511,8 @@ server <- function(input, output) {
               axis.text.y = element_text(size = 12), 
               axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
         labs(title = "Eclipse Timeline", 
-             subtitle = unname(unlist(addr.coords$matchedAddress))) #+
-        #annotation_custom(g, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf) 
+             subtitle = unname(unlist(addr.coords$matchedAddress))) +
+        annotation_custom(g, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf) 
     }else{
       ggplot() + 
         geom_hline(aes(yintercept = 1, 
