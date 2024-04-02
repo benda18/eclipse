@@ -23,7 +23,7 @@ library(glue)
 #library(rsconnect)
 library(ggmap)
 #library(shinyalert)
-library(jpeg)
+#library(jpeg)
 
 # renv::status()
 # renv::snapshot()
