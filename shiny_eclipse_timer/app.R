@@ -87,48 +87,14 @@ ui <- fluidPage(
     mainPanel(
       wellPanel(
         shiny::plotOutput(outputId = "map"),
-        #fluidRow(img(src="flawless.png", width = "240px", height = "auto"))
-        #shiny::plotOutput("plot_flawless")
-        #shiny::imageOutput("ren_flaw")
-        #fluidRow(uiOutput("tab.img17b")),
-        #fluidRow(img(src="ecl2017b.jpg", width = "400px", height = "auto"))
-      )
+        )
     )
   )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  # api keys----
-  #stadiamap set api
-  
-  #apikey <- "abcdefghijklmnopqrstuvwxyz0123456789" # GET YOUR OWN KEY!
-  
-  # NOTE - it is not best practices to keep the api key visible here in your
-  # public repo.  Ideally you would save it in a separate file and add that file
-  # to your .gitignore so it doesn't get pushed to github.  that way the key
-  # still gets deployed to the server but remains relatively hidden otherwise.
-  # THAT SAID for the sake of simplicity, and because this is a free account
-  # that anyone could setup, and because the risk of abuse affecting anyone
-  # personally is so low I chose to keep it in the code so that it was clear to
-  # someone trying to replicate this project how and where to dump their own API
-  # key. Additionally, api keys can be deleted and re-created fairly easily for
-  # projects like this and if at some point in the future I change my mind I can
-  # implement a more secure setup.
-  
-  #register_stadiamaps(key = apikey, write = FALSE)
-  
-  
   # funs----
-  # plot_jpeg <- function(path, add=FALSE){
-  #   require('jpeg')
-  #   jpg = readJPEG(path, native=T) # read the file
-  #   res = dim(jpg)[2:1] # get the resolution, [x, y]
-  #   if (!add) # initialize an empty plot area if add==FALSE
-  #     plot(1,1,xlim=c(1,res[1]),ylim=c(1,res[2]),asp=1,type='n',xaxs='i',yaxs='i',xaxt='n',yaxt='n',xlab='',ylab='',bty='n')
-  #   rasterImage(jpg,1,1,res[1],res[2])
-  # }
-  
   ec_sched <- function(lon_in, lat_in, time_ny){
     # time logic
     
@@ -223,12 +189,11 @@ server <- function(input, output) {
                       coverage = ecsuncov)
     
     out[nrow(out),]$coverage <- 0
-    #out$coverage[out$coverage >= 1] <- 1.14
     return(out)
   }
   # other stuff---
   usa.states <- readRDS("usastates.rds") 
-  path.files <- list.files(pattern = "^eclpathdfusa.*\\.rds$") # this line of code pulls in all paths. 
+  path.files <- list.files(pattern = "^eclpathdfusa.*\\.rds$") # this line of code pulls in all paths that are in the home directory. 
   
   all.paths <- NULL
   for(i in path.files){
@@ -254,17 +219,6 @@ server <- function(input, output) {
   output$nextecl_dash <- renderUI({
     tagList(url.nextecl_dash)
   })
-  
-  # output$ren_flaw <- renderImage({
-  #   print("flawless.png")
-  # })
-  
-  # img.2017eclb <- a("image 92pct Obscuration from 2017 Total Eclipse", 
-  #                   href = "./ecl2017b.jpg", 
-  #                   target = "_blank")
-  # output$tab.img17b <- renderUI({
-  #   tagList(img.2017eclb)
-  # })
   
   url.nasa <- a("NASA's 2024 Eclipse Website", 
                 href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/", 
@@ -326,7 +280,6 @@ server <- function(input, output) {
                                         gregflag = 1)
     
     # tret 3 & 4 = begin and end of totality
-    
     # do eclipse math
     sol_cov     <- swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
                                                     ephe_flag = 4, 
@@ -340,18 +293,6 @@ server <- function(input, output) {
            "Outside Path of Totality")
     
   })
-  
-  # output$plot_flawless <- renderPlot({
-  #   if(get_totality() == "Within Path of Totality"){
-  #     plot_jpeg("flawless.jpg")
-  #   }else{
-  #     
-  #   }
-  # })
-  
-  # output$return_totality <- renderText({
-  #   get_totality()
-  # })
   
   get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
     start.date <- ymd(20240409)
@@ -510,19 +451,7 @@ server <- function(input, output) {
   output$map <- renderPlot({
     addr.coords <- get_cxyinfo()[c("coordinates.x", "coordinates.y", "matchedAddress")]
     
-    # usa48.bbox <- c(left   = -124.76307, 
-    #                 bottom =   24.52310, 
-    #                 right  = - 66.94989, 
-    #                 top    =   49.38436)
-    # bm.stadia <- get_stadiamap(bbox = usa48.bbox, 
-    #                            zoom = 4, 
-    #                            maptype = "stamen_terrain",#"stamen_toner_lite",                            
-    #                            crop = T, 
-    #                            color = "color",
-    #                            force = T,
-    #                            size = 1.04)
-    # ggmap(bm.stadia)+
-      ggplot() +
+    ggplot() +
       geom_sf(data = usa.states,
               fill = "dark grey", color = "white")+
       geom_path(data = all.paths[all.paths$yr <= 2024,], 
@@ -536,7 +465,6 @@ server <- function(input, output) {
       theme(text = element_text(size = 12), 
             legend.position = "bottom", 
             legend.text = element_text(size = 12))+
-      #coord_sf()+
       scale_color_discrete(name = NULL)+
       labs(title = "Eclipse Path")
   })
@@ -575,9 +503,7 @@ server <- function(input, output) {
             legend.text = element_text(size = 12),
             title = element_text(size = 12), 
             axis.text.y = element_text(size = 12), 
-            axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12), 
-            #panel.background = element_rect(fill = "yellow")
-            )+
+            axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
       labs(title = "Eclipse Timeline", 
            subtitle = unname(unlist(addr.coords$matchedAddress)))
   })
