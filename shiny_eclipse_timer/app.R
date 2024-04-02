@@ -483,23 +483,26 @@ server <- function(input, output) {
                          ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
     if(max(df.sched$coverage) >= 1){
       # img <- readPNG(system.file(#"img", "flawless.png", package="png"))
-      img <- readPNG("flawless.png")
+      img <- readPNG("www/totality.png")
       g <- rasterGrob(img, interpolate=TRUE)
       
       ggplot() + 
-        geom_hline(aes(yintercept = 1, 
-                       color = "Totality"), 
-                   linetype = 2, linewidth = 1)+
-        geom_polygon(data = df.sched, alpha = 0.8,
+        annotation_custom(g, xmin=-Inf, xmax=Inf, 
+                          ymin= 1, 
+                          ymax= 1.25) +
+        # geom_hline(aes(yintercept = 1, 
+        #                color = "Totality"), 
+        #            linetype = 2, linewidth = 1)+
+        geom_polygon(data = df.sched, alpha = 0.4,
                      aes(x = time, y = coverage), 
-                     linewidth = 1) +
+                     linewidth = 1, fill = "white") +
         geom_line(data = df.sched, 
                   aes(x = time, y = coverage), 
                   linewidth = 1) +
         scale_y_continuous(name = "% of Sun Obscured by Moon", 
                            labels = scales::percent, 
-                           limits = c(0, NA), 
-                           breaks = seq(0, 2, by = 0.2))+
+                           limits = c(0, 1.25), 
+                           breaks = seq(0, 1, by = 0.2))+
         scale_x_datetime(name = "Time (Eastern Daylight Time)", 
                          date_labels = "%I:%M %p %Z", 
                          date_breaks = "30 min", 
@@ -512,7 +515,8 @@ server <- function(input, output) {
               axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
         labs(title = "Eclipse Timeline", 
              subtitle = unname(unlist(addr.coords$matchedAddress))) +
-        annotation_custom(g, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf) 
+        geom_vline(aes(xintercept = range(df.sched[df.sched$coverage >= 1,]$time), 
+                       color = "Time of Totality"), linesize = 0.9)
     }else{
       ggplot() + 
         geom_hline(aes(yintercept = 1, 
