@@ -87,6 +87,7 @@ ui <- fluidPage(
         shiny::plotOutput(outputId = "map"),
         #fluidRow(img(src="flawless.png"))
         #shiny::imageOutput("ren_flaw")
+        fluidRow(img(src="ecl2017b.jpg"))
       )
     )
   )
