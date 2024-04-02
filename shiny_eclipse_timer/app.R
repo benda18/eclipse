@@ -23,6 +23,7 @@ library(glue)
 #library(rsconnect)
 library(ggmap)
 #library(shinyalert)
+library(jpeg)
 
 # renv::status()
 # renv::snapshot()
@@ -56,6 +57,7 @@ ui <- fluidPage(
                    label   = "SEARCH ADDRESS"),
       
       wellPanel(
+        #shiny::plotOutput("plot_flawless", width = "300px", height = "250px"),
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(span(textOutput(outputId = "return_tot.dur"), style = "color:red")))),
         fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
@@ -85,7 +87,8 @@ ui <- fluidPage(
     mainPanel(
       wellPanel(
         shiny::plotOutput(outputId = "map"),
-        #fluidRow(img(src="flawless.png"))
+        #fluidRow(img(src="flawless.png", width = "240px", height = "auto"))
+        #shiny::plotOutput("plot_flawless")
         #shiny::imageOutput("ren_flaw")
         #fluidRow(uiOutput("tab.img17b")),
         #fluidRow(img(src="ecl2017b.jpg", width = "400px", height = "auto"))
@@ -117,6 +120,15 @@ server <- function(input, output) {
   
   
   # funs----
+  plot_jpeg <- function(path, add=FALSE){
+    require('jpeg')
+    jpg = readJPEG(path, native=T) # read the file
+    res = dim(jpg)[2:1] # get the resolution, [x, y]
+    if (!add) # initialize an empty plot area if add==FALSE
+      plot(1,1,xlim=c(1,res[1]),ylim=c(1,res[2]),asp=1,type='n',xaxs='i',yaxs='i',xaxt='n',yaxt='n',xlab='',ylab='',bty='n')
+    rasterImage(jpg,1,1,res[1],res[2])
+  }
+  
   ec_sched <- function(lon_in, lat_in, time_ny){
     # time logic
     
@@ -328,6 +340,15 @@ server <- function(input, output) {
            "Outside Path of Totality")
     
   })
+  
+  # output$plot_flawless <- renderPlot({
+  #   if(get_totality() == "Within Path of Totality"){
+  #     plot_jpeg("flawless.jpg")
+  #   }else{
+  #     
+  #   }
+  # })
+  
   # output$return_totality <- renderText({
   #   get_totality()
   # })
