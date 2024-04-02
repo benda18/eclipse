@@ -487,9 +487,6 @@ server <- function(input, output) {
       g <- rasterGrob(img, interpolate=TRUE)
       
       ggplot() + 
-        annotation_custom(g, xmin=-Inf, xmax=Inf, 
-                          ymin= 1, 
-                          ymax= 1.25) +
         # geom_hline(aes(yintercept = 1, 
         #                color = "Totality"), 
         #            linetype = 2, linewidth = 1)+
@@ -516,7 +513,10 @@ server <- function(input, output) {
         labs(title = "Eclipse Timeline", 
              subtitle = unname(unlist(addr.coords$matchedAddress))) +
         geom_vline(aes(xintercept = range(df.sched[df.sched$coverage >= 1,]$time), 
-                       color = "Time of Totality"))
+                       color = "Time of Totality")) +
+        annotation_custom(g, xmin=-Inf, xmax=Inf, 
+                          ymin= 1, 
+                          ymax= 1.25)
     }else{
       ggplot() + 
         geom_hline(aes(yintercept = 1, 
