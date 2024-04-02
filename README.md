@@ -25,6 +25,7 @@ Many useful web tools and resources exist to help plan where and when to go to b
 * lubridate: Make Dealing with Dates a Little Easier ([link to CRAN](https://cran.r-project.org/package=lubridate))
 
 ### Other Useful Links
+* Photos of 8-21-2017 Total Eclipse I took from Durham, NC @ 92% obscuration through a Questar 3.5" with solar filter using a Nikon D5000 ([link to public facebook post](https://www.facebook.com/tim.bender.7543/posts/pfbid0b9kPrJcSrKqGLmAy3iEpcAAKDWNJimF3EehUwe1MvRNMeMyhns1wAnwTDmEjSc4Ql))
 * https://www.linkedin.com/pulse/building-simple-eclipse-planning-tool-tim-bender-e0hrf
 * https://www.space.com/why-99-percent-totality-does-not-exist-need-to-be-on-total-solar-eclipse-path-april-2024
 * https://www.si.com/extra-mustard/2013/12/30/the-extra-mustard-trivia-hour-when-a-calendar-defeated-russia-in-the-1908-olympics
