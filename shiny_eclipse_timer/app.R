@@ -495,7 +495,7 @@ server <- function(input, output) {
         #            linetype = 2, linewidth = 1)+
         geom_polygon(data = df.sched, alpha = 0.4,
                      aes(x = time, y = coverage), 
-                     linewidth = 1, fill = "white") +
+                     linewidth = 1) +
         geom_line(data = df.sched, 
                   aes(x = time, y = coverage), 
                   linewidth = 1) +
@@ -516,7 +516,7 @@ server <- function(input, output) {
         labs(title = "Eclipse Timeline", 
              subtitle = unname(unlist(addr.coords$matchedAddress))) +
         geom_vline(aes(xintercept = range(df.sched[df.sched$coverage >= 1,]$time), 
-                       color = "Time of Totality"), linesize = 0.9)
+                       color = "Time of Totality"))
     }else{
       ggplot() + 
         geom_hline(aes(yintercept = 1, 
