@@ -23,8 +23,8 @@ obs.gte    <- 0.05 # obscuration greater than or equal to (percent)
 # do work----
 get.addr <- censusxy::cxy_oneline(address = the.addr)
 
-var.lon <- 51.47888  # runif(1, -180,180) #93.91925 #unlist(unname(get.addr["coordinates.x"]))
-var.lat <- -8.597059 # runif(1, -90, 90)  #56.81266 #unlist(unname(get.addr["coordinates.y"]))
+var.lon <- runif(1, -180,180) #93.91925 #unlist(unname(get.addr["coordinates.x"]))
+var.lat <- runif(1, -90, 90)  #56.81266 #unlist(unname(get.addr["coordinates.y"]))
 
 is_totality <- F
 n <- 0
@@ -55,24 +55,44 @@ while(!is_totality & year(start.date) < 3001){
   
   # check to see if total/annual eclipse or partial----
   
-  ecl_type <- c("total" = min(abs((min(when_next$tret[when_next$tret > 0])-0) -
-                                    swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0]), 
-                                                              ephe_flag = 4, 
-                                                              ifltype = SE$ECL_TOTAL, 
-                                                              backward = F)$tret)),
-                "annular" = min(abs((min(when_next$tret[when_next$tret > 0])-0) -
-                                      swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0]), 
-                                                                ephe_flag = 4, 
-                                                                ifltype = SE$ECL_ANNULAR, 
-                                                                backward = F)$tret)),
-                "partial" = min(abs((min(when_next$tret[when_next$tret > 0])-0) -
-                                      swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0]), 
-                                                                ephe_flag = 4, 
-                                                                ifltype = SE$ECL_PARTIAL, 
-                                                                backward = F)$tret)))
+  ecl_type <- c(
+    "total" = swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0]), 
+                                  ephe_flag = 4, 
+                                  ifltype = SE$ECL_TOTAL, 
+                                  backward = F)$tret[3],
+    "annular" = swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0]), 
+                                          ephe_flag = 4, 
+                                          ifltype = SE$ECL_ANNULAR, 
+                                          backward = F)$tret[3],
+    "partial" = swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0]), 
+                                          ephe_flag = 4, 
+                                          ifltype = SE$ECL_PARTIAL, 
+                                          backward = F)$tret[3])
   
-  next.type <- names(ecl_type[ecl_type == min(ecl_type)])
-  rm(ecl_type)
+  ecl_type2 <- ecl_type
+  for(i in 1:length(ecl_type)){
+    ecl_type2[i] <- unname(ecl_type[i]) %>%
+      swephR::swe_jdet_to_utc(., 1) %>%
+      paste(., sep = "-", collapse = "-") %>%
+      ymd_hms(.) %>%
+      as_date()
+  }
+  ecl_type2 <- as_date(ecl_type2)
+  
+  next.type <- NULLnext.type <- names(ecl_type[ecl_type == min(ecl_type)])
+  #rm(ecl_type)
+  
+  
+  swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0])-1, 
+                            ephe_flag = 4, 
+                            ifltype = SE$ECL_ANNULAR_TOTAL, 
+                            backward = F)$tret[1] %>%
+    swephR::swe_jdet_to_utc(., 1) %>%
+    paste(., sep = "-", collapse = "-") %>%
+    ymd_hms() %>%
+    strftime(., 
+             format = "%B %d, %Y")
+  
   
   if(temp.nextobs >= obs.gte){
     is_totality <- T
@@ -96,3 +116,5 @@ if(temp.nextobs < 1 &
 next.total.eclipse
 next.obs
 next.type
+
+strftime(ecl_type2, format = "%B %d, %Y") %>% as.data.frame()
