@@ -17,6 +17,7 @@ rm(list=ls());cat('\f')
 
 # funs----
 wiki_url <- function(ecl_date = ymd(20780511)){
+  w.year <- year(ecl_date)
   "https://en.wikipedia.org/wiki/Solar_eclipse_of_May_11,_2078"
 }
 
