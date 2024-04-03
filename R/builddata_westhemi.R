@@ -131,7 +131,12 @@ yes.states <- state.abb[!state.abb %in% c("AK", "HI")]
 usa.bbox <- sf::st_bbox(usa.states[usa.states$STUSPS %in% yes.states,])
 
 
-grid.jtimes[between(grid.jtimes$lon, usa.bbox["xmin"], usa.bbox["xmax"]) & between(grid.jtimes$lat, usa.bbox["ymin"], usa.bbox["ymax"]),]
+grid.jtimes[between(grid.jtimes$lon, 
+                    usa.bbox["xmin"], 
+                    usa.bbox["xmax"]) & 
+              between(grid.jtimes$lat, 
+                      usa.bbox["ymin"], 
+                      usa.bbox["ymax"]),]
 
 ggplot() + 
   geom_sf(data = usa.states[usa.states$STUSPS %in% yes.states,]) +
