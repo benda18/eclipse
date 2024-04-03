@@ -27,12 +27,29 @@ fun_eclpoly <- function(ec_where_in, ec_time_in){
              obs_pct = ec_where_in$attr[3])
 }
 
+# vars----
+var_time <- mdy("August 12, 2045") |> as.POSIXct()
+
+
+
+
 #swephR::swe_sol_eclipse_when_loc()  # Find the next solar eclipse for a given geographic position.
 #swephR::swe_sol_eclipse_when_glob() # Find the next solar eclipse on earth.
 #swephR::swe_sol_eclipse_where()     # Compute the geographic position of a solar eclipse path.
 #swephR::swe_sol_eclipse_how()       # Compute the attributes of a solar eclipse for a given time.
+greg_dt.local <- var_time
+tz.local      <- tz(greg_dt.local)
+greg_dt.utc <- with_tz(greg_dt.local, tz = "UTC")
+jul_dt.utc  <- swephR::swe_julday(year  = year(greg_dt.utc), 
+                                  month = lubridate::month(greg_dt.utc, label = F), 
+                                  day   = mday(greg_dt.utc), 
+                                  hourd = hour(greg_dt.utc) + 
+                                    (minute(greg_dt.utc)/60) + 
+                                    (second(greg_dt.utc)/60/60), 
+                                  gregflag = 1)
 
-ec_dur <- swephR::swe_sol_eclipse_when_glob(jd_start = 2460400, 
+
+ec_dur <- swephR::swe_sol_eclipse_when_glob(jd_start = jul_dt.utc, 
                                             4, 
                                             SE$ECL_TOTAL+SE$ECL_CENTRAL+SE$ECL_NONCENTRAL,
                                             FALSE)$tret[c(3,4)]
@@ -69,7 +86,7 @@ for(i in 1:length(in.jtimes)){
                        fun_eclpoly(temp, in.jtimes[i]))
 }
 
-plot(grid.jtimes)
+#plot(grid.jtimes)
 
 # temp.dt_utc <- c(year  = 2024, 
 #                  month = 4, 
@@ -127,23 +144,26 @@ plot(grid.jtimes)
 
 usa.states <- tigris::states(T)
 yes.states <- state.abb[!state.abb %in% c("AK", "HI")]
+usa.states <- usa.states[usa.states$STUSPS %in% yes.states,]
 
-usa.bbox <- sf::st_bbox(usa.states[usa.states$STUSPS %in% yes.states,])
+
+usa.bbox <- sf::st_bbox(usa.states)
 
 
 grid.jtimes[between(grid.jtimes$lon, 
-                    usa.bbox["xmin"], 
-                    usa.bbox["xmax"]) & 
+                    unname(usa.bbox["xmin"]), 
+                    unname(usa.bbox["xmax"])) & 
               between(grid.jtimes$lat, 
-                      usa.bbox["ymin"], 
-                      usa.bbox["ymax"]),]
+                      unname(usa.bbox["ymin"]), 
+                      unname(usa.bbox["ymax"])),]
 
 ggplot() + 
   geom_sf(data = usa.states[usa.states$STUSPS %in% yes.states,]) +
-  geom_point(data = grid.jtimes[between(grid.jtimes$lon, usa.bbox["xmin"], usa.bbox["xmax"]) & between(grid.jtimes$lat, usa.bbox["ymin"], usa.bbox["ymax"]),],
+  geom_point(data = grid.jtimes,#[between(grid.jtimes$lon, usa.bbox["xmin"], usa.bbox["xmax"]) & between(grid.jtimes$lat, usa.bbox["ymin"], usa.bbox["ymax"]),],
              aes(x = lon, y = lat, 
                  size = abs(shadow_dia_km), 
                  color = obs_pct))+
   #scale_size_area()
-  scale_color_viridis_c(option = "C")
+  scale_color_viridis_c(option = "C")+
+  theme(legend.position = "bottom")
 

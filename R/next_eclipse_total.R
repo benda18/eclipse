@@ -17,8 +17,8 @@ rm(list=ls());cat('\f')
 
 # vars----
 the.addr   <- "1210 laurel meadows dr, durham nc"#"504 N queen st, durham, nc"
-start.date <- ymd(20240409)
-obs.gte    <- 0.50 # obscuration greater than or equal to (percent)
+start.date <- mdy("april 9, 2024")#ymd(20240409)
+obs.gte    <- 0.65 # obscuration greater than or equal to (percent)
 
 # do work----
 get.addr <- censusxy::cxy_oneline(address = the.addr)
@@ -60,6 +60,7 @@ while(!is_totality & year(start.date) < 3001){
   if(temp.nextobs >= obs.gte){
     is_totality <- T
     next.obs <- temp.nextobs
+    start.date <- as_date(temp.nextdate)
   }else{
     start.date <- as_date(temp.nextdate) + days(2)
   }
