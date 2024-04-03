@@ -8,8 +8,6 @@ library(ggplot2)
 library(sf)
 library(renv)
 #library(rsconnect)
-#library(rnaturalearth)
-#library(rnaturalearthdata)
 
 
 getwd()
@@ -23,7 +21,7 @@ rm(list=ls()[ls() != "last.addr"]);cat('\f')
 # vars----
 the.addr <- "1447 newcastle rd, durham nc"
 start.date <- ymd(20240409)
-obs.gte    <- 1
+obs.gte    <- 1   # obscuration greater than or equal to (percent)
 
 # do work
 if(the.addr != last.addr){
