@@ -67,7 +67,6 @@ ui <- fluidPage(
         fluidRow(uiOutput("nextecl_dash"))
       ),
       wellPanel(
-        
         shiny::plotOutput(outputId = "sched"),
       ),
       wellPanel(
