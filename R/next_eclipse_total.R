@@ -10,30 +10,21 @@ library(renv)
 #library(rsconnect)
 
 
-getwd()
-
 #renv::snapshot()
 #renv::status()
-last.addr <- ""
-rm(list=ls()[ls() != "last.addr"]);cat('\f')
+rm(list=ls());cat('\f')
 
 
 # vars----
-the.addr <- "1447 newcastle rd, durham nc"
+the.addr   <- "1210 laurel meadows dr, durham nc"#"504 N queen st, durham, nc"
 start.date <- ymd(20240409)
-obs.gte    <- 1   # obscuration greater than or equal to (percent)
+obs.gte    <- 0.50 # obscuration greater than or equal to (percent)
 
-# do work
-if(the.addr != last.addr){
-  get.addr <- censusxy::cxy_oneline(address = the.addr)
-}
-
-last.addr <- the.addr
+# do work----
+get.addr <- censusxy::cxy_oneline(address = the.addr)
 
 var.lon <- unlist(unname(get.addr["coordinates.x"]))
 var.lat <- unlist(unname(get.addr["coordinates.y"]))
-
-
 
 is_totality <- F
 n <- 0

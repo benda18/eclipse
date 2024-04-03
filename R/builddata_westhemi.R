@@ -14,9 +14,9 @@ rm(list=ls());cat('\f')
 getwd()
 
 # Funs----
-fun_min2dec <- function(x, rnd = 2){
-  round(x/60,rnd)
-}
+# fun_min2dec <- function(x, rnd = 2){
+#   round(x/60,rnd)
+# }
 
 fun_eclpoly <- function(ec_where_in, ec_time_in){
   data.frame(time_jd = ec_time_in, 
