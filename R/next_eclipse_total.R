@@ -23,7 +23,7 @@ wiki_url <- function(ecl_date = ymd(20780511)){
 
 
 # vars----
-the.addr        <- "1 exchange plaza, raleigh nc" #"1210 laurel meadows dr, durham nc"#
+the.addr        <- "1210 laurel meadows dr, durham nc"#
 start.date      <- ymd(20240409)
 loc_in.totality <- T # will location be in path of totality?
 
