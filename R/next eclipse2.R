@@ -29,6 +29,7 @@ var.lon <- unlist(unname(get.addr["coordinates.x"]))
 var.lat <- unlist(unname(get.addr["coordinates.y"]))
 
 start.date <- ymd(20240409)
+
 is_totality <- F
 n <- 0
 while(!is_totality & year(start.date) < 3001){
@@ -73,8 +74,6 @@ if(temp.nextobs < 1 &
 }else{
   next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
 }
-
-
 
 # next lunar eclipse----
 le_type <- function(mag_u){

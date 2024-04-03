@@ -9,7 +9,7 @@ library(censusxy)
 #library(readr)
 #library(data.table)
 #library(shiny)
-library(rsconnect)
+#library(rsconnect)
 
 renv::snapshot()
 renv::status()
@@ -125,5 +125,5 @@ ec_sched <- function(lon_in, lat_in, time_ny){
 }
 
 # do function----
-ec_sched(lon1, lat1, time_NY1)
+ec_sched(lon1, lat1, time_NY1) |> plot(type = "b")
 

@@ -8,16 +8,10 @@ library(readr)
 
 renv::snapshot()
 renv::status()
-#renv::restore()
+
+rm(list=ls());cat('\f');gc()
 
 # Funs----
-
-jdate1 <- swe_sol_eclipse_when_glob(jd_start = 2460405,
-                                   4, 0, F)$tret[1]
-lonlat1 <- c(-81,42)
-
-get_next_total_eclipse(jdate1, lonlat1)
-
 # to do: fix so you get non-total occlusion info returned. 
 get_next_total_eclipse <- function(jdate, 
                                    lonlat = c("x"=0,"y"=0)){
@@ -48,6 +42,14 @@ get_next_total_eclipse <- function(jdate,
   }
   return(dt.eclipse.max)
 }
+
+jdate1 <- swe_sol_eclipse_when_glob(jd_start = 2460405,
+                                   4, 0, F)$tret[1]
+lonlat1 <- c(-81,42)
+
+get_next_total_eclipse(jdate1, lonlat1)
+
+
 
 
 # Vars----
