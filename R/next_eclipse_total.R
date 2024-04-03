@@ -16,11 +16,39 @@ library(glue)
 rm(list=ls());cat('\f')
 
 # funs----
+eclipsewise_url <- function(ecl_date = ymd(20780511)){
+  require(glue)
+  require(lubridate)
+  w.year  <- year(ecl_date)
+  w.month <- as.character(lubridate::month(ecl_date, label = F))
+  w.month <- ifelse(nchar(w.month) == 1,
+                    paste("0", w.month, sep = "", collapse = ""), 
+                    w.month)
+  w.mday  <- mday(ecl_date)
+  w.mday  <- ifelse(nchar(w.mday) == 1, 
+                    paste("0", w.mday, sep = "", collapse = ""), 
+                    w.mday)
+  w.cenA  <- floor(w.year/100)*100+1
+  w.cenB  <- w.cenA + 99
+  list(c(partial = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}P.gif"), 
+         annular = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}A.gif"), 
+         total   = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}T.gif")))
+  
+  
+}
+eclipsewise_url(ymd(20240408))
+
+
 wiki_url <- function(ecl_date = ymd(20780511)){
-  w.year <- year(ecl_date)
-  "https://en.wikipedia.org/wiki/Solar_eclipse_of_May_11,_2078"
+  require(glue)
+  require(lubridate)
+  w.year  <- year(ecl_date)
+  w.month <- as.character(lubridate::month(ecl_date, label = T, abbr = F))
+  w.mday  <- mday(ecl_date)
+  glue("https://en.wikipedia.org/wiki/Solar_eclipse_of_{w.month}_{w.mday},_{w.year}")
 }
 
+wiki_url()
 
 # vars----
 the.addr        <- sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
@@ -40,7 +68,7 @@ the.addr        <- sample(x = c("1600 Pennsylvania Ave, Washington, DC",
                                 "4790 W 16th St, Indianapolis, IN"), 
                           size = 1)#
 start.date      <- ymd(20240409)
-loc_in.totality <- T # will location be in path of totality?
+min_obsc <- 1 # will location be in path of totality?
 
 # do work----
 get.addr <- censusxy::cxy_oneline(address = the.addr)
@@ -50,6 +78,9 @@ var.lat <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)
 
 is_totality <- F
 n <- 0
+
+log.ecls <- NULL
+
 while(!is_totality & year(start.date) < 3001){
   n <- n + 1
   if(n > 2000){
@@ -73,9 +104,31 @@ while(!is_totality & year(start.date) < 3001){
   temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
                                  sep = "-", collapse = "-"))
   
-  temp.nextobs <- max(when_next$attr[c(1,3)]) # p
+  temp.nextobs <- max(when_next$attr[c(3)]) # p
   
-  if(temp.nextobs >= as.numeric(loc_in.totality)){
+  log.ecls <- rbind(log.ecls, 
+                    data.frame(n        = n, 
+                               address  = the.addr,
+                               date     = temp.nextdate,
+                               strfdate = strftime(x = temp.nextdate, format = "%b %d, %Y"),
+                               jdate    = NA,
+                               ecl_type = NA,
+                               obsc     = temp.nextobs))
+  
+  temp.utc <- last(log.ecls$date)
+  temp.jd <- swe_utc_to_jd(year = year(temp.utc), 
+                           month = lubridate::month(x = temp.utc, label = F), 
+                           day = mday(temp.utc), 
+                           houri = hour(temp.utc), 
+                           min = minute(temp.utc), 
+                           sec = second(temp.utc), 
+                           gregflag = 1)$dret |> 
+    as.integer() |> 
+    unique()
+  
+  
+  
+  if(temp.nextobs >= min_obsc){
     is_totality <- T
     next.obs <- temp.nextobs
     start.date <- as_date(temp.nextdate)
@@ -93,4 +146,12 @@ if(temp.nextobs < 1 &
 }
 
 next.total.eclipse
-next.obs
+try(next.obs)
+log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),
+         c("address", "date", "obsc")]
+
+lapply(X = log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),]$date, 
+       FUN = wiki_url)
+
+lapply(X = log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),]$date, 
+       FUN = eclipsewise_url)
