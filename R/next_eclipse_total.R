@@ -7,6 +7,7 @@ library(scales)
 library(ggplot2)
 library(sf)
 library(renv)
+library(glue)
 #library(rsconnect)
 
 
@@ -14,17 +15,22 @@ library(renv)
 #renv::status()
 rm(list=ls());cat('\f')
 
+# funs----
+wiki_url <- function(ecl_date = ymd(20780511)){
+  "https://en.wikipedia.org/wiki/Solar_eclipse_of_May_11,_2078"
+}
+
 
 # vars----
-the.addr   <- "1210 laurel meadows dr, durham nc"#"504 N queen st, durham, nc"
-start.date <- mdy("april 9, 2024")#ymd(20240409)
-obs.gte    <- 0.05 # obscuration greater than or equal to (percent)
+the.addr        <- "1 exchange plaza, raleigh nc" #"1210 laurel meadows dr, durham nc"#
+start.date      <- ymd(20240409)
+loc_in.totality <- T # will location be in path of totality?
 
 # do work----
 get.addr <- censusxy::cxy_oneline(address = the.addr)
 
-var.lon <- runif(1, -180,180) #93.91925 #unlist(unname(get.addr["coordinates.x"]))
-var.lat <- runif(1, -90, 90)  #56.81266 #unlist(unname(get.addr["coordinates.y"]))
+var.lon <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180) 
+var.lat <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)  
 
 is_totality <- F
 n <- 0
@@ -53,48 +59,7 @@ while(!is_totality & year(start.date) < 3001){
   
   temp.nextobs <- max(when_next$attr[c(1,3)]) # p
   
-  # # check to see if total/annual eclipse or partial----
-  # 
-  # ecl_type <- c(
-  #   "total" = swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0]), 
-  #                                 ephe_flag = 4, 
-  #                                 ifltype = SE$ECL_TOTAL, 
-  #                                 backward = F)$tret[3],
-  #   "annular" = swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0]), 
-  #                                         ephe_flag = 4, 
-  #                                         ifltype = SE$ECL_ANNULAR, 
-  #                                         backward = F)$tret[3],
-  #   "partial" = swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0]), 
-  #                                         ephe_flag = 4, 
-  #                                         ifltype = SE$ECL_PARTIAL, 
-  #                                         backward = F)$tret[3])
-  # 
-  # ecl_type2 <- ecl_type
-  # for(i in 1:length(ecl_type)){
-  #   ecl_type2[i] <- unname(ecl_type[i]) %>%
-  #     swephR::swe_jdet_to_utc(., 1) %>%
-  #     paste(., sep = "-", collapse = "-") %>%
-  #     ymd_hms(.) %>%
-  #     as_date()
-  # }
-  # ecl_type2 <- as_date(ecl_type2)
-  # 
-  # next.type <- NULLnext.type <- names(ecl_type[ecl_type == min(ecl_type)])
-  # #rm(ecl_type)
-  # 
-  # 
-  # swe_sol_eclipse_when_glob(jd_start = min(when_next$tret[when_next$tret > 0])-1, 
-  #                           ephe_flag = 4, 
-  #                           ifltype = SE$ECL_ANNULAR_TOTAL, 
-  #                           backward = F)$tret[1] %>%
-  #   swephR::swe_jdet_to_utc(., 1) %>%
-  #   paste(., sep = "-", collapse = "-") %>%
-  #   ymd_hms() %>%
-  #   strftime(., 
-  #            format = "%B %d, %Y")
-  
-  
-  if(temp.nextobs >= obs.gte){
+  if(temp.nextobs >= as.numeric(loc_in.totality)){
     is_totality <- T
     next.obs <- temp.nextobs
     start.date <- as_date(temp.nextdate)
@@ -102,8 +67,6 @@ while(!is_totality & year(start.date) < 3001){
     start.date <- as_date(temp.nextdate) + days(2)
   }
 }
-
-
 
 # do next----
 if(temp.nextobs < 1 & 
@@ -115,6 +78,3 @@ if(temp.nextobs < 1 &
 
 next.total.eclipse
 next.obs
-#next.type
-
-# strftime(ecl_type2, format = "%B %d, %Y") %>% as.data.frame()
