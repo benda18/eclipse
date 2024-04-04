@@ -83,5 +83,7 @@ if(temp.nextobs < 1 &
   next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
 }
 
-next.total.eclipse
-next.obs
+glue("Next View of Totality: {next.total.eclipse}")
+
+# next.total.eclipse
+# next.obs
