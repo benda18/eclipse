@@ -62,8 +62,8 @@ ui <- fluidPage(
         #shiny::plotOutput("plot_flawless", width = "300px", height = "250px"),
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(span(textOutput(outputId = "return_tot.dur"), style = "color:red")))),
-        #fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
-        fluidRow(div(h4(strong("Next View of Totality: [temporarily removed due to bug]")))),
+        fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
+        #fluidRow(div(h4(strong("Next View of Totality: [temporarily removed due to bug]")))),
         fluidRow(uiOutput("nextecl_dash"))
       ),
       wellPanel(
@@ -332,7 +332,7 @@ server <- function(input, output) {
 
       temp.nextobs <- max(when_next$attr[c(3)]) # p
 
-      #ecl_type <- ifelse(temp.nextobs >= 1, "total", "partial")
+      ecl_type <- ifelse(temp.nextobs >= 1, "total", "partial")
 
       if(ecl_type == "total"){
         is_totality <- T
@@ -355,9 +355,9 @@ server <- function(input, output) {
   
   
   
-  # output$return_nextecl <- renderText({
-  #   get_nextecl()
-  # })
+  output$return_nextecl <- renderText({
+    get_nextecl()
+  })
   
   # get sun coverage
   get_suncov <- eventReactive(eventExpr = input$cxy_go, {
