@@ -29,15 +29,15 @@ the.addr        <- sample(x = c("1600 Pennsylvania Ave, Washington, DC",
                                 "369 Central Ave, Hot Springs, AR",         
                                 "4790 W 16th St, Indianapolis, IN"), 
                           size = 1)#
-start.date <- ymd(20240409)
-min_obsc   <- 1 
 
 # do work----
+####
+start.date <- ymd(20240409)
+min_obsc <- 1 
 get.addr <- censusxy::cxy_oneline(address = the.addr)
 var.lon  <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180) 
 var.lat  <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)  
 
-####
 is_totality <- F
 n <- 0
 while(!is_totality & year(start.date) < 3001){
