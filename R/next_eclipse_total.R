@@ -34,9 +34,8 @@ min_obsc   <- 1
 
 # do work----
 get.addr <- censusxy::cxy_oneline(address = the.addr)
-
-var.lon <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180) 
-var.lat <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)  
+var.lon  <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180) 
+var.lat  <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)  
 
 ####
 is_totality <- F
