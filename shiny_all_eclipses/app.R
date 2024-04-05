@@ -21,7 +21,7 @@ library(glue)
 ui <- fluidPage(
 
     # Application title
-    titlePanel("<title>"),
+    titlePanel("Solar Eclipses Visible from Your Address"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
@@ -29,6 +29,12 @@ ui <- fluidPage(
           shiny::textInput(inputId = "addr_in", 
                            label = "Enter Address", 
                            value = "1600 Pennsylvania Ave, Washington, DC"),
+          shiny::dateInput(inputId = "date_in", 
+                           label = "Search-From Date", 
+                           value = Sys.Date(), 
+                           min   = "1000-01-01", 
+                           max   = "2999-12-31", 
+                           format = "MM dd, yyyy"),
           actionButton(inputId = "cxy_go", 
                        label   = "SEARCH ADDRESS")
         ),
