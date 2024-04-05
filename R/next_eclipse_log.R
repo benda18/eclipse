@@ -17,7 +17,7 @@ rm(list=ls());cat('\f')
 
 # funs----
 
-eclipsewise_url <- function(ecl_date = ymd(20780511)){
+eclipsewise_url <- function(ecl_date = ymd(20780511), ecltype = c("t", "a", "p")){
   require(glue)
   require(lubridate)
   w.year  <- year(ecl_date)

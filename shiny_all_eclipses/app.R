@@ -51,6 +51,31 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  eclipsewise_url <- function(ecl_date = ymd(20780511), 
+                              ecltype = c("total", "annular", "partial")){
+    require(glue)
+    require(lubridate)
+    w.year  <- year(ecl_date)
+    w.month <- as.character(lubridate::month(ecl_date, label = F))
+    w.month <- ifelse(nchar(w.month) == 1,
+                      paste("0", w.month, sep = "", collapse = ""),
+                      w.month)
+    w.mday  <- mday(ecl_date)
+    w.mday  <- ifelse(nchar(w.mday) == 1,
+                      paste("0", w.mday, sep = "", collapse = ""),
+                      w.mday)
+    w.cenA  <- floor(w.year/100)*100+1
+    w.cenB  <- w.cenA + 99
+    # list(c(partial = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}P.gif"),
+    #        annular = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}A.gif"),
+    #        total   = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}T.gif")))
+    
+    et <- toupper(substr(ecltype,1,1))
+    
+    return(glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}{et}.gif"))
+  }
+  
   get_search.addr <- eventReactive(input$search_go, {
     censusxy::cxy_oneline(address = input$addr_in)
   })
@@ -107,16 +132,24 @@ server <- function(input, output) {
                                                ifltype = SE$ECL_PARTIAL,
                                                ephe_flag = 4, 
                                                backward = F)
+      ecl_hybrid <- swe_sol_eclipse_when_glob(jd_start = when_next$tret[2]-1, 
+                                               ifltype = SE$ECL_ANNULAR_TOTAL,
+                                               ephe_flag = 4, 
+                                               backward = F)
       
-      ecl_type222 <- c("total", "annular", "partial")[which(c(ecl_total$tret[2] - when_next$tret[2],
-        ecl_annular$tret[2] - when_next$tret[2],
-        ecl_partial$tret[2] - when_next$tret[2]) == 
-        min(c(ecl_total$tret[2] - when_next$tret[2],
-              ecl_annular$tret[2] - when_next$tret[2],
-              ecl_partial$tret[2] - when_next$tret[2])))]
-      ecl_typecheck0 <- min(c(ecl_total$tret[2] - when_next$tret[2],
+      ecl_type222 <- c("total", "annular", 
+                       "partial", "hybrid")[which(abs(c(ecl_total$tret[2] - when_next$tret[2],
+                                                    ecl_annular$tret[2] - when_next$tret[2],
+                                                    ecl_partial$tret[2] - when_next$tret[2],
+                                                    ecl_hybrid$tret[2] - when_next$tret[2])) == 
+                                                    min(abs(c(ecl_total$tret[2] - when_next$tret[2],
+                                                          ecl_annular$tret[2] - when_next$tret[2],
+                                                          ecl_partial$tret[2] - when_next$tret[2],
+                                                          ecl_hybrid$tret[2] - when_next$tret[2]))))]
+      ecl_typecheck0 <- min(abs(c(ecl_total$tret[2] - when_next$tret[2],
                               ecl_annular$tret[2] - when_next$tret[2],
-                              ecl_partial$tret[2] - when_next$tret[2]))
+                              ecl_partial$tret[2] - when_next$tret[2],
+                              ecl_hybrid$tret[2] - when_next$tret[2])))
       
       
       
@@ -137,7 +170,8 @@ server <- function(input, output) {
                           ecl_type = ecl_type222,
                           ecl_typecheck0 = ecl_typecheck0,
                           pct_obscured = temp.nextobs, 
-                          eclipse_url = "[to be implemented at a future date]"))
+                          eclipse_url = eclipsewise_url(ecl_date = temp.nextdate, 
+                                                        ecltype = ecl_type222)))
       
       temp.utc <- temp.nextdate
       temp.jd  <- swe_utc_to_jd(year = year(temp.utc),
