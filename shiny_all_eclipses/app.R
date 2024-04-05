@@ -27,7 +27,22 @@ ui <- fluidPage(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Address", 
-                       value = "1600 Pennsylvania Ave, Washington, DC"),
+                       value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
+                                            "1060 W Addison, Chicago IL",               
+                                            "1 Bear Valley Rd, Point Reyes Station, CA",  
+                                            "250 E Franklin St, Chapel Hill, NC",          
+                                            "100 Joe Nuxhall Wy, Cincinnati, OH",        
+                                            "281 W Lane Ave, Columbus, OH",               
+                                            "300 Alamo Plaza, San Antonio, TX",           
+                                            "2634 Main St, Lake Placid, NY",             
+                                            "1047 Main St, Buffalo, NY" ,                 
+                                            "2610 University Cir, Cincinnati, OH",     
+                                            "3159 W 11th St, Cleveland, OH",              
+                                            "4001 W 2nd St, Roswell, NM",              
+                                            "926 E McLemore Ave, Memphis, TN",           
+                                            "369 Central Ave, Hot Springs, AR",         
+                                            "4790 W 16th St, Indianapolis, IN"), 
+                                      size = 1)),
       shiny::dateInput(inputId = "date_in", 
                        label = "Search-From Date", 
                        value = Sys.Date(), 
@@ -42,7 +57,7 @@ ui <- fluidPage(
     mainPanel(
       #fluidRow(img(src = "clouds.jpg", align = "left", alt = "https://www.flickr.com/photos/alan_light/5273187814/")),  
       wellPanel(
-        fluidRow("The table below shows every eclipse partially visible from the input address until the year 3000 or until Totality is visible again at that location."),
+        fluidRow("The table below shows the next 50 years of solar eclipses visible from this location."),
       ),
       shiny::tableOutput(outputId = "logtable"),
     )
@@ -87,8 +102,8 @@ server <- function(input, output) {
   output$logtable <- shiny::renderTable({
     # vars----
     start.date      <- get_search.date()
-    max.year        <- year(start.date) + 100
-    min_obsc        <- 1 
+    max.year        <- year(start.date) + 50
+    #min_obsc        <- 1 
     
     # do work----
     get.addr <- get_search.addr()
@@ -101,7 +116,8 @@ server <- function(input, output) {
     
     log.ecls <- NULL
     
-    while(!is_totality & year(start.date) < max.year){
+    while(#!is_totality & 
+          year(start.date) < max.year){
       n <- n + 1
       if(n > 2000){
         stop("too many searches - ERROR")
@@ -185,7 +201,8 @@ server <- function(input, output) {
         as.integer() |>
         unique()
       
-      if(temp.nextobs >= min_obsc | year(start.date) >= max.year){
+      if(#temp.nextobs >= min_obsc | 
+        year(start.date) >= max.year){
         break
         is_totality <- T
         next.obs <- temp.nextobs
@@ -205,12 +222,12 @@ server <- function(input, output) {
     # }
     
     log.ecls$pct_obscured[log.ecls$pct_obscured >= 1]  <- 1
-    log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 1)
-    try(log.ecls <- log.ecls[1:max(which(log.ecls$pct_obscured == "100%")),])
+    log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 0.1)
+    # try(log.ecls <- log.ecls[1:max(which(log.ecls$pct_obscured == "100%")),])
     
-    try(log.ecls$pct_obscured <- ifelse(log.ecls$pct_obscured == "100%", 
-                                    "TOTALITY / 100%", 
-                                    log.ecls$pct_obscured))
+    # try(log.ecls$pct_obscured <- ifelse(log.ecls$pct_obscured == "100%",
+    #                                 "TOTALITY / 100%",
+    #                                 log.ecls$pct_obscured))
    #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
     log.ecls$Eclipse_Map <- paste0("click [<a href='",  
                                    log.ecls$Eclipse_Map,
