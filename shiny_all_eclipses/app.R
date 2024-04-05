@@ -144,12 +144,9 @@ server <- function(input, output) {
     log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 1)
     try(log.ecls <- log.ecls[1:max(which(log.ecls$pct_obscured == "100%")),])
     
-    
-    #log.ecls$pct_obscured <- scales::percent(floor(round(log.ecls$pct_obscured *100, digits = 1))/100,accuracy =1)
-    
-    # log.ecls$pct_obscured <- ifelse(test = log.ecls$pct_obscured >= 100, 
-    #                                 yes = "<<<TOTALITY>>>" , 
-    #                                 no = log.ecls$pct_obscured)
+    log.ecls$pct_obscured <- ifelse(log.ecls$pct_obscured == "100%", 
+                                    "TOTALITY / 100%", 
+                                    log.ecls$pct_obscured)
     
     log.ecls
   })
