@@ -15,37 +15,7 @@ library(glue)
 #renv::status()
 rm(list=ls());cat('\f')
 
-# funs----
-# eclipsewise_url <- function(ecl_date = ymd(20780511)){
-#   require(glue)
-#   require(lubridate)
-#   w.year  <- year(ecl_date)
-#   w.month <- as.character(lubridate::month(ecl_date, label = F))
-#   w.month <- ifelse(nchar(w.month) == 1,
-#                     paste("0", w.month, sep = "", collapse = ""), 
-#                     w.month)
-#   w.mday  <- mday(ecl_date)
-#   w.mday  <- ifelse(nchar(w.mday) == 1, 
-#                     paste("0", w.mday, sep = "", collapse = ""), 
-#                     w.mday)
-#   w.cenA  <- floor(w.year/100)*100+1
-#   w.cenB  <- w.cenA + 99
-#   list(c(partial = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}P.gif"), 
-#          annular = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}A.gif"), 
-#          total   = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}T.gif")))
-#   
-#   
-# }
-# eclipsewise_url(ymd(20240408))
-# wiki_url <- function(ecl_date = ymd(20780511)){
-#   require(glue)
-#   require(lubridate)
-#   w.year  <- year(ecl_date)
-#   w.month <- as.character(lubridate::month(ecl_date, label = T, abbr = F))
-#   w.mday  <- mday(ecl_date)
-#   glue("https://en.wikipedia.org/wiki/Solar_eclipse_of_{w.month}_{w.mday},_{w.year}")
-# }
-# wiki_url()
+
 
 # vars----
 the.addr        <- sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
@@ -105,18 +75,18 @@ while(!is_totality & year(start.date) < 3001){
   temp.nextobs <- when_next$attr[c(3)] # p
   
   log.ecls <- rbind(log.ecls,
-                    data.frame(n        = n,
-                               address  = the.addr,
-                               date     = temp.nextdate,
-                               strfdate = strftime(x = temp.nextdate, 
+                    data.frame(#n        = n,
+                               #address  = the.addr,
+                               #date     = temp.nextdate,
+                               date = strftime(x = temp.nextdate, 
                                                    format = "%b %d, %Y", 
                                                    tz = "America/New_York"),
-                               jdate    = NA,
-                               ecl_type = NA,
-                               obsc     = temp.nextobs))
+                               #jdate    = NA,
+                               #ecl_type = NA,
+                               pct_obscured = temp.nextobs))
 
-  temp.utc <- last(log.ecls$date)
-  temp.jd <- swe_utc_to_jd(year = year(temp.utc),
+  temp.utc <- temp.nextdate
+  temp.jd  <- swe_utc_to_jd(year = year(temp.utc),
                            month = lubridate::month(x = temp.utc, label = F),
                            day = mday(temp.utc),
                            houri = hour(temp.utc),
@@ -136,23 +106,27 @@ while(!is_totality & year(start.date) < 3001){
   }
 }
 
-# do next----
-if(temp.nextobs < 1 & 
-   year(start.date) > 3000){
-  next.total.eclipse <- "Sometime after the year 3000"
-}else{
-  next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
-}
+# # do next----
+# if(temp.nextobs < 1 & 
+#    year(start.date) > 3000){
+#   next.total.eclipse <- "Sometime after the year 3000"
+# }else{
+#   next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
+# }
 
-next.total.eclipse
-try(next.obs)
 
-log.ecls[log.ecls$obs >= 0.001,]
 
-floor(round(log.ecls$obsc *100, digits = 1))
+
+log.ecls$pct_obscured <- floor(round(log.ecls$pct_obscured *100, digits = 1))
+
+log.ecls$pct_obscured <- ifelse(test = log.ecls$pct_obscured >= 100, 
+                                yes = "<<<TOTALITY>>>" , 
+                                no = log.ecls$pct_obscured)
+
+log.ecls
 
 # log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),
-#          c("address", "date", "obsc")]
+#          c("address", "date", "pct_obscured")]
 # 
 # lapply(X = log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),]$date,
 #        FUN = wiki_url)

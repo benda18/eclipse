@@ -16,7 +16,13 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            fluidRow("firstrow")
+          shiny::textInput(inputId = "addr_in", 
+                           label = "Enter Address", 
+                           value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
+                                                "4790 W 16th St, Indianapolis, IN"), 
+                                          size = 1)),
+          actionButton(inputId = "cxy_go", 
+                       label   = "SEARCH ADDRESS")
         ),
 
         # Show a plot of the generated distribution
