@@ -18,22 +18,7 @@ rm(list=ls());cat('\f')
 
 
 # vars----
-the.addr        <- sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
-                                "1060 W Addison, Chicago IL",               
-                                "1 Bear Valley Rd, Point Reyes Station, CA",  
-                                "250 E Franklin St, Chapel Hill, NC",          
-                                "100 Joe Nuxhall Wy, Cincinnati, OH",        
-                                "281 W Lane Ave, Columbus, OH",               
-                                "300 Alamo Plaza, San Antonio, TX",           
-                                "2634 Main St, Lake Placid, NY",             
-                                "1047 Main St, Buffalo, NY" ,                 
-                                "2610 University Cir, Cincinnati, OH",     
-                                "3159 W 11th St, Cleveland, OH",              
-                                "4001 W 2nd St, Roswell, NM",              
-                                "926 E McLemore Ave, Memphis, TN",           
-                                "369 Central Ave, Hot Springs, AR",         
-                                "4790 W 16th St, Indianapolis, IN"), 
-                          size = 1)#
+the.addr        <- "1600 Pennsylvania Ave, Washington, DC"
 start.date      <- ymd(20240409)
 min_obsc        <- 1 # will location be in path of totality?
 
