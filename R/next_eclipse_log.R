@@ -15,6 +15,29 @@ library(glue)
 #renv::status()
 rm(list=ls());cat('\f')
 
+# funs----
+
+eclipsewise_url <- function(ecl_date = ymd(20780511)){
+  require(glue)
+  require(lubridate)
+  w.year  <- year(ecl_date)
+  w.month <- as.character(lubridate::month(ecl_date, label = F))
+  w.month <- ifelse(nchar(w.month) == 1,
+                    paste("0", w.month, sep = "", collapse = ""),
+                    w.month)
+  w.mday  <- mday(ecl_date)
+  w.mday  <- ifelse(nchar(w.mday) == 1,
+                    paste("0", w.mday, sep = "", collapse = ""),
+                    w.mday)
+  w.cenA  <- floor(w.year/100)*100+1
+  w.cenB  <- w.cenA + 99
+  list(c(partial = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}P.gif"),
+         annular = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}A.gif"),
+         total   = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}T.gif")))
+
+
+}
+eclipsewise_url(ymd(20240408))
 
 
 # vars----

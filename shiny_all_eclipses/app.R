@@ -94,7 +94,33 @@ server <- function(input, output) {
                                                        y = var.lat, 
                                                        z = 10), 
                                             backward = F)
+      # search eclipse type
+      ecl_total <- swe_sol_eclipse_when_glob(jd_start = when_next$tret[2]-1, 
+                                            ifltype = SE$ECL_TOTAL,#SE$ECL_CENTRAL|SE$ECL_NONCENTRAL,
+                                            ephe_flag = 4, 
+                                            backward = F)
+      ecl_annular <- swe_sol_eclipse_when_glob(jd_start = when_next$tret[2]-1, 
+                                               ifltype = SE$ECL_ANNULAR,
+                                               ephe_flag = 4, 
+                                               backward = F)
+      ecl_partial <- swe_sol_eclipse_when_glob(jd_start = when_next$tret[2]-1, 
+                                               ifltype = SE$ECL_PARTIAL,
+                                               ephe_flag = 4, 
+                                               backward = F)
       
+      ecl_type222 <- c("total", "annular", "partial")[which(c(ecl_total$tret[2] - when_next$tret[2],
+        ecl_annular$tret[2] - when_next$tret[2],
+        ecl_partial$tret[2] - when_next$tret[2]) == 
+        min(c(ecl_total$tret[2] - when_next$tret[2],
+              ecl_annular$tret[2] - when_next$tret[2],
+              ecl_partial$tret[2] - when_next$tret[2])))]
+      ecl_typecheck0 <- min(c(ecl_total$tret[2] - when_next$tret[2],
+                              ecl_annular$tret[2] - when_next$tret[2],
+                              ecl_partial$tret[2] - when_next$tret[2]))
+      
+      
+      
+      # NEXT DATE
       temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
                                      sep = "-", collapse = "-"))
       
@@ -108,7 +134,8 @@ server <- function(input, output) {
                                           format = "%b %d, %Y", 
                                           tz = "America/New_York"),
                           #jdate    = NA,
-                          #ecl_type = NA,
+                          ecl_type = ecl_type222,
+                          ecl_typecheck0 = ecl_typecheck0,
                           pct_obscured = temp.nextobs, 
                           eclipse_url = "[to be implemented at a future date]"))
       
