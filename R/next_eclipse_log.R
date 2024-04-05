@@ -61,14 +61,15 @@ while(!is_totality & year(start.date) < 3001){
   
   log.ecls <- rbind(log.ecls,
                     data.frame(#n        = n,
-                               #address  = the.addr,
-                               #date     = temp.nextdate,
-                               date = strftime(x = temp.nextdate, 
-                                                   format = "%b %d, %Y", 
-                                                   tz = "America/New_York"),
-                               #jdate    = NA,
-                               #ecl_type = NA,
-                               pct_obscured = temp.nextobs))
+                      #address  = the.addr,
+                      #date     = temp.nextdate,
+                      date = strftime(x = temp.nextdate, 
+                                      format = "%b %d, %Y", 
+                                      tz = "America/New_York"),
+                      #jdate    = NA,
+                      #ecl_type = NA,
+                      pct_obscured = temp.nextobs, 
+                      url = NA))
 
   temp.utc <- temp.nextdate
   temp.jd  <- swe_utc_to_jd(year = year(temp.utc),

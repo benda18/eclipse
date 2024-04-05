@@ -87,7 +87,8 @@ server <- function(input, output) {
                                             tz = "America/New_York"),
                             #jdate    = NA,
                             #ecl_type = NA,
-                            pct_obscured = temp.nextobs))
+                            pct_obscured = temp.nextobs, 
+                            url = NA))
         
         temp.utc <- temp.nextdate
         temp.jd  <- swe_utc_to_jd(year = year(temp.utc),
