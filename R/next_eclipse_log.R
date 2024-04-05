@@ -65,7 +65,7 @@ the.addr        <- sample(x = c("1600 Pennsylvania Ave, Washington, DC",
                                 "4790 W 16th St, Indianapolis, IN"), 
                           size = 1)#
 start.date      <- ymd(20240409)
-min_obsc <- 1 # will location be in path of totality?
+min_obsc        <- 1 # will location be in path of totality?
 
 # do work----
 get.addr <- censusxy::cxy_oneline(address = the.addr)
@@ -77,7 +77,7 @@ var.lat <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)
 is_totality <- F
 n <- 0
 
-#log.ecls <- NULL
+log.ecls <- NULL
 
 while(!is_totality & year(start.date) < 3001){
   n <- n + 1
@@ -104,27 +104,27 @@ while(!is_totality & year(start.date) < 3001){
   
   temp.nextobs <- when_next$attr[c(3)] # p
   
-  # log.ecls <- rbind(log.ecls, 
-  #                   data.frame(n        = n, 
-  #                              address  = the.addr,
-  #                              date     = temp.nextdate,
-  #                              strfdate = strftime(x = temp.nextdate, format = "%b %d, %Y"),
-  #                              jdate    = NA,
-  #                              ecl_type = NA,
-  #                              obsc     = temp.nextobs))
-  # 
-  # temp.utc <- last(log.ecls$date)
-  # temp.jd <- swe_utc_to_jd(year = year(temp.utc), 
-  #                          month = lubridate::month(x = temp.utc, label = F), 
-  #                          day = mday(temp.utc), 
-  #                          houri = hour(temp.utc), 
-  #                          min = minute(temp.utc), 
-  #                          sec = second(temp.utc), 
-  #                          gregflag = 1)$dret |> 
-  #   as.integer() |> 
-  #   unique()
-  
-  
+  log.ecls <- rbind(log.ecls,
+                    data.frame(n        = n,
+                               address  = the.addr,
+                               date     = temp.nextdate,
+                               strfdate = strftime(x = temp.nextdate, 
+                                                   format = "%b %d, %Y", 
+                                                   tz = "America/New_York"),
+                               jdate    = NA,
+                               ecl_type = NA,
+                               obsc     = temp.nextobs))
+
+  temp.utc <- last(log.ecls$date)
+  temp.jd <- swe_utc_to_jd(year = year(temp.utc),
+                           month = lubridate::month(x = temp.utc, label = F),
+                           day = mday(temp.utc),
+                           houri = hour(temp.utc),
+                           min = minute(temp.utc),
+                           sec = second(temp.utc),
+                           gregflag = 1)$dret |>
+    as.integer() |>
+    unique()
   
   if(temp.nextobs >= min_obsc){
     is_totality <- T
@@ -146,11 +146,16 @@ if(temp.nextobs < 1 &
 
 next.total.eclipse
 try(next.obs)
+
+log.ecls[log.ecls$obs >= 0.001,]
+
+floor(round(log.ecls$obsc *100, digits = 1))
+
 # log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),
 #          c("address", "date", "obsc")]
 # 
-# lapply(X = log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),]$date, 
+# lapply(X = log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),]$date,
 #        FUN = wiki_url)
 # 
-# lapply(X = log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),]$date, 
+# lapply(X = log.ecls[sample(1:nrow(log.ecls), size = 3, replace = F),]$date,
 #        FUN = eclipsewise_url)
