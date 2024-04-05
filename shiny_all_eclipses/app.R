@@ -6,7 +6,17 @@
 #
 
 library(shiny)
-
+library(swephR)
+library(lubridate)
+library(dplyr)
+#library(tigris)
+library(censusxy)
+library(scales)
+library(ggplot2)
+#library(sf)
+library(renv)
+library(glue)
+#library(rsconnect)
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -18,9 +28,7 @@ ui <- fluidPage(
         sidebarPanel(
           shiny::textInput(inputId = "addr_in", 
                            label = "Enter Address", 
-                           value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
-                                                "4790 W 16th St, Indianapolis, IN"), 
-                                          size = 1)),
+                           value = "1600 Pennsylvania Ave, Washington, DC"),
           actionButton(inputId = "cxy_go", 
                        label   = "SEARCH ADDRESS")
         ),
@@ -37,7 +45,8 @@ server <- function(input, output) {
 
     output$logtable <- shiny::renderTable({
       # vars----
-      the.addr        <- "1600 Pennsylvania Ave, Washington, DC"
+      #the.addr        <- "4790 W 16th St, Indianapolis, IN"
+      the.addr        <- input$addr_in
       start.date      <- ymd(20240409)
       min_obsc        <- 1 # will location be in path of totality?
       
@@ -119,14 +128,16 @@ server <- function(input, output) {
       #   next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
       # }
       
+      log.ecls$pct_obscured[log.ecls$pct_obscured >= 1]  <- 1
+      log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 1)
+      try(log.ecls <- log.ecls[1:max(which(log.ecls$pct_obscured == "100%")),])
       
       
+      #log.ecls$pct_obscured <- scales::percent(floor(round(log.ecls$pct_obscured *100, digits = 1))/100,accuracy =1)
       
-      log.ecls$pct_obscured <- floor(round(log.ecls$pct_obscured *100, digits = 1))
-      
-      log.ecls$pct_obscured <- ifelse(test = log.ecls$pct_obscured >= 100, 
-                                      yes = "<<<TOTALITY>>>" , 
-                                      no = log.ecls$pct_obscured)
+      # log.ecls$pct_obscured <- ifelse(test = log.ecls$pct_obscured >= 100, 
+      #                                 yes = "<<<TOTALITY>>>" , 
+      #                                 no = log.ecls$pct_obscured)
       
       log.ecls
     })

@@ -18,7 +18,7 @@ rm(list=ls());cat('\f')
 
 
 # vars----
-the.addr        <- "1600 Pennsylvania Ave, Washington, DC"
+the.addr        <- "4790 W 16th St, Indianapolis, IN"
 start.date      <- ymd(20240409)
 min_obsc        <- 1 # will location be in path of totality?
 
