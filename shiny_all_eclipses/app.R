@@ -209,7 +209,7 @@ server <- function(input, output) {
     log.ecls$pct_obscured <- ifelse(log.ecls$pct_obscured == "100%", 
                                     "TOTALITY / 100%", 
                                     log.ecls$pct_obscured)
-   
+   #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
     log.ecls$eclipse_url <- paste0("<a href='",  
                                    log.ecls$eclipse_url,
                                    "' target='_blank'>[click]</a>")
