@@ -97,6 +97,11 @@ ui <- fluidPage(
         wellPanel(
           fluidRow(div(h4(strong("A NOTE ON CALENDAR CALCULATIONS")))),
           fluidRow("The modern Gregorian calendar was adopted beginning in AD 1582.  Attempting to reconcile earlier historical events with these types of astronomical calculations at minimum requires additional verification. The scientific effort to perfect the calendar has caused at least 1 country's Olympic delegation to arrive at the contest 2 weeks late, entirely missing out on participating in some events (https://www.si.com/extra-mustard/2013/12/30/the-extra-mustard-trivia-hour-when-a-calendar-defeated-russia-in-the-1908-olympics)." )
+        ), 
+        wellPanel(
+          fluidRow(strong("DONATIONS - help cover hosting costs")), 
+          #fluidRow("This tool was created for fun for the enjoyment and use of others, and was built upon the work of others who came before me. There is montly cost to keep it live for people to use, so if you want to donate to help cover that cost or even a little extra I would appreciate it, but do not expect it"), 
+          fluidRow("Venmo: @Tim_J_Bender")
         )
       )
     )
