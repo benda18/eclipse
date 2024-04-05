@@ -21,8 +21,7 @@ library(glue)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("Solar Eclipses Visible from Your Address"),
-  
+  titlePanel("Solar Eclipses Visible from Your Address", ),
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
@@ -41,15 +40,17 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      fluidRow("The table below shows every eclipse partially visible from the input address until the year 3000 or until Totality is visible again at that location."),
-      shiny::tableOutput(outputId = "logtable")
+      #fluidRow(img(src = "clouds.jpg", align = "left", alt = "https://www.flickr.com/photos/alan_light/5273187814/")),  
+      wellPanel(
+        fluidRow("The table below shows every eclipse partially visible from the input address until the year 3000 or until Totality is visible again at that location."),
+      ),
+      shiny::tableOutput(outputId = "logtable"),
     )
   )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  
   get_search.addr <- eventReactive(input$search_go, {
     censusxy::cxy_oneline(address = input$addr_in)
   })
