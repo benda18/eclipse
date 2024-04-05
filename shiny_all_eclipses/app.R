@@ -168,7 +168,7 @@ server <- function(input, output) {
                                           tz = "America/New_York"),
                           #jdate    = NA,
                           ecl_type = ecl_type222,
-                          ecl_typecheck0 = ecl_typecheck0,
+                          #ecl_typecheck0 = ecl_typecheck0,
                           pct_obscured = temp.nextobs, 
                           eclipse_url = eclipsewise_url(ecl_date = temp.nextdate, 
                                                         ecltype = ecl_type222)))
@@ -209,9 +209,14 @@ server <- function(input, output) {
     log.ecls$pct_obscured <- ifelse(log.ecls$pct_obscured == "100%", 
                                     "TOTALITY / 100%", 
                                     log.ecls$pct_obscured)
-    
+   
+    log.ecls$eclipse_url <- paste0("<a href='",  
+                                   log.ecls$eclipse_url,
+                                   "' target='_blank'>[click]</a>")
     log.ecls
-  })
+  }, 
+  sanitize.text.function = function(x) x
+  )
   
 }
 
