@@ -53,7 +53,7 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   eclipsewise_url <- function(ecl_date = ymd(20780511), 
-                              ecltype = c("total", "annular", "partial")){
+                              ecltype = c("Total Eclipse", "Annular", "Partial", "Hybrid")){
     require(glue)
     require(lubridate)
     w.year  <- year(ecl_date)
@@ -87,6 +87,7 @@ server <- function(input, output) {
   output$logtable <- shiny::renderTable({
     # vars----
     start.date      <- get_search.date()
+    max.year        <- year(start.date) + 100
     min_obsc        <- 1 
     
     # do work----
@@ -100,7 +101,7 @@ server <- function(input, output) {
     
     log.ecls <- NULL
     
-    while(!is_totality & year(start.date) < 3001){
+    while(!is_totality & year(start.date) < max.year){
       n <- n + 1
       if(n > 2000){
         stop("too many searches - ERROR")
@@ -137,8 +138,8 @@ server <- function(input, output) {
                                                ephe_flag = 4, 
                                                backward = F)
       
-      ecl_type222 <- c("total", "annular", 
-                       "partial", "hybrid")[which(abs(c(ecl_total$tret[2] - when_next$tret[2],
+      ecl_type222 <- c("Total Eclipse", "Annular", 
+                       "Partial", "Hybrid")[which(abs(c(ecl_total$tret[2] - when_next$tret[2],
                                                     ecl_annular$tret[2] - when_next$tret[2],
                                                     ecl_partial$tret[2] - when_next$tret[2],
                                                     ecl_hybrid$tret[2] - when_next$tret[2])) == 
@@ -163,14 +164,14 @@ server <- function(input, output) {
                         data.frame(#n        = n,
                           #address  = the.addr,
                           #date     = temp.nextdate,
-                          date = strftime(x = temp.nextdate, 
+                          Date = strftime(x = temp.nextdate, 
                                           format = "%b %d, %Y", 
                                           tz = "America/New_York"),
                           #jdate    = NA,
-                          ecl_type = ecl_type222,
+                          Type = ecl_type222,
                           #ecl_typecheck0 = ecl_typecheck0,
                           pct_obscured = temp.nextobs, 
-                          eclipse_url = eclipsewise_url(ecl_date = temp.nextdate, 
+                          Eclipse_Map = eclipsewise_url(ecl_date = temp.nextdate, 
                                                         ecltype = ecl_type222)))
       
       temp.utc <- temp.nextdate
@@ -184,7 +185,8 @@ server <- function(input, output) {
         as.integer() |>
         unique()
       
-      if(temp.nextobs >= min_obsc){
+      if(temp.nextobs >= min_obsc | year(start.date) >= max.year){
+        break
         is_totality <- T
         next.obs <- temp.nextobs
         start.date <- as_date(temp.nextdate)
@@ -206,13 +208,13 @@ server <- function(input, output) {
     log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 1)
     try(log.ecls <- log.ecls[1:max(which(log.ecls$pct_obscured == "100%")),])
     
-    log.ecls$pct_obscured <- ifelse(log.ecls$pct_obscured == "100%", 
+    try(log.ecls$pct_obscured <- ifelse(log.ecls$pct_obscured == "100%", 
                                     "TOTALITY / 100%", 
-                                    log.ecls$pct_obscured)
+                                    log.ecls$pct_obscured))
    #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
-    log.ecls$eclipse_url <- paste0("<a href='",  
-                                   log.ecls$eclipse_url,
-                                   "' target='_blank'>[click]</a>")
+    log.ecls$Eclipse_Map <- paste0("click [<a href='",  
+                                   log.ecls$Eclipse_Map,
+                                   "' target='_blank'>link</a>]")
     log.ecls
   }, 
   sanitize.text.function = function(x) x
