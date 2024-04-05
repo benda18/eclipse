@@ -50,14 +50,27 @@ ui <- fluidPage(
                        max   = "2999-12-31", 
                        format = "MM dd, yyyy"),
       actionButton(inputId = "search_go", 
-                   label   = "SEARCH ADDRESS")
+                   label   = "SEARCH ADDRESS"),
+     
     ),
     
     # Show a plot of the generated distribution
     mainPanel(
       #fluidRow(img(src = "clouds.jpg", align = "left", alt = "https://www.flickr.com/photos/alan_light/5273187814/")),  
       wellPanel(
-        fluidRow("The table below shows the next 50 years of solar eclipses visible from this location."),
+        fluidRow(strong("Developed by Tim Bender")), 
+        fluidRow(uiOutput("tab.linkedin")),
+        fluidRow(uiOutput("tab.github")),
+        fluidRow("Special thanks to reddit user /u/danielsixfive for QA assistance"),
+        #fluidRow("RESOURCES"),
+        #fluidRow(uiOutput("tab.res2")),
+        #fluidRow(uiOutput("tab.nasa")),
+        #fluidRow(uiOutput("tab")),
+        fluidRow(strong("SOURCES")),
+        fluidRow(uiOutput("tab.res"))
+      ),
+      wellPanel(
+        fluidRow("The table below shows the next 75 years of solar eclipses visible from this location."),
       ),
       shiny::tableOutput(outputId = "logtable"),
     )
@@ -102,7 +115,7 @@ server <- function(input, output) {
   output$logtable <- shiny::renderTable({
     # vars----
     start.date      <- get_search.date()
-    max.year        <- year(start.date) + 50
+    max.year        <- year(start.date) + 75
     #min_obsc        <- 1 
     
     # do work----
@@ -229,13 +242,64 @@ server <- function(input, output) {
     #                                 "TOTALITY / 100%",
     #                                 log.ecls$pct_obscured))
    #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
-    log.ecls$Eclipse_Map <- paste0("click [<a href='",  
+    log.ecls$Eclipse_Map <- paste0("link to [<a href='",  
                                    log.ecls$Eclipse_Map,
-                                   "' target='_blank'>link</a>]")
+                                   "' target='_blank'>map</a>]")
     log.ecls
   }, 
   sanitize.text.function = function(x) x
   )
+  
+  # url <- a("Interactive map from National Solar Observatory", 
+  #          href="https://nso.edu/for-public/eclipse-map-2024/", 
+  #          target="_blank")
+  # output$tab <- renderUI({
+  #   tagList(url)
+  # })
+  
+  # url.nextecl_dash <- a("Want to know more? Click here to find the next solar and lunar eclipse for any location at any point in recent history (today +/- 1000 years)", 
+  #                       href="https://tim-bender.shinyapps.io/shiny_next_eclipse/", 
+  #                       target="_blank")
+  # output$nextecl_dash <- renderUI({
+  #   tagList(url.nextecl_dash)
+  # })
+  
+  # url.nasa <- a("NASA's 2024 Eclipse Website", 
+  #               href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/", 
+  #               target = "_blank")
+  # output$tab.nasa <- renderUI({
+  #   tagList(url.nasa)
+  # })
+  
+  url.github <- a("GitHub Source Code", 
+                  href = "https://github.com/benda18/eclipse/blob/main/shiny_all_eclipses/app.R", 
+                  target = "_blank")
+  output$tab.github <- renderUI({
+    tagList(url.github)
+  })
+  
+  url.linkedin <- a("LinkedIn", 
+                    href = "https://www.linkedin.com/in/tim-bender-238870171/", 
+                    target = "_blank")
+  output$tab.linkedin <- renderUI({
+    tagList(url.linkedin)
+  })
+  
+  url.res <- a("All Sources are cited on the project's GitHub README", 
+               href = "https://github.com/benda18/eclipse/blob/main/README.md#sources", 
+               target = "_blank")
+  output$tab.res <- renderUI({
+    tagList(url.res)
+  })
+  
+  # url.res2 <- a("The American Astronomical Society's \"Suppliers of Safe Solar Viewers & Filters\" list", 
+  #               href = "https://eclipse.aas.org/eye-safety/viewers-filters", 
+  #               target = "_blank")
+  # output$tab.res2 <- renderUI({
+  #   tagList(url.res2)
+  # })
+  
+  
   
 }
 
