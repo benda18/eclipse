@@ -66,7 +66,7 @@ ui <- fluidPage(
       ),
       wellPanel(
         fluidRow("The table below shows the next 75 years of solar eclipses visible from this location."),
-        fluidRow(strong(span("KNOWN ERROR:The obscuration values in the table below are off by by roughly 5%.  Currently working on identifying the problem and a fix. There are no issues with the eclipses identified as that comes from different logic", style = "color:red"))),
+        fluidRow(strong(span("NOTE: Obscuration percentages were being incorrectly calculated in the table below by about 5% previously. This error has now been fixed.", style = "color:black"))),
       ),
       shiny::tableOutput(outputId = "logtable"),
       wellPanel(

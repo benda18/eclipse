@@ -212,7 +212,7 @@ server <- function(input, output) {
                                                  sep = "-", collapse = "-"))), 
                            format = "%B %d, %Y at %I:%M%p %Z")
       ecl_type <- ifelse(when_next$attr[2] >= 1, "Total Solar", "Annular Solar")
-      ecl_obs  <- when_next$attr[3]
+      ecl_obs  <- max(when_next$attr[c(1,3)])
       
       df_ecl <- data.frame(Date_Time = ecl_date, 
                            Eclipse_Type = ecl_type, 
