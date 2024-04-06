@@ -17,12 +17,13 @@ library(ggplot2)
 library(renv)
 library(glue)
 #library(rsconnect)
-# Define UI for application that draws a histogram
+
+
 ui <- fluidPage(
   
   # Application title
   titlePanel("Solar Eclipses Visible from Your Address", ),
-  # Sidebar with a slider input for number of bins 
+  
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
@@ -54,30 +55,24 @@ ui <- fluidPage(
      
     ),
     
-    # Show a plot of the generated distribution
     mainPanel(
-      #fluidRow(img(src = "clouds.jpg", align = "left", alt = "https://www.flickr.com/photos/alan_light/5273187814/")),  
       wellPanel(
         fluidRow(strong("Developed by Tim Bender")), 
         fluidRow(uiOutput("tab.linkedin")),
         fluidRow(uiOutput("tab.github")),
         fluidRow("Special thanks to reddit user /u/danielsixfive for QA assistance"),
-        #fluidRow("RESOURCES"),
-        #fluidRow(uiOutput("tab.res2")),
-        #fluidRow(uiOutput("tab.nasa")),
-        #fluidRow(uiOutput("tab")),
         fluidRow(strong("SOURCES")),
         fluidRow(uiOutput("tab.res"))
       ),
       wellPanel(
         fluidRow("The table below shows the next 75 years of solar eclipses visible from this location."),
+        fluidRow(strong(span("KNOWN ERROR:The obscuration values in the table below are off by by roughly 5%.  Currently working on identifying the problem and a fix. There are no issues with the eclipses identified as that comes from different logic", style = "color:red"))),
       ),
       shiny::tableOutput(outputId = "logtable"),
       wellPanel(
         fluidRow(strong("DONATIONS - help cover hosting costs")), 
-        #fluidRow("This tool was created for fun for the enjoyment and use of others, and was built upon the work of others who came before me. There is montly cost to keep it live for people to use, so if you want to donate to help cover that cost or even a little extra I would appreciate it, but do not expect it"), 
-        #fluidRow("Venmo: @Tim_J_Bender"), 
-        fluidRow(uiOutput("tab.venmo"))
+        fluidRow(uiOutput("tab.venmo")),
+        #fluidRow(uiOutput("addr_img"))
       )
     )
   )
@@ -101,9 +96,6 @@ server <- function(input, output) {
                       w.mday)
     w.cenA  <- floor(w.year/100)*100+1
     w.cenB  <- w.cenA + 99
-    # list(c(partial = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}P.gif"),
-    #        annular = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}A.gif"),
-    #        total   = glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}T.gif")))
     
     et <- toupper(substr(ecltype,1,1))
     
@@ -193,7 +185,7 @@ server <- function(input, output) {
       temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
                                      sep = "-", collapse = "-"))
       
-      temp.nextobs <- when_next$attr[c(3)] # p
+      temp.nextobs <- max(when_next$attr[c(3)]) # p
       
       log.ecls <- rbind(log.ecls,
                         data.frame(#n        = n,
@@ -220,8 +212,7 @@ server <- function(input, output) {
         as.integer() |>
         unique()
       
-      if(#temp.nextobs >= min_obsc | 
-        year(start.date) >= max.year){
+      if(year(start.date) >= max.year){
         break
         is_totality <- T
         next.obs <- temp.nextobs
@@ -232,22 +223,9 @@ server <- function(input, output) {
       }
     }
     
-    # # do next----
-    # if(temp.nextobs < 1 & 
-    #    year(start.date) > 3000){
-    #   next.total.eclipse <- "Sometime after the year 3000"
-    # }else{
-    #   next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
-    # }
-    
     log.ecls$pct_obscured[log.ecls$pct_obscured >= 1]  <- 1
     log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 0.1)
-    # try(log.ecls <- log.ecls[1:max(which(log.ecls$pct_obscured == "100%")),])
-    
-    # try(log.ecls$pct_obscured <- ifelse(log.ecls$pct_obscured == "100%",
-    #                                 "TOTALITY / 100%",
-    #                                 log.ecls$pct_obscured))
-   #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
+    #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
     log.ecls$Eclipse_Map <- paste0("link to [<a href='",  
                                    log.ecls$Eclipse_Map,
                                    "' target='_blank'>map</a>]")
@@ -255,27 +233,6 @@ server <- function(input, output) {
   }, 
   sanitize.text.function = function(x) x
   )
-  
-  # url <- a("Interactive map from National Solar Observatory", 
-  #          href="https://nso.edu/for-public/eclipse-map-2024/", 
-  #          target="_blank")
-  # output$tab <- renderUI({
-  #   tagList(url)
-  # })
-  
-  # url.nextecl_dash <- a("Want to know more? Click here to find the next solar and lunar eclipse for any location at any point in recent history (today +/- 1000 years)", 
-  #                       href="https://tim-bender.shinyapps.io/shiny_next_eclipse/", 
-  #                       target="_blank")
-  # output$nextecl_dash <- renderUI({
-  #   tagList(url.nextecl_dash)
-  # })
-  
-  # url.nasa <- a("NASA's 2024 Eclipse Website", 
-  #               href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/", 
-  #               target = "_blank")
-  # output$tab.nasa <- renderUI({
-  #   tagList(url.nasa)
-  # })
   
   url.venmo <- a("Venmo: @Tim_J_Bender", 
                  href = "https://venmo.com/u/Tim_J_Bender", 
@@ -305,15 +262,15 @@ server <- function(input, output) {
     tagList(url.res)
   })
   
-  # url.res2 <- a("The American Astronomical Society's \"Suppliers of Safe Solar Viewers & Filters\" list", 
-  #               href = "https://eclipse.aas.org/eye-safety/viewers-filters", 
-  #               target = "_blank")
-  # output$tab.res2 <- renderUI({
-  #   tagList(url.res2)
+  # ADDRESS IMAGES----
+  
+  # address.img <- eventReactive(input$search_go, {
+  #   ifelse(input$addr_in == "926 E McLemore Ave, Memphis, TN", 
+  #          img("staxmuseum.jpg"), 
+  #          img("null.jpg"))
   # })
-  
-  
-  
+  # output$addr_img <- renderImage(address.img())
+  # 
 }
 
 # Run the application 
