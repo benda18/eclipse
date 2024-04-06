@@ -76,7 +76,8 @@ ui <- fluidPage(
       wellPanel(
         fluidRow(strong("DONATIONS - help cover hosting costs")), 
         #fluidRow("This tool was created for fun for the enjoyment and use of others, and was built upon the work of others who came before me. There is montly cost to keep it live for people to use, so if you want to donate to help cover that cost or even a little extra I would appreciate it, but do not expect it"), 
-        fluidRow("Venmo: @Tim_J_Bender")
+        #fluidRow("Venmo: @Tim_J_Bender"),
+        fluidRow(uiOutput("tab.venmo"))
       )
     )
   )
@@ -275,6 +276,13 @@ server <- function(input, output) {
   # output$tab.nasa <- renderUI({
   #   tagList(url.nasa)
   # })
+  
+  url.venmo <- a("Venmo: @Tim_J_Bender", 
+                 href = "https://venmo.com/u/Tim_J_Bender", 
+                 target = "_blank")
+  output$tab.venmo <- renderUI({
+    tagList(url.venmo)
+  })
   
   url.github <- a("GitHub Source Code", 
                   href = "https://github.com/benda18/eclipse/blob/main/shiny_all_eclipses/app.R", 
