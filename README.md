@@ -15,9 +15,7 @@ Many useful web tools and resources exist to help plan where and when to go to b
 * April 8, 2024 Total Eclipse Planning Tool ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_eclipse_planner/))
 * Find all eclipses for the next 75 years for a location ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_all_eclipses/))
 * Find the next Solar and Lunar Eclipse for a Location ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_next_eclipse/))
-* 
-
-
+  
 ### Sources
 * swephR: High Precision Swiss Ephemeris ([link to CRAN](https://cran.r-project.org/package=swephR))
 * ggmap: spatial visualization with ggplot2 ([link to CRAN](https://cran.r-project.org/package=ggmap)) ([link to D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161.](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf))
