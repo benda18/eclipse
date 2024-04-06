@@ -1,5 +1,5 @@
 # Eclipse Planning Tools
-## Search for Solar and Lunar Information by US Mailing Address
+## Search for Solar and Lunar Eclipse Information by US Mailing Address
 
 ### BACKGROUND: 
 The 2024 Total Eclipse that will cross North America on April 8th will be the last chance for many of us to see a total solar eclipse [for the next 21 years](https://tim-bender.shinyapps.io/shiny_next_eclipse/).  NASA estimates that 150 million people live within 200 miles of totality of this eclipse, 5 times as many people as the 2017 eclipse that also crossed the continental US.  
