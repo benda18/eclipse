@@ -185,7 +185,7 @@ server <- function(input, output) {
       temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
                                      sep = "-", collapse = "-"))
       
-      temp.nextobs <- max(when_next$attr[c(3)]) # p
+      temp.nextobs <- max(when_next$attr[c(1,3)]) # p
       
       log.ecls <- rbind(log.ecls,
                         data.frame(#n        = n,
