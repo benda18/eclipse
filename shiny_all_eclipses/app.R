@@ -74,6 +74,8 @@ ui <- fluidPage(
         #fluidRow(strong(span("NOTE: Obscuration percentages were being incorrectly calculated in the table below by about 5% previously. This error has now been fixed.", style = "color:black"))),
       ),
       shiny::tableOutput(outputId = "logtable"),
+      shiny::plotOutput(outputId = "qr_url", 
+                        height = "200px")
       # wellPanel(
       #   fluidRow(strong("DONATIONS - help cover hosting costs")), 
       #   fluidRow(uiOutput("tab.venmo")),
@@ -263,22 +265,14 @@ server <- function(input, output) {
   })
   #/RESOURCES
   
-  # url.res <- a("All Sources are cited on the project's GitHub README", 
-  #              href = "https://github.com/benda18/eclipse/blob/main/README.md#sources", 
-  #              target = "_blank")
-  # output$tab.res <- renderUI({
-  #   tagList(url.res)
-  # })
+  output$qr_url <- renderPlot({
+    qr_app <- qrcode::qr_code(x = "https://tim-bender.shinyapps.io/shiny_all_eclipses/", 
+                              ecl = "H")
+    qr_app_logo <- add_logo(qr_app, 
+                            logo = "www/QRLOGO.jpg")
+    plot(qr_app_logo)
+  })
   
-  # ADDRESS IMAGES----
-  
-  # address.img <- eventReactive(input$search_go, {
-  #   ifelse(input$addr_in == "926 E McLemore Ave, Memphis, TN", 
-  #          img("staxmuseum.jpg"), 
-  #          img("null.jpg"))
-  # })
-  # output$addr_img <- renderImage(address.img())
-  # 
 }
 
 # Run the application 
