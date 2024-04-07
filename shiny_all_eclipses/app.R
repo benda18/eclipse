@@ -17,7 +17,7 @@ library(ggplot2)
 library(renv)
 library(glue)
 #library(rsconnect)
-
+library(qrcode)
 
 ui <- fluidPage(
   

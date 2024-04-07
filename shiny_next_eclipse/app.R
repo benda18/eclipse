@@ -20,6 +20,7 @@ library(sf)
 library(glue)
 #library(rsconnect)
 #library(ggmap)
+library(qrcode)
 
 # renv::status()
 # renv::snapshot()

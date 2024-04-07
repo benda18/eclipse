@@ -22,10 +22,10 @@ library(sf)
 library(glue)
 #library(rsconnect)
 library(ggmap)
-#library(shinyalert)
-#library(jpeg)
 library(png)
 library(grid)
+library(qrcode)
+
 
 # renv::status()
 # renv::snapshot()
@@ -106,6 +106,8 @@ ui <- fluidPage(
       #/BRMP
       wellPanel(
         shiny::plotOutput(outputId = "map"),
+        shiny::plotOutput(outputId = "qr_url", 
+                          height = "200px")
         ), 
       # wellPanel(
       #   fluidRow(strong("DONATIONS - help cover hosting costs")), 
@@ -479,6 +481,15 @@ server <- function(input, output) {
   output$return_suncov <- renderText({
     paste(get_suncov(), get_totality(), sep = " | ", collapse = " | ")
     
+  })
+  
+  
+  output$qr_url <- renderPlot({
+    qr_app <- qrcode::qr_code(x = "https://tim-bender.shinyapps.io/shiny_eclipse_planner/", 
+                              ecl = "H")
+    qr_app_logo <- add_logo(qr_app, 
+                            logo = "www/QRLOGO.jpg")
+    plot(qr_app_logo)
   })
   
   output$map <- renderPlot({
