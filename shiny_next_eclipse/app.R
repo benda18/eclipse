@@ -40,7 +40,7 @@ ui <- fluidPage(
         fluidRow("Find the next Solar and Lunar eclipses for any US mailing address. Enter an address and a date to search from below.")
       ),
       shiny::textInput(inputId = "addr_in", 
-                       label = "Enter Address", 
+                       label = "Enter Street Address [general terms like \'The White House\' won't work]", 
                        #value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
                        value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
                                             "1060 W Addison, Chicago IL",               

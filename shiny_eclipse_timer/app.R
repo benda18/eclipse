@@ -39,7 +39,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
-                       label = "Enter Address", 
+                       label = "Enter Street Address [general terms like \'The White House\' won't work]" , 
                        value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
                                             "1060 W Addison, Chicago IL",               
                                             "1 Bear Valley Rd, Point Reyes Station, CA",  
