@@ -66,7 +66,7 @@ ui <- fluidPage(
       ),
       wellPanel(
         fluidRow("The table below shows the next 75 years of solar eclipses visible from this location."),
-        fluidRow(strong(span("NOTE: Obscuration percentages were being incorrectly calculated in the table below by about 5% previously. This error has now been fixed.", style = "color:black"))),
+        #fluidRow(strong(span("NOTE: Obscuration percentages were being incorrectly calculated in the table below by about 5% previously. This error has now been fixed.", style = "color:black"))),
       ),
       shiny::tableOutput(outputId = "logtable"),
       wellPanel(
@@ -81,7 +81,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  eclipsewise_url <- function(ecl_date = ymd(20780511), 
+  eclipsewise_url <- function(ecl_date,# = ymd(20780511), 
                               ecltype = c("Total Eclipse", "Annular", "Partial", "Hybrid")){
     require(glue)
     require(lubridate)
