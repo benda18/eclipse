@@ -517,7 +517,7 @@ server <- function(input, output) {
       img <- readPNG("www/totality.png")
       g <- rasterGrob(img, interpolate=TRUE)
       
-      ggplot() + 
+      sched.plot <- ggplot() + 
         # geom_hline(aes(yintercept = 1, 
         #                color = "Totality"), 
         #            linetype = 2, linewidth = 1)+
@@ -549,11 +549,11 @@ server <- function(input, output) {
                           ymin= 1, 
                           ymax= 1.25)
     }else{
-      ggplot() + 
+      sched.plot <- ggplot() + 
         geom_hline(aes(yintercept = 1, 
                        color = "Totality"), 
                    linetype = 2, linewidth = 1)+
-        geom_polygon(data = df.sched, alpha = 0.8,
+        geom_polygon(data = df.sched, alpha = 0.4,
                      aes(x = time, y = coverage), 
                      linewidth = 1) +
         geom_line(data = df.sched, 
@@ -576,6 +576,10 @@ server <- function(input, output) {
         labs(title = "Eclipse Timeline", 
              subtitle = unname(unlist(addr.coords$matchedAddress)))
     }
+    
+    
+    print(sched.plot + 
+            geom_vline(aes(xintercept = Sys.time())))
     
     
   })
