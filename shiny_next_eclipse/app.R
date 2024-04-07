@@ -66,7 +66,7 @@ ui <- fluidPage(
                        label = "Search From Date", 
                        value = Sys.Date(), 
                        min = ymd(10000101), #ymd(18500101), 
-                       max = ymd(30001231)), #ymd(21500101)),
+                       max = ymd(25001231)), #ymd(21500101)),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH"), 
       wellPanel(
