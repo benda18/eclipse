@@ -56,24 +56,28 @@ ui <- fluidPage(
     ),
     
     mainPanel(
+      # BLOCK RESOURCES MAIN PANEL
       wellPanel(
-        fluidRow(strong("Developed by Tim Bender")), 
+        fluidRow(strong("DEVELOPED BY")), 
         fluidRow(uiOutput("tab.linkedin")),
-        fluidRow(uiOutput("tab.github")),
-        fluidRow("Special thanks to reddit user /u/danielsixfive for QA assistance"),
+        fluidRow(strong("SPECIAL ASSISTANCE FROM")),
+        fluidRow("reddit user /u/danielsixfive for QA assistance"),
         fluidRow(strong("SOURCES")),
-        fluidRow(uiOutput("tab.res"))
+        fluidRow(uiOutput("tab.github")),
+        fluidRow(strong("DONATIONS - help cover hosting costs")), 
+        fluidRow(uiOutput("tab.venmo")),
       ),
+      #/BRMP
       wellPanel(
         fluidRow("The table below shows the next 75 years of solar eclipses visible from this location."),
         #fluidRow(strong(span("NOTE: Obscuration percentages were being incorrectly calculated in the table below by about 5% previously. This error has now been fixed.", style = "color:black"))),
       ),
       shiny::tableOutput(outputId = "logtable"),
-      wellPanel(
-        fluidRow(strong("DONATIONS - help cover hosting costs")), 
-        fluidRow(uiOutput("tab.venmo")),
-        #fluidRow(uiOutput("addr_img"))
-      )
+      # wellPanel(
+      #   fluidRow(strong("DONATIONS - help cover hosting costs")), 
+      #   fluidRow(uiOutput("tab.venmo")),
+      #   #fluidRow(uiOutput("addr_img"))
+      # )
     )
   )
 )
@@ -234,6 +238,8 @@ server <- function(input, output) {
   sanitize.text.function = function(x) x
   )
   
+  
+  # RESOURCES
   url.venmo <- a("Venmo: @Tim_J_Bender", 
                  href = "https://venmo.com/u/Tim_J_Bender", 
                  target = "_blank")
@@ -241,26 +247,27 @@ server <- function(input, output) {
     tagList(url.venmo)
   })
   
-  url.github <- a("GitHub Source Code", 
+  url.github <- a("Source Code", 
                   href = "https://github.com/benda18/eclipse/blob/main/shiny_all_eclipses/app.R", 
                   target = "_blank")
   output$tab.github <- renderUI({
     tagList(url.github)
   })
   
-  url.linkedin <- a("LinkedIn", 
+  url.linkedin <- a("Tim Bender (LinkedIn)", 
                     href = "https://www.linkedin.com/in/tim-bender-238870171/", 
                     target = "_blank")
   output$tab.linkedin <- renderUI({
     tagList(url.linkedin)
   })
+  #/RESOURCES
   
-  url.res <- a("All Sources are cited on the project's GitHub README", 
-               href = "https://github.com/benda18/eclipse/blob/main/README.md#sources", 
-               target = "_blank")
-  output$tab.res <- renderUI({
-    tagList(url.res)
-  })
+  # url.res <- a("All Sources are cited on the project's GitHub README", 
+  #              href = "https://github.com/benda18/eclipse/blob/main/README.md#sources", 
+  #              target = "_blank")
+  # output$tab.res <- renderUI({
+  #   tagList(url.res)
+  # })
   
   # ADDRESS IMAGES----
   
