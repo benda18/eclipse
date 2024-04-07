@@ -6,6 +6,7 @@
 #
 
 library(shiny)
+library(jpeg)
 library(swephR)
 library(lubridate)
 library(dplyr)

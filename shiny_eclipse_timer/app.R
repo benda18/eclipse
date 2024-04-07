@@ -10,6 +10,7 @@
 
 
 library(renv)
+library(jpeg)
 library(swephR)
 library(lubridate)
 library(dplyr)
