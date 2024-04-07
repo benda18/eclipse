@@ -62,7 +62,7 @@ ui <- fluidPage(
         #shiny::plotOutput("plot_flawless", width = "300px", height = "250px"),
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(span(textOutput(outputId = "return_tot.dur"), style = "color:red")))),
-        #fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
+        fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
         #fluidRow(div(h4(strong("Next View of Totality: [temporarily removed due to bug]")))),
         fluidRow(uiOutput("nextecl_dash"))
       ),
@@ -311,67 +311,67 @@ server <- function(input, output) {
   
   
   #### get next eclipse
-  # get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
-  #   start.date <- ymd(20240409)
-  #   min_obsc <- 1 
-  #   get.addr <- censusxy::cxy_oneline(address = the.addr)
-  #   var.lon  <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180) 
-  #   var.lat  <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)  
-  #   
-  #   is_totality <- F
-  #   n <- 0
-  #   while(!is_totality & year(start.date) < 3001){
-  #     n <- n + 1
-  #     if(n > 2000){
-  #       stop("too many searches - ERROR")
-  #     }
-  #     a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date), 
-  #                                        month = lubridate::month(start.date), 
-  #                                        day   = mday(start.date), 
-  #                                        houri = 0, 
-  #                                        min   = 30, 
-  #                                        sec   = 0, 
-  #                                        gregflag = 1)$dret[2]
-  #     
-  #     when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
-  #                                           ephe_flag = 4, 
-  #                                           geopos = c(x = var.lon, 
-  #                                                      y = var.lat, 
-  #                                                      z = 10), 
-  #                                           backward = F)
-  #     
-  #     temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
-  #                                    sep = "-", collapse = "-"))
-  #     
-  #     temp.nextobs <- when_next$attr[c(3)] 
-  #     
-  #     if(temp.nextobs >= min_obsc){
-  #       is_totality <- T
-  #       #next.obs <- temp.nextobs
-  #       start.date <- as_date(temp.nextdate)
-  #     }else{
-  #       start.date <- as_date(temp.nextdate) + days(2)
-  #       #next.obs <- temp.nextobs
-  #     }
-  #   }
-  #   
-  #   # do next----
-  #   if(temp.nextobs < 1 & 
-  #      year(start.date) > 3000){
-  #     next.total.eclipse <- "Sometime after the year 3000"
-  #   }else{
-  #     next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
-  #   }
-  #   
-  #   glue("Next View of Totality: {next.total.eclipse}")
-  # })
-  #### /get next eclipse
+  get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
+    start.date <- ymd(20240409)
+    min_obsc <- 1
+    get.addr <- censusxy::cxy_oneline(address = input$addr_in)
+    var.lon  <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180)
+    var.lat  <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)
+
+    is_totality <- F
+    n <- 0
+    while(!is_totality & year(start.date) < 2501){
+      n <- n + 1
+      if(n > 2000){
+        stop("too many searches - ERROR")
+      }
+      a.date.ju <- swephR::swe_utc_to_jd(year = year(start.date),
+                                         month = lubridate::month(start.date),
+                                         day   = mday(start.date),
+                                         houri = 0,
+                                         min   = 30,
+                                         sec   = 0,
+                                         gregflag = 1)$dret[2]
+
+      when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju,
+                                            ephe_flag = 4,
+                                            geopos = c(x = var.lon,
+                                                       y = var.lat,
+                                                       z = 10),
+                                            backward = F)
+
+      temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1),
+                                     sep = "-", collapse = "-"))
+
+      temp.nextobs <- max(when_next$attr[c(1,3)])
+
+      if(temp.nextobs >= min_obsc){
+        is_totality <- T
+        #next.obs <- temp.nextobs
+        start.date <- as_date(temp.nextdate)
+      }else{
+        start.date <- as_date(temp.nextdate) + days(2)
+        #next.obs <- temp.nextobs
+      }
+    }
+
+    # do next----
+    if(temp.nextobs < 1 &
+       year(start.date) > 2500){
+      next.total.eclipse <- "Sometime after the year 2500"
+    }else{
+      next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
+    }
+
+    glue("Next View of Totality: {next.total.eclipse}")
+  })
+  ### /get next eclipse
+
   
   
-  
-  # output$return_nextecl <- renderText({
-  #   get_nextecl()
-  # })
+  output$return_nextecl <- renderText({
+    get_nextecl()
+  })
   
   # get sun coverage
   get_suncov <- eventReactive(eventExpr = input$cxy_go, {
@@ -530,7 +530,7 @@ server <- function(input, output) {
               title = element_text(size = 12), 
               axis.text.y = element_text(size = 12), 
               axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
-        labs(title = "Eclipse Timeline", 
+        labs(title = "Eclipse Timeline (Eastern Timezone)", 
              subtitle = unname(unlist(addr.coords$matchedAddress))) +
         geom_vline(aes(xintercept = range(df.sched[df.sched$coverage >= 1,]$time), 
                        color = "Time of Totality")) +
