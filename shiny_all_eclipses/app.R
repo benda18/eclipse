@@ -56,7 +56,7 @@ ui <- fluidPage(
     ),
     
     mainPanel(
-      # BLOCK RESOURCES MAIN PANEL
+      # BLOCK RESOURCES MAIN PANEL----
       wellPanel(
         fluidRow(strong("DEVELOPED BY")), 
         fluidRow(uiOutput("tab.linkedin")),
@@ -68,6 +68,7 @@ ui <- fluidPage(
         fluidRow(uiOutput("tab.venmo")),
       ),
       #/BRMP
+      
       wellPanel(
         fluidRow("The table below shows the next 75 years of solar eclipses visible from this location."),
         #fluidRow(strong(span("NOTE: Obscuration percentages were being incorrectly calculated in the table below by about 5% previously. This error has now been fixed.", style = "color:black"))),
@@ -239,7 +240,7 @@ server <- function(input, output) {
   )
   
   
-  # RESOURCES
+  # RESOURCES----
   url.venmo <- a("Venmo: @Tim_J_Bender", 
                  href = "https://venmo.com/u/Tim_J_Bender", 
                  target = "_blank")

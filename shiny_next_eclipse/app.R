@@ -68,18 +68,25 @@ ui <- fluidPage(
                        min = ymd(10000101), #ymd(18500101), 
                        max = ymd(25001231)), #ymd(21500101)),
       actionButton(inputId = "cxy_go", 
-                   label   = "SEARCH"), 
-      wellPanel(
-        fluidRow("Developed by Tim Bender"), 
-        fluidRow(uiOutput("tab.linkedin")),
-        fluidRow(uiOutput("tab.github")), 
-        fluidRow("Other Work Examples You Might Enjoy:"), 
-        fluidRow("[COMING SOON]")
-      )
+                   label   = "SEARCH")
     ),
     
     # Show a plot of the generated distribution
     mainPanel(
+      
+      # BLOCK RESOURCES MAIN PANEL----
+      wellPanel(
+        fluidRow(strong("DEVELOPED BY")), 
+        fluidRow(uiOutput("tab.linkedin")),
+        fluidRow(strong("SPECIAL ASSISTANCE FROM")),
+        fluidRow("reddit user /u/danielsixfive for QA assistance"),
+        fluidRow(strong("SOURCES")),
+        fluidRow(uiOutput("tab.github")),
+        fluidRow(strong("DONATIONS - help cover hosting costs")), 
+        fluidRow(uiOutput("tab.venmo"))
+      ),
+      #/BRMP
+      
       wellPanel(
         wellPanel(
           fluidRow(textOutput(outputId = "addr_input")), 
@@ -98,12 +105,12 @@ ui <- fluidPage(
           fluidRow(div(h4(strong("A NOTE ON CALENDAR CALCULATIONS")))),
           fluidRow("The modern Gregorian calendar was adopted beginning in AD 1582.  Attempting to reconcile earlier historical events with these types of astronomical calculations at minimum requires additional verification. The scientific effort to perfect the calendar has caused at least 1 country's Olympic delegation to arrive at the contest 2 weeks late, entirely missing out on participating in some events (https://www.si.com/extra-mustard/2013/12/30/the-extra-mustard-trivia-hour-when-a-calendar-defeated-russia-in-the-1908-olympics)." )
         ), 
-        wellPanel(
-          fluidRow(strong("DONATIONS - help cover hosting costs")), 
-          #fluidRow("This tool was created for fun for the enjoyment and use of others, and was built upon the work of others who came before me. There is montly cost to keep it live for people to use, so if you want to donate to help cover that cost or even a little extra I would appreciate it, but do not expect it"), 
-          #fluidRow("Venmo: @Tim_J_Bender"), 
-          fluidRow(uiOutput("tab.venmo"))
-        )
+        # wellPanel(
+        #   fluidRow(strong("DONATIONS - help cover hosting costs")), 
+        #   #fluidRow("This tool was created for fun for the enjoyment and use of others, and was built upon the work of others who came before me. There is montly cost to keep it live for people to use, so if you want to donate to help cover that cost or even a little extra I would appreciate it, but do not expect it"), 
+        #   #fluidRow("Venmo: @Tim_J_Bender"), 
+        #   fluidRow(uiOutput("tab.venmo"))
+        # )
       )
     )
   )
@@ -223,20 +230,7 @@ server <- function(input, output) {
     get_nextSOL()
   })
   
-  url.github <- a("GitHub Source Code", 
-                  href = "https://github.com/benda18/eclipse/blob/main/shiny_next_eclipse/app.R", 
-                  target = "_blank")
-  output$tab.github <- renderUI({
-    tagList(url.github)
-  })
-  
-  url.linkedin <- a("LinkedIn", 
-                    href = "https://www.linkedin.com/in/tim-bender-238870171/", 
-                    target = "_blank")
-  output$tab.linkedin <- renderUI({
-    tagList(url.linkedin)
-  })
-  
+  # RESOURCES----
   url.venmo <- a("Venmo: @Tim_J_Bender", 
                  href = "https://venmo.com/u/Tim_J_Bender", 
                  target = "_blank")
@@ -244,6 +238,20 @@ server <- function(input, output) {
     tagList(url.venmo)
   })
   
+  url.github <- a("Source Code", 
+                  href = "https://github.com/benda18/eclipse/blob/main/shiny_all_eclipses/app.R", 
+                  target = "_blank")
+  output$tab.github <- renderUI({
+    tagList(url.github)
+  })
+  
+  url.linkedin <- a("Tim Bender (LinkedIn)", 
+                    href = "https://www.linkedin.com/in/tim-bender-238870171/", 
+                    target = "_blank")
+  output$tab.linkedin <- renderUI({
+    tagList(url.linkedin)
+  })
+  #/RESOURCES
   
   swe_close()
 }
