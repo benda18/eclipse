@@ -76,19 +76,24 @@ ui <- fluidPage(
         #   fluidRow(uiOutput("tab.github"))
         # ),
         fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
-        wellPanel(
-          fluidRow("RESOURCES"),
-          fluidRow(uiOutput("tab.res2")),
-          #fluidRow(uiOutput("tab.nasa")),
-          fluidRow(uiOutput("tab")),
-          fluidRow("SOURCES"),
-          fluidRow(uiOutput("tab.res"))
-        ),
+        # wellPanel(
+        #   fluidRow("RESOURCES"),
+        #   fluidRow(uiOutput("tab.res2")),
+        #   #fluidRow(uiOutput("tab.nasa")),
+        #   fluidRow(uiOutput("tab")),
+        #   #fluidRow("SOURCES"),
+        #   fluidRow(uiOutput("tab.res"))
+        # ),
       )
     ),
     mainPanel(
       # BLOCK RESOURCES MAIN PANEL----
       wellPanel(
+        fluidRow(strong("RESOURCES")),
+        fluidRow(uiOutput("tab.res2")),
+        fluidRow(uiOutput("tab.nasa")),
+        fluidRow(uiOutput("tab")),
+        fluidRow(uiOutput("tab.res")),
         fluidRow(strong("DEVELOPED BY")), 
         fluidRow(uiOutput("tab.linkedin")),
         fluidRow(strong("SPECIAL ASSISTANCE FROM")),
@@ -226,7 +231,7 @@ server <- function(input, output) {
   }
   all.paths <- all.paths |> transform(yr = year(ed))
   
-  url <- a("NSO Interactive Map", 
+  url <- a("National Solar Observatory's 2024 Interactive Eclipse Map", 
            href="https://nso.edu/for-public/eclipse-map-2024/", 
            target="_blank")
   output$tab <- renderUI({
@@ -240,12 +245,12 @@ server <- function(input, output) {
   #   tagList(url.nextecl_dash)
   # })
   # 
-  # url.nasa <- a("NASA's 2024 Eclipse Website", 
-  #               href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/", 
-  #               target = "_blank")
-  # output$tab.nasa <- renderUI({
-  #   tagList(url.nasa)
-  # })
+  url.nasa <- a("NASA's 2024 Eclipse Website",
+                href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/",
+                target = "_blank")
+  output$tab.nasa <- renderUI({
+    tagList(url.nasa)
+  })
   # RESOURCES----
   url.venmo <- a("Venmo: @Tim_J_Bender", 
                  href = "https://venmo.com/u/Tim_J_Bender", 
