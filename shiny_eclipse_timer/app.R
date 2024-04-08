@@ -116,6 +116,11 @@ ui <- fluidPage(
       #   #fluidRow("Venmo: @Tim_J_Bender"), 
       #   fluidRow(uiOutput("tab.venmo"))
       # )
+      wellPanel(
+        fluidRow(strong("OTHER ECLIPSE WEBAPPS")), 
+        fluidRow(uiOutput("tab.AE")), 
+        fluidRow(uiOutput("tab.NE"))
+      )
     )
   )
 )
@@ -594,6 +599,12 @@ server <- function(input, output) {
             geom_vline(aes(xintercept = Sys.time())))
     
     
+  })
+  url.AE <- a("* Every Solar Eclipse Visible from Your Address for 75 Years",
+              href = "https://tim-bender.shinyapps.io/shiny_all_eclipses/",
+              target = "_blank")
+  output$tab.AE <- renderUI({
+    tagList(url.AE)
   })
   
 }
