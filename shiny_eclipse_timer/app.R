@@ -599,7 +599,10 @@ server <- function(input, output) {
               axis.text.y = element_text(size = 12), 
               axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
         labs(title = "Eclipse Timeline", 
-             subtitle = unname(unlist(addr.coords$matchedAddress)))
+             subtitle = unname(unlist(addr.coords$matchedAddress)))+
+               geom_vline(aes(xintercept = max(df.sched[df.sched$coverage ==
+                                                            max(df.sched$coverage),]$time), 
+                              color = "Time of Peak Eclipse")) 
     }
     
     
