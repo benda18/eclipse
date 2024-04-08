@@ -211,11 +211,11 @@ server <- function(input, output) {
                                     gregflag = 1)
       
       ecsuncov <- c(ecsuncov, 
-                    swephR::swe_sol_eclipse_how(jd_ut = i_time, 
+                    max(swephR::swe_sol_eclipse_how(jd_ut = i_time, 
                                                 ephe_flag = 4, 
                                                 geopos = c(x = lon_in, 
                                                            y = lat_in, 
-                                                           z = 10))$attr[1])
+                                                           z = 10))$attr[c(1,3)]))
     }
     
     out <- data.frame(time = ecsched.times, 
@@ -315,12 +315,12 @@ server <- function(input, output) {
     
     # tret 3 & 4 = begin and end of totality
     # do eclipse math
-    sol_cov     <- swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
+    sol_cov     <- max(swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
                                                     ephe_flag = 4, 
                                                     geopos    = c(x = lon_in,
                                                                   y = lat_in,
                                                                   z = 10), 
-                                                    backward = F)$attr[1]
+                                                    backward = F)$attr[c(1,3)])
     
     ifelse(sol_cov >= 1, 
            "Within Path of Totality", 
@@ -413,12 +413,12 @@ server <- function(input, output) {
                                         gregflag = 1)
     
     # do eclipse math
-    sol_cov     <- swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
+    sol_cov     <- max(swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
                                                     ephe_flag = 4, 
                                                     geopos    = c(x = lon_in,
                                                                   y = lat_in,
                                                                   z = 10), 
-                                                    backward = F)$attr[1]
+                                                    backward = F)$attr[c(1,3)])
     sol_cov <- ifelse(sol_cov > 1, 1, sol_cov)
     glue("{ifelse(sol_cov < 1 & sol_cov >= 0.99, \"99%\", scales::percent(sol_cov,accuracy = 0.1))}")
   })
@@ -471,6 +471,11 @@ server <- function(input, output) {
       out.time <- c("mins" = "00", 
                     "secs" = as.character(abs(floor(as.numeric(out.time.dec)))))
     }
+    
+    if(nchar(out.time["secs"])==1){
+      out.time["secs"] <- paste("0",out.time["secs"],sep="",collapse="")
+    }
+    
     
     #out.time <- ifelse(out.time == "00:0", "00:00", out.time)
     
