@@ -36,9 +36,9 @@ ui <- fluidPage(
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
-      wellPanel(
-        fluidRow("Find the next Solar and Lunar eclipses for any US mailing address. Enter an address and a date to search from below.")
-      ),
+      # wellPanel(
+      #   fluidRow("Find the next Solar and Lunar eclipses for any US mailing address. Enter an address and a date to search from below.")
+      # ),
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Street Address [general terms like \'The White House\' won't work]", 
                        #value = "6880 Springfield Xenia Rd, Yellow Springs, OH"),
@@ -78,14 +78,14 @@ ui <- fluidPage(
       
       # BLOCK RESOURCES MAIN PANEL----
       wellPanel(
-        fluidRow(strong("DEVELOPED BY")), 
-        fluidRow(uiOutput("tab.linkedin")),
-        fluidRow(strong("SPECIAL ASSISTANCE FROM")),
-        fluidRow("reddit user /u/danielsixfive for QA assistance"),
-        fluidRow(strong("SOURCES")),
-        fluidRow(uiOutput("tab.github")),
-        fluidRow(strong("DONATIONS - help cover hosting costs")), 
-        fluidRow(uiOutput("tab.venmo"))
+        # fluidRow(strong("DEVELOPED BY")), 
+        fluidRow(strong(uiOutput("tab.linkedin"))),
+        #fluidRow(strong("SPECIAL ASSISTANCE FROM")),
+        #fluidRow(strong("SOURCES")),
+        fluidRow(strong(uiOutput("tab.github"))),
+        #fluidRow(strong("Help Cover ")), 
+        fluidRow(strong(uiOutput("tab.venmo"))),
+        fluidRow("Special thanks to reddit user /u/danielsixfive")
       ),
       #/BRMP
       
@@ -239,21 +239,21 @@ server <- function(input, output) {
   })
   
   # RESOURCES----
-  url.venmo <- a("Venmo: @Tim_J_Bender", 
+  url.venmo <- a("Want to help cover hosting costs? Venmo: @Tim_J_Bender", 
                  href = "https://venmo.com/u/Tim_J_Bender", 
                  target = "_blank")
   output$tab.venmo <- renderUI({
     tagList(url.venmo)
   })
   
-  url.github <- a("Source Code", 
+  url.github <- a("Source Code (Github)", 
                   href = "https://github.com/benda18/eclipse/blob/main/shiny_all_eclipses/app.R", 
                   target = "_blank")
   output$tab.github <- renderUI({
     tagList(url.github)
   })
   
-  url.linkedin <- a("Tim Bender (LinkedIn)", 
+  url.linkedin <- a("Created by Tim Bender (LinkedIn)", 
                     href = "https://www.linkedin.com/in/tim-bender-238870171/", 
                     target = "_blank")
   output$tab.linkedin <- renderUI({
