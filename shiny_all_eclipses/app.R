@@ -23,7 +23,7 @@ library(qrcode)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("Solar Eclipses Visible from Your Address", ),
+  titlePanel("75 Years of Solar Eclipses Visible from Your Address", ),
   
   sidebarLayout(
     sidebarPanel(
@@ -234,9 +234,9 @@ server <- function(input, output) {
     log.ecls$pct_obscured[log.ecls$pct_obscured >= 1]  <- 1
     log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 0.1)
     #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
-    log.ecls$Eclipse_Map <- paste0("link to [<a href='",  
+    log.ecls$Eclipse_Map <- paste0("[<a href='",  
                                    log.ecls$Eclipse_Map,
-                                   "' target='_blank'>map</a>]")
+                                   "' target='_blank'>see eclipse path</a>]")
     log.ecls
   }, 
   sanitize.text.function = function(x) x
