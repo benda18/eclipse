@@ -53,6 +53,12 @@ ui <- fluidPage(
                        format = "MM dd, yyyy"),
       actionButton(inputId = "search_go", 
                    label   = "SEARCH ADDRESS"),
+      shiny::checkboxInput("cb_total.ecl", 
+                           value = F,
+                           label = "Show Only Total Eclipses"), 
+      shiny::checkboxInput("cb_totality", 
+                           value = F, 
+                           label = "Show Only when in Path of Totality")
      
     ),
     
@@ -237,6 +243,16 @@ server <- function(input, output) {
     log.ecls$Eclipse_Map <- paste0("[<a href='",  
                                    log.ecls$Eclipse_Map,
                                    "' target='_blank'>see eclipse path</a>]")
+    
+    # checkbox_totaleclipse
+    if(input$cb_total.ecl){
+      log.ecls <- log.ecls[log.ecls$Type == "Total Eclipse",]
+    }
+    # checkbox_totality
+    if(input$cb_totality){
+      log.ecls <- log.ecls[log.ecls$pct_obscured == "100.0%",]
+    }
+    
     log.ecls
   }, 
   sanitize.text.function = function(x) x
