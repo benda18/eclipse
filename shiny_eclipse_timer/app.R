@@ -480,7 +480,10 @@ server <- function(input, output) {
     #out.time <- ifelse(out.time == "00:0", "00:00", out.time)
     
     out <- paste(out.time, sep = ":", collapse = ":")
-    ifelse(out == "00:0", "", paste("Length of Totality (mm:ss): ", out, sep = "", collapse = ""))
+    ifelse(out %in% c("00:0", 
+                      "00:00"), 
+           "",
+           paste("Length of Totality (mm:ss): ", out, sep = "", collapse = ""))
     
     })
   
