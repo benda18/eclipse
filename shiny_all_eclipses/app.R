@@ -82,7 +82,12 @@ ui <- fluidPage(
       ),
       shiny::tableOutput(outputId = "logtable"),
       shiny::plotOutput(outputId = "qr_url", 
-                        height = "200px")
+                        height = "200px"),
+      wellPanel(
+        fluidRow(strong("OTHER ECLIPSE WEBAPPS")), 
+        fluidRow(uiOutput("tab.PT")), 
+        fluidRow(uiOutput("tab.NE"))
+      )
       # wellPanel(
       #   fluidRow(strong("DONATIONS - help cover hosting costs")), 
       #   fluidRow(uiOutput("tab.venmo")),
@@ -281,6 +286,19 @@ server <- function(input, output) {
     tagList(url.linkedin)
   })
   #/RESOURCES
+  url.AE <- a("* Every Solar Eclipse Visible from Your Address for 75 Years",
+                    href = "https://tim-bender.shinyapps.io/shiny_all_eclipses/",
+                    target = "_blank")
+  output$tab.AE <- renderUI({
+    tagList(url.AE)
+  })
+  url.PT <- a("* Total Eclipse of April 8, 2024 - What to Expect from Your Location",
+              href = "https://tim-bender.shinyapps.io/shiny_eclipse_planner/",
+              target = "_blank")
+  output$tab.PT <- renderUI({
+    tagList(url.PT)
+  })
+  
   
   output$qr_url <- renderPlot({
     qr_app <- qrcode::qr_code(x = "https://tim-bender.shinyapps.io/shiny_all_eclipses/", 
