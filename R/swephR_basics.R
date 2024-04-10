@@ -21,28 +21,31 @@ rm(list=ls());cat('\f');gc()
 # FUNS----
 
 
-# swephR_functions----
+# SWEPHR FUNS----
 
 # Solar eclipses:
 
-# swe_sol_eclipse_when_loc(tjd...) finds the next eclipse for a given geographic
-# position;
+# find the next eclipse for a given geographic position;
+swe_sol_eclipse_when_loc(tjd...) 
 
-# swe_sol_eclipse_when_glob(tjd...) finds the next eclipse globally;
+# find the next eclipse globally;
+swe_sol_eclipse_when_glob(tjd...) 
 
-# swe_sol_eclipse_where() computes the geographic location of a solar eclipse
-# for a given tjd;
+# compute the geographic location of a solar eclipse for a given tjd;
+swe_sol_eclipse_where() 
 
-# swe_sol_eclipse_how() computes attributes of a solar eclipse for a given tjd,
-# geographic longitude, latitude and height.
+# compute attributes of a solar eclipse for a given tjd, geographic longitude,
+# latitude and height.
+swe_sol_eclipse_how() 
 
 # Lunar eclipses:
 
-# swe_lun_eclipse_when_loc(tjd...) finds the next lunar eclipse for a given
-# geographic position;
+# find the next lunar eclipse for a given geographic position;
+swe_lun_eclipse_when_loc(tjd...) 
 
-# swe_lun_eclipse_when(tjd...) finds the next lunar eclipse;
+# find the next lunar eclipse;
+swe_lun_eclipse_when(tjd...) 
 
-# swe_lun_eclipse_how() computes the attributes of a lunar eclipse for a given
-# tjd.
+# compute the attributes of a lunar eclipse for a given tjd.
+swe_lun_eclipse_how() 
 
