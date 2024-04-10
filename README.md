@@ -35,3 +35,6 @@ Many useful web tools and resources exist to help plan where and when to go to b
 * [NASA's 2024 Eclipse Website](https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/)
 * NASA's Five Millennium Catalog of Solar Eclipses ([pdf download](http://eclipse.gsfc.nasa.gov/5MCSE/TP2009-214174.pdf))
 * [Webpages on the History of Astronomy by Robert Harry van Gent](https://webspace.science.uu.nl/~gent0113/)
+
+### Special Thanks
+* Reddit users u/danielsixfive and u/QuackingUp23
