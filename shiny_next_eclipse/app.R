@@ -85,7 +85,7 @@ ui <- fluidPage(
         fluidRow(strong(uiOutput("tab.github"))),
         #fluidRow(strong("Help Cover ")), 
         fluidRow(strong(uiOutput("tab.venmo"))),
-        fluidRow("Special thanks to reddit user /u/danielsixfive")
+        fluidRow("Special thanks to reddit users u/danielsixfive and u/QuackingUp23")
       ),
       #/BRMP
       
