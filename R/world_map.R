@@ -39,6 +39,6 @@ ggplot() +
         legend.position = "none")
 
 
-sort(unique(countries110$geounit[countries110$continent == "Oceania"]) ) %>%
+sort(unique(countries110$geounit[countries110$continent == "North America"]) ) %>%
   paste(collapse = "\", \"") %>%
   cat()
