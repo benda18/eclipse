@@ -8,6 +8,7 @@ library(dplyr)
 library(renv)
 library(leaflet)
 
+
 #renv::snapshot()
 
 ui <- navbarPage(title = "<Title>", 
@@ -19,6 +20,9 @@ ui <- navbarPage(title = "<Title>",
                           tags$br(),
                           leafletOutput("map", 
                                         width = "50%"),
+                          wellPanel(
+                            shiny::tableOutput("vxy")
+                          )
                           # wellPanel(
                           #   fluidRow(
                           #     textOutput(outputId = "lon_id")
@@ -28,13 +32,16 @@ ui <- navbarPage(title = "<Title>",
                           #   )
                           # )
                  )
-  
+                 
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  
+  output$vxy <- shiny::renderTable({
+    data.frame("lon" = input$myBtn_lon, 
+               "lat" = input$myBtn_lat)
+  })
   
   output$map <- renderLeaflet({
     req(input$myBtn_lon)
