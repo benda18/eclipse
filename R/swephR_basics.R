@@ -14,7 +14,7 @@ library(glue)
 #library(qrcode)
 library(rnaturalearthdata) # for map of world
 
-renv::snapshot()
+#renv::snapshot()
 
 rm(list=ls());cat('\f');gc()
 
@@ -28,10 +28,24 @@ rm(list=ls());cat('\f');gc()
 lon.in     <- runif(-180,180,n=1)
 lat.in     <- runif(-90, 90, n=1)
 greg_dt.in <- Sys.time()
+loctz.in   <- "America/New_York"
+
+# Transformations----
+greg_utcdt.in <- greg_dt.in |> with_tz(tzone = "UTC")
+
+jul_utcdt.in  <- swephR::swe_utc_to_jd(year = year(greg_utcdt.in), 
+                                    month = lubridate::month(greg_utcdt.in), 
+                                    day   = mday(greg_utcdt.in), 
+                                    houri = hour(greg_utcdt.in), 
+                                    min   = minute(greg_utcdt.in), 
+                                    sec   = second(greg_utcdt.in), 
+                                    gregflag = 1 #SE$GREG_CAL = 1
+                                    )$dret[2] # dret[2] = UTC, [1] = ET (not sure what et means)
+
 
 # SWEPHR FUNS----
 # find the next eclipse for a given geographic position;
-swe_sol_eclipse_when_loc(jd_start  = NA, 
+swe_sol_eclipse_when_loc(jd_start  = jul_utcdt.in, 
                          ephe_flag = 4, 
                          geopos    = c(x = lon.in, 
                                        y = lat.in, 
@@ -39,19 +53,19 @@ swe_sol_eclipse_when_loc(jd_start  = NA,
                          backward  = FALSE) 
 
 # find the next eclipse globally (including type of eclipse);
-ecl_total   <- swe_sol_eclipse_when_glob(jd_start  = NA,
+ecl_total   <- swe_sol_eclipse_when_glob(jd_start  = jul_utcdt.in,
                                          ephe_flag = 4, 
                                          ifltype   = SE$ECL_TOTAL, 
                                          backward  = FALSE)
-ecl_annular <- swe_sol_eclipse_when_glob(jd_start  = NA,
+ecl_annular <- swe_sol_eclipse_when_glob(jd_start  = jul_utcdt.in,
                                          ephe_flag = 4, 
                                          ifltype   = SE$ECL_ANNULAR,
                                          backward  = FALSE)
-ecl_partial <- swe_sol_eclipse_when_glob(jd_start  = NA,
+ecl_partial <- swe_sol_eclipse_when_glob(jd_start  = jul_utcdt.in,
                                          ephe_flag = 4, 
                                          ifltype   = SE$ECL_PARTIAL,
                                          backward  = FALSE)
-ecl_hybrid  <- swe_sol_eclipse_when_glob(jd_start  = NA,
+ecl_hybrid  <- swe_sol_eclipse_when_glob(jd_start  = jul_utcdt.in,
                                          ephe_flag = 4, 
                                          ifltype   = SE$ECL_ANNULAR_TOTAL,
                                          backward  = FALSE)
@@ -67,19 +81,19 @@ ecl_type <- c("Total Eclipse", "Annular",
                                                      ecl_hybrid$tret[2] - when_next$tret[2]))))]
 
 # compute the geographic location of a solar eclipse for a given tjd;
-swe_sol_eclipse_where(jd_ut     = NA, 
+swe_sol_eclipse_where(jd_ut     = jul_utcdt.in, 
                       ephe_flag = 4) 
 
 # compute attributes of a solar eclipse for a given tjd, geographic longitude,
 # latitude and height.
-swe_sol_eclipse_how(jd_ut     = NA, 
+swe_sol_eclipse_how(jd_ut     = jul_utcdt.in, 
                     ephe_flag = 4, 
                     geopos    = c(x = lon.in, 
                                   y = lat.in, 
                                   z = 10)) 
 
 # find the next lunar eclipse for a given geographic position;
-swe_lun_eclipse_when_loc(jd_start  = NA, 
+swe_lun_eclipse_when_loc(jd_start  = jul_utcdt.in, 
                          ephe_flag = 4, 
                          geopos    = c(x = lon.in, 
                                        y = lat.in, 
@@ -87,13 +101,13 @@ swe_lun_eclipse_when_loc(jd_start  = NA,
                          backward  = FALSE) 
 
 # find the next lunar eclipse;
-swe_lun_eclipse_when(jd_start  = NA,
+swe_lun_eclipse_when(jd_start  = jul_utcdt.in,
                      ephe_flag = 4, 
                      ifltype   = NA, # SE_ECL_TOTAL, SE_ECL_PARTIAL, or SE_ECL_PENUMBRAL
                      backward  = FALSE) 
 
 # compute the attributes of a lunar eclipse for a given tjd.
-swe_lun_eclipse_how(jd_ut     = NA, 
+swe_lun_eclipse_how(jd_ut     = jul_utcdt.in, 
                     ephe_flag = 4,
                     geopos    = c(x = lon.in, 
                                   y = lat.in, 
