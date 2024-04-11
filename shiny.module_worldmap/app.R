@@ -24,6 +24,7 @@ library(sf)
 #library(qrcode)
 library(rnaturalearthdata)
 
+# renv::snapshot()
 
 # Define UI for application 
 ui <- fluidPage(

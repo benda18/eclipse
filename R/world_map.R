@@ -13,7 +13,7 @@ library(glue)
 #library(rsconnect)
 #library(qrcode)
 library(rnaturalearthdata) # for map of world
-library(maps)
+
 
 
 
