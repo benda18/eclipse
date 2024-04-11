@@ -48,13 +48,13 @@ ui <- fluidPage(
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(span(textOutput(outputId = "return_tot.dur"), style = "color:red")))),
         fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
-        ),
+      ),
       wellPanel(
         shiny::plotOutput(outputId = "sched"),
       ),
       wellPanel(
-       fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
-        )
+        fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
+      )
     ),
     mainPanel(
       # BLOCK RESOURCES MAIN PANEL----
@@ -72,7 +72,7 @@ ui <- fluidPage(
         shiny::plotOutput(outputId = "map"),
         shiny::plotOutput(outputId = "qr_url", 
                           height = "200px")
-        ), 
+      ), 
       wellPanel(
         fluidRow(strong("OTHER ECLIPSE WEBAPPS")), 
         fluidRow(uiOutput("tab.AE")), 
@@ -169,10 +169,10 @@ server <- function(input, output) {
       
       ecsuncov <- c(ecsuncov, 
                     max(swephR::swe_sol_eclipse_how(jd_ut = i_time, 
-                                                ephe_flag = 4, 
-                                                geopos = c(x = lon_in, 
-                                                           y = lat_in, 
-                                                           z = 10))$attr[c(1,3)]))
+                                                    ephe_flag = 4, 
+                                                    geopos = c(x = lon_in, 
+                                                               y = lat_in, 
+                                                               z = 10))$attr[c(1,3)]))
     }
     
     out <- data.frame(time = ecsched.times, 
@@ -273,11 +273,11 @@ server <- function(input, output) {
     # tret 3 & 4 = begin and end of totality
     # do eclipse math
     sol_cov     <- max(swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
-                                                    ephe_flag = 4, 
-                                                    geopos    = c(x = lon_in,
-                                                                  y = lat_in,
-                                                                  z = 10), 
-                                                    backward = F)$attr[c(1,3)])
+                                                        ephe_flag = 4, 
+                                                        geopos    = c(x = lon_in,
+                                                                      y = lat_in,
+                                                                      z = 10), 
+                                                        backward = F)$attr[c(1,3)])
     
     ifelse(sol_cov >= 1, 
            "Within Path of Totality", 
@@ -293,7 +293,7 @@ server <- function(input, output) {
     get.addr <- censusxy::cxy_oneline(address = input$addr_in)
     var.lon  <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180)
     var.lat  <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)
-
+    
     is_totality <- F
     n <- 0
     while(!is_totality & year(start.date) < 2501){
@@ -308,19 +308,19 @@ server <- function(input, output) {
                                          min   = 30,
                                          sec   = 0,
                                          gregflag = 1)$dret[2]
-
+      
       when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju,
                                             ephe_flag = 4,
                                             geopos = c(x = var.lon,
                                                        y = var.lat,
                                                        z = 10),
                                             backward = F)
-
+      
       temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1),
                                      sep = "-", collapse = "-"))
-
+      
       temp.nextobs <- max(when_next$attr[c(1,3)])
-
+      
       if(temp.nextobs >= min_obsc){
         is_totality <- T
         #next.obs <- temp.nextobs
@@ -330,7 +330,7 @@ server <- function(input, output) {
         #next.obs <- temp.nextobs
       }
     }
-
+    
     # do next----
     if(temp.nextobs < 1 &
        year(start.date) > 2500){
@@ -338,11 +338,11 @@ server <- function(input, output) {
     }else{
       next.total.eclipse <-  strftime(start.date, format = "%B %d, %Y")
     }
-
+    
     glue("Next View of Totality: {next.total.eclipse}")
   })
   ### /get next eclipse
-
+  
   
   
   output$return_nextecl <- renderText({
@@ -371,11 +371,11 @@ server <- function(input, output) {
     
     # do eclipse math
     sol_cov     <- max(swephR::swe_sol_eclipse_when_loc(jd_start  = jul_dt.utc, 
-                                                    ephe_flag = 4, 
-                                                    geopos    = c(x = lon_in,
-                                                                  y = lat_in,
-                                                                  z = 10), 
-                                                    backward = F)$attr[c(1,3)])
+                                                        ephe_flag = 4, 
+                                                        geopos    = c(x = lon_in,
+                                                                      y = lat_in,
+                                                                      z = 10), 
+                                                        backward = F)$attr[c(1,3)])
     sol_cov <- ifelse(sol_cov > 1, 1, sol_cov)
     glue("{ifelse(sol_cov < 1 & sol_cov >= 0.99, \"99%\", scales::percent(sol_cov,accuracy = 0.1))}")
   })
@@ -442,7 +442,7 @@ server <- function(input, output) {
            "",
            paste("Length of Totality (mm:ss): ", out, sep = "", collapse = ""))
     
-    })
+  })
   
   output$return_tot.dur <- renderText({
     get_tot.dur()
@@ -557,9 +557,9 @@ server <- function(input, output) {
               axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
         labs(title = "Eclipse Timeline", 
              subtitle = unname(unlist(addr.coords$matchedAddress)))+
-               geom_vline(aes(xintercept = max(df.sched[df.sched$coverage ==
-                                                            max(df.sched$coverage),]$time), 
-                              color = "Time of Peak Eclipse")) 
+        geom_vline(aes(xintercept = max(df.sched[df.sched$coverage ==
+                                                   max(df.sched$coverage),]$time), 
+                       color = "Time of Peak Eclipse")) 
     }
     
     
