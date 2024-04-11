@@ -58,20 +58,36 @@ ecl_type <- c("Total Eclipse", "Annular",
                                                      ecl_partial$tret[2] - when_next$tret[2],
                                                      ecl_hybrid$tret[2] - when_next$tret[2]))))]
 
-
 # compute the geographic location of a solar eclipse for a given tjd;
-swe_sol_eclipse_where() 
+swe_sol_eclipse_where(jd_ut     = NA, 
+                      ephe_flag = 4) 
 
 # compute attributes of a solar eclipse for a given tjd, geographic longitude,
 # latitude and height.
-swe_sol_eclipse_how() 
+swe_sol_eclipse_how(jd_ut     = NA, 
+                    ephe_flag = 4, 
+                    geopos    = c(x = NA, 
+                                  y = NA, 
+                                  z = 10)) 
 
 # find the next lunar eclipse for a given geographic position;
-swe_lun_eclipse_when_loc(tjd...) 
+swe_lun_eclipse_when_loc(jd_start  = NA, 
+                         ephe_flag = 4, 
+                         geopos    = c(x = NA, 
+                                       y = NA, 
+                                       z = 10), 
+                         backward  = FALSE) 
 
 # find the next lunar eclipse;
-swe_lun_eclipse_when(tjd...) 
+swe_lun_eclipse_when(jd_start  = NA,
+                     ephe_flag = 4, 
+                     ifltype   = NA, # SE_ECL_TOTAL, SE_ECL_PARTIAL, or SE_ECL_PENUMBRAL
+                     backward  = FALSE) 
 
 # compute the attributes of a lunar eclipse for a given tjd.
-swe_lun_eclipse_how() 
+swe_lun_eclipse_how(jd_ut     = NA, 
+                    ephe_flag = 4,
+                    geopos    = c(x = NA, 
+                                  y = NA, 
+                                  z = 10)) 
 
