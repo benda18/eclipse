@@ -40,68 +40,31 @@ ui <- fluidPage(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Street Address [general terms like \'The White House\' won't work]" , 
-                       value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
-                                            "1060 W Addison, Chicago IL",               
-                                            "1 Bear Valley Rd, Point Reyes Station, CA",  
-                                            "250 E Franklin St, Chapel Hill, NC",          
-                                            "100 Joe Nuxhall Wy, Cincinnati, OH",        
-                                            "281 W Lane Ave, Columbus, OH",               
-                                            "300 Alamo Plaza, San Antonio, TX",           
-                                            "2634 Main St, Lake Placid, NY",             
-                                            "1047 Main St, Buffalo, NY" ,                 
-                                            "2610 University Cir, Cincinnati, OH",     
-                                            "3159 W 11th St, Cleveland, OH",              
-                                            "4001 W 2nd St, Roswell, NM",              
-                                            "926 E McLemore Ave, Memphis, TN",           
-                                            "369 Central Ave, Hot Springs, AR",         
-                                            "4790 W 16th St, Indianapolis, IN"), 
-                                      size = 1)),
+                       value = "1600 Pennsylvania Ave, Washington, DC"),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH ADDRESS"),
       
       wellPanel(
-        #shiny::plotOutput("plot_flawless", width = "300px", height = "250px"),
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
         fluidRow(div(h4(span(textOutput(outputId = "return_tot.dur"), style = "color:red")))),
         fluidRow(div(h4(strong(textOutput(outputId = "return_nextecl"))))),
-        #fluidRow(div(h4(strong("Next View of Totality: [temporarily removed due to bug]")))),
-        #fluidRow(uiOutput("nextecl_dash"))
-      ),
+        ),
       wellPanel(
         shiny::plotOutput(outputId = "sched"),
       ),
       wellPanel(
-        # wellPanel(
-        #   fluidRow("Developed by Tim Bender"), 
-        #   fluidRow(uiOutput("tab.linkedin")),
-        #   fluidRow(uiOutput("tab.github"))
-        # ),
-        fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
-        # wellPanel(
-        #   fluidRow("RESOURCES"),
-        #   fluidRow(uiOutput("tab.res2")),
-        #   #fluidRow(uiOutput("tab.nasa")),
-        #   fluidRow(uiOutput("tab")),
-        #   #fluidRow("SOURCES"),
-        #   fluidRow(uiOutput("tab.res"))
-        # ),
-      )
+       fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
+        )
     ),
     mainPanel(
       # BLOCK RESOURCES MAIN PANEL----
       wellPanel(
-        fluidRow(strong("RESOURCES")),
-        fluidRow(uiOutput("tab.res2")),
-        fluidRow(uiOutput("tab.nasa")),
-        fluidRow(uiOutput("tab")),
         fluidRow(uiOutput("tab.res")),
         fluidRow(strong("DEVELOPED BY")), 
         fluidRow(uiOutput("tab.linkedin")),
-        fluidRow(strong("SPECIAL THANKs")),
         fluidRow("Special thanks to reddit users u/danielsixfive and u/QuackingUp23"),
-        fluidRow(strong("SOURCES")),
-        fluidRow(uiOutput("tab.github")),
-        fluidRow(strong("DONATIONS - help cover hosting costs")), 
+        fluidRow(strong(uiOutput("tab.github"))),
+        fluidRow(strong("Help cover hosting costs")), 
         fluidRow(uiOutput("tab.venmo"))
       ),
       #/BRMP
@@ -110,12 +73,6 @@ ui <- fluidPage(
         shiny::plotOutput(outputId = "qr_url", 
                           height = "200px")
         ), 
-      # wellPanel(
-      #   fluidRow(strong("DONATIONS - help cover hosting costs")), 
-      #   #fluidRow("This tool was created for fun for the enjoyment and use of others, and was built upon the work of others who came before me. There is montly cost to keep it live for people to use, so if you want to donate to help cover that cost or even a little extra I would appreciate it, but do not expect it"), 
-      #   #fluidRow("Venmo: @Tim_J_Bender"), 
-      #   fluidRow(uiOutput("tab.venmo"))
-      # )
       wellPanel(
         fluidRow(strong("OTHER ECLIPSE WEBAPPS")), 
         fluidRow(uiOutput("tab.AE")), 
@@ -239,12 +196,12 @@ server <- function(input, output) {
   }
   all.paths <- all.paths |> transform(yr = year(ed))
   
-  url <- a("National Solar Observatory's 2024 Interactive Eclipse Map", 
-           href="https://nso.edu/for-public/eclipse-map-2024/", 
-           target="_blank")
-  output$tab <- renderUI({
-    tagList(url)
-  })
+  # url <- a("National Solar Observatory's 2024 Interactive Eclipse Map", 
+  #          href="https://nso.edu/for-public/eclipse-map-2024/", 
+  #          target="_blank")
+  # output$tab <- renderUI({
+  #   tagList(url)
+  # })
   
   # url.nextecl_dash <- a("Want to know more? Click here to find the next solar and lunar eclipse for any location at any point in recent history (today +/- 1000 years)", 
   #                  href="https://tim-bender.shinyapps.io/shiny_next_eclipse/", 
@@ -253,12 +210,12 @@ server <- function(input, output) {
   #   tagList(url.nextecl_dash)
   # })
   # 
-  url.nasa <- a("NASA's 2024 Eclipse Website",
-                href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/",
-                target = "_blank")
-  output$tab.nasa <- renderUI({
-    tagList(url.nasa)
-  })
+  # url.nasa <- a("NASA's 2024 Eclipse Website",
+  #               href = "https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/",
+  #               target = "_blank")
+  # output$tab.nasa <- renderUI({
+  #   tagList(url.nasa)
+  # })
   # RESOURCES----
   url.venmo <- a("Venmo: @Tim_J_Bender", 
                  href = "https://venmo.com/u/Tim_J_Bender", 
@@ -282,12 +239,12 @@ server <- function(input, output) {
   })
   #/RESOURCES
   
-  url.res2 <- a("The AAS \"Suppliers of Safe Solar Viewers & Filters\" list", 
-                href = "https://eclipse.aas.org/eye-safety/viewers-filters", 
-                target = "_blank")
-  output$tab.res2 <- renderUI({
-    tagList(url.res2)
-  })
+  # url.res2 <- a("The AAS \"Suppliers of Safe Solar Viewers & Filters\" list", 
+  #               href = "https://eclipse.aas.org/eye-safety/viewers-filters", 
+  #               target = "_blank")
+  # output$tab.res2 <- renderUI({
+  #   tagList(url.res2)
+  # })
   
   # get eclipse times----
   
