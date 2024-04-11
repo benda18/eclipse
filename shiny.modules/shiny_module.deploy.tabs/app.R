@@ -5,6 +5,7 @@ library(rnaturalearthdata)
 library(sf)
 library(censusxy)
 library(dplyr)
+library(remotes)
 
 ui <- navbarPage(title = "<Title>", 
                  id = "tabs",
