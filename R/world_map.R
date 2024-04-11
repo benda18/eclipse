@@ -13,6 +13,7 @@ library(glue)
 #library(rsconnect)
 #library(qrcode)
 library(rnaturalearthdata) # for map of world
+library(maps)
 
 
 # renv::snapshot()
@@ -30,12 +31,7 @@ countries110$scalerank %>% table
 
 countries110$continent
 
-ggplot() + 
-  geom_sf(data = countries110[countries110$continent %in% 
-                                c("Europe"),], 
-          aes(fill = continent))+
-  theme(panel.background = element_rect(fill = "#9ce4ff"), 
-        legend.position = "none")
+
 
 
 sort(unique(countries110$geounit[countries110$continent == "Europe"]) ) %>%
@@ -49,3 +45,16 @@ sort(unique(countries110$geounit[countries110$subregion == "Melanesia"]) ) %>%
 
 
 countries110[countries110$geounit == "France",] %>% t()
+
+
+maps::world.cities
+
+ggplot() + 
+  geom_sf(data = countries110, 
+          aes(fill = continent))+
+  theme(panel.background = element_rect(fill = "#9ce4ff"), 
+        legend.position = "none")+
+  geom_point(data = slice_max(world.cities,#group_by(world.cities, country.etc), 
+                              order_by = pop, 
+                              prop = 0.025), 
+             aes(x = long, y = lat))
