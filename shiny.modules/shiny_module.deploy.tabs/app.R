@@ -36,7 +36,16 @@ ui <- navbarPage(title = "<Title>",
                           tags$p("Click the button to get your location"),
                           geoloc::button_geoloc("myBtn", "Get my Location"),
                           tags$br(),
-                          leafletOutput("lf")
+                          leafletOutput("lf"),
+                          # actionButton("use_clik_loc", "Check loc"), 
+                          # wellPanel(
+                          #   fluidRow(
+                          #     textOutput(outputId = "lon_id")
+                          #   ), 
+                          #   fluidRow(
+                          #     textOutput(outputId = "lat_id")
+                          #   )
+                          # )
                           ),
                  tabPanel("Search by Lon/Lat"),
                  mainPanel(
@@ -47,6 +56,10 @@ ui <- navbarPage(title = "<Title>",
 
 server <- function(input, output, session) {
   data("countries50")
+  
+  # observeEvent(input$use_clik_loc, {
+  #   print(isolate(as.data.frame(input$map_click)))
+  # })
   
   # geoloc 
   output$lf <- renderLeaflet({
