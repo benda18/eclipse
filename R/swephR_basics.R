@@ -36,6 +36,17 @@ swe_sol_eclipse_when_glob(jd_start  = NA,
                           ifltype   = NA, # SE$ECL_TOTAL, SE$ECL_ANNULAR, SE$ECL_PARTIAL, or SE$ECL_ANNULAR_TOTAL (hybrid)
                           backward  = FALSE) 
 
+c("Total Eclipse", "Annular", 
+  "Partial", "Hybrid")[which(abs(c(ecl_total$tret[2] - when_next$tret[2],
+                                   ecl_annular$tret[2] - when_next$tret[2],
+                                   ecl_partial$tret[2] - when_next$tret[2],
+                                   ecl_hybrid$tret[2] - when_next$tret[2])) == 
+                               min(abs(c(ecl_total$tret[2] - when_next$tret[2],
+                                         ecl_annular$tret[2] - when_next$tret[2],
+                                         ecl_partial$tret[2] - when_next$tret[2],
+                                         ecl_hybrid$tret[2] - when_next$tret[2]))))]
+
+
 # compute the geographic location of a solar eclipse for a given tjd;
 swe_sol_eclipse_where() 
 
