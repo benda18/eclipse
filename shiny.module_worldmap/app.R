@@ -44,21 +44,39 @@ ui <- fluidPage(
                                              "Asia", "Europe", 
                                              #"Antarctica", 
                                              "Oceania")),
+      wellPanel(
+        fluidRow("Find the next Solar and Lunar eclipses by clicking on the map")
+      ),
+      wellPanel(
+        fluidRow(textOutput(outputId = "lon_id")), 
+        fluidRow(textOutput(outputId = "lat_id"))
+      )
       
     ),
     mainPanel(
-      plotOutput(outputId = "world_map")
+      wellPanel(
+        plotOutput(outputId = "world_map", 
+                   click = clickOpts(id = "plot_click"))
+      )
     )
   )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  data("countries50")
+  data("countries110")
+  
+  # print lon and lat inputs----
+  output$lon_id <- renderText({
+    unlist(input$plot_click["x"])
+  })
+  output$lat_id <- renderText({
+    unlist(input$plot_click["y"])
+  })
   
   output$world_map <- renderPlot({
     ggplot() + 
-      geom_sf(data = countries50[countries50$continent %in% input$f_continent,],
+      geom_sf(data = countries110[countries110$continent %in% input$f_continent,],
               aes(fill = continent), color = "#363838") +
       theme(panel.background = element_rect(fill = "#9ce4ff"), 
             legend.position = "none", 
