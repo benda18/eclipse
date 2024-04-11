@@ -23,7 +23,7 @@ library(sf)
 #library(rsconnect)
 #library(qrcode)
 library(rnaturalearthdata)
-library(maps)
+
 
 # Define UI for application 
 ui <- fluidPage(
@@ -53,16 +53,12 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  data("countries50", "world.cities")
+  data("countries50")
   
   output$world_map <- renderPlot({
     ggplot() + 
       geom_sf(data = countries50[countries50$continent %in% input$f_continent,],
               aes(fill = continent), color = "#363838") +
-      # geom_point(data = slice_max(world.cities,
-      #                             order_by = pop, 
-      #                             prop = 0.0125), 
-      #            aes(x = long, y = lat)) +
       theme(panel.background = element_rect(fill = "#9ce4ff"), 
             legend.position = "none", 
             panel.grid = element_blank())
