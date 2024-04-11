@@ -193,10 +193,10 @@ server <- function(input, output) {
                                                           ecl_annular$tret[2] - when_next$tret[2],
                                                           ecl_partial$tret[2] - when_next$tret[2],
                                                           ecl_hybrid$tret[2] - when_next$tret[2]))))]
-      ecl_typecheck0 <- min(abs(c(ecl_total$tret[2] - when_next$tret[2],
-                              ecl_annular$tret[2] - when_next$tret[2],
-                              ecl_partial$tret[2] - when_next$tret[2],
-                              ecl_hybrid$tret[2] - when_next$tret[2])))
+      # ecl_typecheck0 <- min(abs(c(ecl_total$tret[2] - when_next$tret[2],
+      #                         ecl_annular$tret[2] - when_next$tret[2],
+      #                         ecl_partial$tret[2] - when_next$tret[2],
+      #                         ecl_hybrid$tret[2] - when_next$tret[2])))
       
       
       
