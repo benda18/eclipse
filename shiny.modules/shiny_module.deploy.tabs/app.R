@@ -3,6 +3,8 @@ library(renv)
 library(ggplot2)
 library(rnaturalearthdata)
 library(sf)
+library(censusxy)
+library(dplyr)
 
 ui <- navbarPage(title = "<Title>", 
                  id = "tabs",
@@ -24,13 +26,6 @@ ui <- navbarPage(title = "<Title>",
                  ),
                  tabPanel("Search by Current Location", "This is the bar tab"),
                  tabPanel("Search by Lon/Lat"),
-                 # navbarMenu("More",
-                 #            tabPanel("Table", "Table page"),
-                 #            tabPanel("About", "About page"),
-                 #            "------",
-                 #            "Even more!",
-                 #            tabPanel("Email", "Email page")
-                 # )
                  mainPanel(
                    
                  )
