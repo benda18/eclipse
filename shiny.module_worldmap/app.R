@@ -8,26 +8,35 @@
 #
 
 library(shiny)
+library(renv)
+#library(shiny)
+#library(jpeg)
+library(swephR)
+library(lubridate)
+library(dplyr)
+library(tigris)
+library(censusxy)
+library(scales)
+library(ggplot2)
+library(sf)
+library(glue)
+#library(rsconnect)
+#library(qrcode)
+library(rnaturalearthdata)
 
-# Define UI for application that draws a histogram
+# Define UI for application 
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("title"),
 
-    # Sidebar with a slider input for number of bins 
+    # Sidebar 
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+            
         ),
-
-        # Show a plot of the generated distribution
         mainPanel(
-           plotOutput("distPlot")
+          
         )
     )
 )
@@ -35,16 +44,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
+   
 }
 
 # Run the application 
