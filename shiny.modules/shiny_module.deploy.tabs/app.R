@@ -7,8 +7,10 @@ library(censusxy)
 library(dplyr)
 #library(remotes)
 library(geoloc)
+library(leaflet)
 
-renv::snapshot()
+#renv::snapshot()
+
 #remotes::install_github("ColinFay/geoloc")
 
 ui <- navbarPage(title = "<Title>", 
@@ -29,7 +31,13 @@ ui <- navbarPage(title = "<Title>",
                      )
                    )
                  ),
-                 tabPanel("Search by Current Location", "This is the bar tab"),
+                 tabPanel("Search by Current Location", 
+                          h2("Where Am I?"),
+                          tags$p("Click the button to get your location"),
+                          geoloc::button_geoloc("myBtn", "Get my Location"),
+                          tags$br(),
+                          leafletOutput("lf")
+                          ),
                  tabPanel("Search by Lon/Lat"),
                  mainPanel(
                    
@@ -39,6 +47,17 @@ ui <- navbarPage(title = "<Title>",
 
 server <- function(input, output, session) {
   data("countries50")
+  
+  # geoloc 
+  output$lf <- renderLeaflet({
+    req(input$myBtn_lon)
+    req(input$myBtn_lat)
+    leaflet() %>%
+      addTiles() %>%
+      setView(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), zoom = 17) %>%
+      addMarkers(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), label = "You're here!")
+  })
+  
   
   # print lon and lat inputs----
   output$lon_id <- renderText({
