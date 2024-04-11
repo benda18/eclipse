@@ -41,8 +41,12 @@ ui <- fluidPage(
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Street Address [general terms like \'The White House\' won't work]" , 
                        value = "1600 Pennsylvania Ave, Washington, DC"),
+      shiny::dateInput(inputId = "date_di", 
+                       label = "Eclipses Occuring On or After:", 
+                       value = with_tz(Sys.Date(), "America/New_York"), 
+                       format = "MM dd, yyyy"),
       actionButton(inputId = "cxy_go", 
-                   label   = "SEARCH ADDRESS"),
+                   label   = "SEARCH"),
       
       wellPanel(
         fluidRow(div(h4(strong(textOutput(outputId = "return_suncov"))))), # max sun coverage
@@ -257,7 +261,8 @@ server <- function(input, output) {
     temp          <- get_cxyinfo()
     lon_in        <- temp$coordinates.x
     lat_in        <- temp$coordinates.y
-    greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    #greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
     tz.local      <- tz(greg_dt.local)
     
     # convert to utc
@@ -288,7 +293,7 @@ server <- function(input, output) {
   
   #### get next eclipse
   get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
-    start.date <- ymd(20240409)
+    start.date <- input$date_di
     min_obsc <- 1
     get.addr <- censusxy::cxy_oneline(address = input$addr_in)
     var.lon  <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180)
@@ -356,7 +361,8 @@ server <- function(input, output) {
     temp          <- get_cxyinfo()
     lon_in        <- temp$coordinates.x
     lat_in        <- temp$coordinates.y
-    greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    #greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
     tz.local      <- tz(greg_dt.local)
     
     # convert to utc
@@ -383,7 +389,8 @@ server <- function(input, output) {
   get_tot.dur <- eventReactive(eventExpr = input$cxy_go, {
     #if(as.numeric(gsub("%", "", x = get_suncov())) >= 100){
     #out <- "yes"
-    start.datetime <- ymd_hms("2024-04-07 08:30:00", tz = "America/New_York")
+    #start.datetime <- ymd_hms("2024-04-07 08:30:00", tz = "America/New_York")
+    start.datetime <- with_tz(as_datetime(input$date_di), "America/New_York")
     get.addr <- get_cxyinfo()
     var.lon <- unlist(unname(get.addr["coordinates.x"]))
     var.lat <- unlist(unname(get.addr["coordinates.y"]))
@@ -493,7 +500,8 @@ server <- function(input, output) {
     
     df.sched <- ec_sched(unname(unlist(addr.coords$coordinates.x)), 
                          unname(unlist(addr.coords$coordinates.y)), 
-                         ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
+                         #ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
+                         with_tz(as_datetime(input$date_di), "America/New_York"))
     if(max(df.sched$coverage) >= 1){
       # img <- readPNG(system.file(#"img", "flawless.png", package="png"))
       img <- readPNG("www/totality.png")
