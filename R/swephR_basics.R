@@ -22,14 +22,19 @@ rm(list=ls());cat('\f');gc()
 
 
 # SWEPHR FUNS----
-
-# Solar eclipses:
-
 # find the next eclipse for a given geographic position;
-swe_sol_eclipse_when_loc(tjd...) 
+swe_sol_eclipse_when_loc(jd_start  = NA, 
+                         ephe_flag = 4, 
+                         geopos    = c(x = NA, 
+                                       y = NA, 
+                                       z = 10), 
+                         backward  = FALSE) 
 
 # find the next eclipse globally;
-swe_sol_eclipse_when_glob(tjd...) 
+swe_sol_eclipse_when_glob(jd_start  = NA,
+                          ephe_flag = 4, 
+                          ifltype   = NA, # SE$ECL_TOTAL, SE$ECL_ANNULAR, SE$ECL_PARTIAL, or SE$ECL_ANNULAR_TOTAL (hybrid)
+                          backward  = FALSE) 
 
 # compute the geographic location of a solar eclipse for a given tjd;
 swe_sol_eclipse_where() 
@@ -37,8 +42,6 @@ swe_sol_eclipse_where()
 # compute attributes of a solar eclipse for a given tjd, geographic longitude,
 # latitude and height.
 swe_sol_eclipse_how() 
-
-# Lunar eclipses:
 
 # find the next lunar eclipse for a given geographic position;
 swe_lun_eclipse_when_loc(tjd...) 
