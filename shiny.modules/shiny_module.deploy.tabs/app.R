@@ -9,23 +9,19 @@
 
 library(shiny)
 
+#https://shiny.posit.co/r/reference/shiny/latest/
+
 # Define UI for application 
 ui <- fluidPage(
 
-    # Application title
-    titlePanel("<titlePanel>"),
+  titlePanel("Application Title"),
 
-    # Sidebar 
-    sidebarLayout(
-        sidebarPanel(
-            fluidRow("<sidebarPanel>")
-        ),
-
-        # Main Panel
-        mainPanel(
-           fluidRow("<mainPanel>")
-        )
-    )
+  navlistPanel(
+    "Header",
+    tabPanel("First"),
+    tabPanel("Second"),
+    tabPanel("Third")
+  )
 )
 
 # Define server logic 
