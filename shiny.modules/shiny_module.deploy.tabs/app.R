@@ -1,34 +1,40 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    https://shiny.posit.co/
-#
-
 library(shiny)
+library(renv)
 
-#https://shiny.posit.co/r/reference/shiny/latest/
-
-# Define UI for application 
-ui <- fluidPage(
-
-  titlePanel("Application Title"),
-
-  navlistPanel(
-    "Header",
-    tabPanel("First"),
-    tabPanel("Second"),
-    tabPanel("Third")
-  )
+ui <- navbarPage("Navbar page", id = "tabs",
+                 tabPanel("Home",
+                          actionButton("hideTab", "Hide 'Foo' tab"),
+                          actionButton("showTab", "Show 'Foo' tab"),
+                          actionButton("hideMenu", "Hide 'More' navbarMenu"),
+                          actionButton("showMenu", "Show 'More' navbarMenu")
+                 ),
+                 tabPanel("Foo", "This is the foo tab"),
+                 tabPanel("Bar", "This is the bar tab"),
+                 navbarMenu("More",
+                            tabPanel("Table", "Table page"),
+                            tabPanel("About", "About page"),
+                            "------",
+                            "Even more!",
+                            tabPanel("Email", "Email page")
+                 )
 )
 
-# Define server logic 
-server <- function(input, output) {
-
-    
+server <- function(input, output, session) {
+  observeEvent(input$hideTab, {
+    hideTab(inputId = "tabs", target = "Foo")
+  })
+  
+  observeEvent(input$showTab, {
+    showTab(inputId = "tabs", target = "Foo")
+  })
+  
+  observeEvent(input$hideMenu, {
+    hideTab(inputId = "tabs", target = "More")
+  })
+  
+  observeEvent(input$showMenu, {
+    showTab(inputId = "tabs", target = "More")
+  })
 }
 
-# Run the application 
-shinyApp(ui = ui, server = server)
+shinyApp(ui, server)
