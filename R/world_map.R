@@ -16,6 +16,7 @@ library(rnaturalearthdata) # for map of world
 library(maps)
 
 
+
 # renv::snapshot()
 
 rm(list=ls());cat('\f')
@@ -51,10 +52,24 @@ maps::world.cities
 
 ggplot() + 
   geom_sf(data = countries110, 
-          aes(fill = continent))+
+          aes(fill = continent)) +
+  # geom_point(data = slice_max(world.cities,
+  #                             order_by = pop, 
+  #                             prop = 0.0125), 
+  #            aes(x = long, y = lat)) +
   theme(panel.background = element_rect(fill = "#9ce4ff"), 
-        legend.position = "none")+
-  geom_point(data = slice_max(world.cities,#group_by(world.cities, country.etc), 
-                              order_by = pop, 
-                              prop = 0.0125), 
-             aes(x = long, y = lat))
+        legend.position = "none")
+
+
+# world map continent edits----
+
+countries110 %>%
+  
+  ggplot(data = .) + 
+  geom_sf(aes(fill = continent)) +
+  # geom_point(data = slice_max(world.cities,
+  #                             order_by = pop, 
+  #                             prop = 0.0125), 
+  #            aes(x = long, y = lat)) +
+  theme(panel.background = element_rect(fill = "#9ce4ff"), 
+        legend.position = "none")
