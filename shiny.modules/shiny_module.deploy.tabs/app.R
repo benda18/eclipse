@@ -5,7 +5,11 @@ library(rnaturalearthdata)
 library(sf)
 library(censusxy)
 library(dplyr)
-library(remotes)
+#library(remotes)
+library(geoloc)
+
+renv::snapshot()
+#remotes::install_github("ColinFay/geoloc")
 
 ui <- navbarPage(title = "<Title>", 
                  id = "tabs",
