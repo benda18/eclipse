@@ -19,18 +19,13 @@ ui <- navbarPage(title = "<Title>",
                           geoloc::button_geoloc("myBtn", "Get my Location"),
                           tags$br(),
                           leafletOutput("map", 
-                                        width = "50%"),
+                                        width = "100%"),
                           wellPanel(
                             shiny::tableOutput("vxy")
+                          ), 
+                          wellPanel(
+                            shiny::tableOutput("dtab")
                           )
-                          # wellPanel(
-                          #   fluidRow(
-                          #     textOutput(outputId = "lon_id")
-                          #   ), 
-                          #   fluidRow(
-                          #     textOutput(outputId = "lat_id")
-                          #   )
-                          # )
                  )
                  
 )
@@ -50,6 +45,10 @@ server <- function(input, output) {
       addTiles() %>%
       setView(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), zoom = 17) %>%
       addMarkers(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), label = "You're here!")
+  })
+  
+  output$dtab <- renderTable({
+    mtcars
   })
   
 }
