@@ -12,6 +12,9 @@ library(sf)
 library(glue)
 #library(rsconnect)
 #library(qrcode)
+library(rnaturalearthdata) # for map of world
+
+renv::snapshot()
 
 rm(list=ls());cat('\f');gc()
 
@@ -22,16 +25,16 @@ rm(list=ls());cat('\f');gc()
 
 
 # UNIVERSAL VARIABLES----
-lon.in     <- NA
-lat.in     <- NA
+lon.in     <- runif(-180,180,n=1)
+lat.in     <- runif(-90, 90, n=1)
 greg_dt.in <- Sys.time()
 
 # SWEPHR FUNS----
 # find the next eclipse for a given geographic position;
 swe_sol_eclipse_when_loc(jd_start  = NA, 
                          ephe_flag = 4, 
-                         geopos    = c(x = NA, 
-                                       y = NA, 
+                         geopos    = c(x = lon.in, 
+                                       y = lat.in, 
                                        z = 10), 
                          backward  = FALSE) 
 
@@ -71,15 +74,15 @@ swe_sol_eclipse_where(jd_ut     = NA,
 # latitude and height.
 swe_sol_eclipse_how(jd_ut     = NA, 
                     ephe_flag = 4, 
-                    geopos    = c(x = NA, 
-                                  y = NA, 
+                    geopos    = c(x = lon.in, 
+                                  y = lat.in, 
                                   z = 10)) 
 
 # find the next lunar eclipse for a given geographic position;
 swe_lun_eclipse_when_loc(jd_start  = NA, 
                          ephe_flag = 4, 
-                         geopos    = c(x = NA, 
-                                       y = NA, 
+                         geopos    = c(x = lon.in, 
+                                       y = lat.in, 
                                        z = 10), 
                          backward  = FALSE) 
 
@@ -92,7 +95,7 @@ swe_lun_eclipse_when(jd_start  = NA,
 # compute the attributes of a lunar eclipse for a given tjd.
 swe_lun_eclipse_how(jd_ut     = NA, 
                     ephe_flag = 4,
-                    geopos    = c(x = NA, 
-                                  y = NA, 
+                    geopos    = c(x = lon.in, 
+                                  y = lat.in, 
                                   z = 10)) 
 
