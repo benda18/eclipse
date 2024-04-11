@@ -21,6 +21,11 @@ rm(list=ls());cat('\f');gc()
 # FUNS----
 
 
+# UNIVERSAL VARIABLES----
+lon.in     <- NA
+lat.in     <- NA
+greg_dt.in <- Sys.time()
+
 # SWEPHR FUNS----
 # find the next eclipse for a given geographic position;
 swe_sol_eclipse_when_loc(jd_start  = NA, 
