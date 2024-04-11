@@ -30,21 +30,33 @@ swe_sol_eclipse_when_loc(jd_start  = NA,
                                        z = 10), 
                          backward  = FALSE) 
 
-# find the next eclipse globally;
-swe_sol_eclipse_when_glob(jd_start  = NA,
-                          ephe_flag = 4, 
-                          ifltype   = NA, # SE$ECL_TOTAL, SE$ECL_ANNULAR, SE$ECL_PARTIAL, or SE$ECL_ANNULAR_TOTAL (hybrid)
-                          backward  = FALSE) 
+# find the next eclipse globally (including type of eclipse);
+ecl_total   <- swe_sol_eclipse_when_glob(jd_start  = NA,
+                                         ephe_flag = 4, 
+                                         ifltype   = SE$ECL_TOTAL, 
+                                         backward  = FALSE)
+ecl_annular <- swe_sol_eclipse_when_glob(jd_start  = NA,
+                                         ephe_flag = 4, 
+                                         ifltype   = SE$ECL_ANNULAR,
+                                         backward  = FALSE)
+ecl_partial <- swe_sol_eclipse_when_glob(jd_start  = NA,
+                                         ephe_flag = 4, 
+                                         ifltype   = SE$ECL_PARTIAL,
+                                         backward  = FALSE)
+ecl_hybrid  <- swe_sol_eclipse_when_glob(jd_start  = NA,
+                                         ephe_flag = 4, 
+                                         ifltype   = SE$ECL_ANNULAR_TOTAL,
+                                         backward  = FALSE)
 
-c("Total Eclipse", "Annular", 
-  "Partial", "Hybrid")[which(abs(c(ecl_total$tret[2] - when_next$tret[2],
-                                   ecl_annular$tret[2] - when_next$tret[2],
-                                   ecl_partial$tret[2] - when_next$tret[2],
-                                   ecl_hybrid$tret[2] - when_next$tret[2])) == 
-                               min(abs(c(ecl_total$tret[2] - when_next$tret[2],
-                                         ecl_annular$tret[2] - when_next$tret[2],
-                                         ecl_partial$tret[2] - when_next$tret[2],
-                                         ecl_hybrid$tret[2] - when_next$tret[2]))))]
+ecl_type <- c("Total Eclipse", "Annular", 
+              "Partial", "Hybrid")[which(abs(c(ecl_total$tret[2] - when_next$tret[2],
+                                               ecl_annular$tret[2] - when_next$tret[2],
+                                               ecl_partial$tret[2] - when_next$tret[2],
+                                               ecl_hybrid$tret[2] - when_next$tret[2])) == 
+                                           min(abs(c(ecl_total$tret[2] - when_next$tret[2],
+                                                     ecl_annular$tret[2] - when_next$tret[2],
+                                                     ecl_partial$tret[2] - when_next$tret[2],
+                                                     ecl_hybrid$tret[2] - when_next$tret[2]))))]
 
 
 # compute the geographic location of a solar eclipse for a given tjd;
