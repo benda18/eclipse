@@ -45,7 +45,7 @@ jul_utcdt.in  <- swephR::swe_utc_to_jd(year = year(greg_utcdt.in),
 
 # SWEPHR FUNS----
 # find the next eclipse for a given geographic position;
-swe_sol_eclipse_when_loc(jd_start  = jul_utcdt.in, 
+when_next <- swe_sol_eclipse_when_loc(jd_start  = jul_utcdt.in, 
                          ephe_flag = 4, 
                          geopos    = c(x = lon.in, 
                                        y = lat.in, 
@@ -81,7 +81,16 @@ ecl_type <- c("Total Eclipse", "Annular",
                                                      ecl_hybrid$tret[2] - when_next$tret[2]))))]
 
 # compute the geographic location of a solar eclipse for a given tjd;
-swe_sol_eclipse_where(jd_ut     = jul_utcdt.in, 
+
+jul_utc_ecl.begin <- swe_sol_eclipse_when_glob(jd_start  = jul_utcdt.in,
+                                             ephe_flag = 4, 
+                                             ifltype   = 0, # 0 = any eclipse 
+                                             backward  = FALSE)$tret[c(3:4)]
+
+
+swe_sol_eclipse_where(jd_ut     = min(jul_utc_ecl.begin), 
+                      ephe_flag = 4) 
+swe_sol_eclipse_where(jd_ut     = max(jul_utc_ecl.begin), 
                       ephe_flag = 4) 
 
 # compute attributes of a solar eclipse for a given tjd, geographic longitude,
