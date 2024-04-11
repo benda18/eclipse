@@ -9,19 +9,13 @@
 
 library(shiny)
 library(renv)
-#library(shiny)
-#library(jpeg)
 library(swephR)
 library(lubridate)
 library(dplyr)
 library(tigris)
-#library(censusxy)
 library(scales)
 library(ggplot2)
 library(sf)
-#library(glue)
-#library(rsconnect)
-#library(qrcode)
 library(rnaturalearthdata)
 
 # renv::snapshot()
@@ -30,7 +24,7 @@ library(rnaturalearthdata)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("title"),
+  titlePanel("<Clickable World Map>"),
   
   # Sidebar 
   sidebarLayout(
