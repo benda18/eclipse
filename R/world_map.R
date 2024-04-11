@@ -56,5 +56,5 @@ ggplot() +
         legend.position = "none")+
   geom_point(data = slice_max(world.cities,#group_by(world.cities, country.etc), 
                               order_by = pop, 
-                              prop = 0.025), 
+                              prop = 0.0125), 
              aes(x = long, y = lat))

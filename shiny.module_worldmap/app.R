@@ -64,7 +64,7 @@ server <- function(input, output) {
             panel.grid = element_blank())+
       geom_point(data = slice_max(world.cities,
                                   order_by = pop, 
-                                  prop = 0.025), 
+                                  prop = 0.0125), 
                  aes(x = long, y = lat))
   })
 }
