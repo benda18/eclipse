@@ -7,9 +7,11 @@ library(lubridate)
 library(dplyr)
 library(renv)
 library(leaflet)
+library(scales)
 
 
 #renv::snapshot()
+# www.astro.com/swisseph/swephprg.htm
 
 ui <- navbarPage(title = "<Title>", 
                  id = "tabs",
@@ -52,8 +54,6 @@ server <- function(input, output) {
     # UNIVERSAL VARIABLES
     lon.in     <- req(input$myBtn_lon)
     lat.in     <- req(input$myBtn_lat)
-    # lon.in     <- runif(-180,180,n=1)
-    # lat.in     <- runif(-90, 90, n=1)
     greg_dt.in <- Sys.time()
     loctz.in   <- "America/New_York"
     
@@ -77,6 +77,29 @@ server <- function(input, output) {
                                                             lat.in, 
                                                             10), 
                                               backward  = FALSE) 
+    
+    
+    nextecl_df <- lapply(X = when_next.sol$tret[c(2,3,1,4,5)], 
+           FUN = swe_jdet_to_utc, 
+           gregflag = 1) %>%
+      lapply(X = ., 
+             FUN = paste, 
+             sep = "-", 
+             collapse = "-") %>%
+      ymd_hms()
+    
+    names(nextecl_df) <- c("eclipse_begin", 
+                               "totality_begin", 
+                               "max_eclipse", 
+                               "totality_end", 
+                               "fourth_end")
+    nextecl_df <- as.data.frame(nextecl_df)
+    nextecl_df$time_type <- rownames(nextecl_df)
+    nextecl_df <- as_tibble(nextecl_df)
+    
+    nextecl_df$obsc_pct <- c(0,100,when_next.sol$attr[3]*100,100,0)/100
+    
+    names(nextecl_df)[1] <- "date_time"
     
     # find the next eclipse globally (including type of eclipse);
     ecl_total   <- swe_sol_eclipse_when_glob(jd_start  = jul_utcdt.in,
@@ -106,7 +129,7 @@ server <- function(input, output) {
                                                          ecl_partial$tret[2] - when_next.sol$tret[2],
                                                          ecl_hybrid$tret[2] - when_next.sol$tret[2]))))]
     
-    
+    nextecl_df$eclipse_type <- ecl_type
     
     # compute the geographic location of a solar eclipse for a given tjd;
     
@@ -149,6 +172,16 @@ server <- function(input, output) {
                         geopos    = c(lon.in, 
                                       lat.in, 
                                       10)) 
+    nextecl_df$date_time <- as_datetime(nextecl_df$date_time)
+    
+    df_out          <- nextecl_df
+    df_out$obsc_pct <- scales::percent(df_out$obsc_pct)
+    
+    strftime(df_out$date_time, 
+             format = "%B %d, %Y")
+    
+    strftime((df_out$date_time), 
+             format = "%R:%S%p %Z")
     
   })
   
