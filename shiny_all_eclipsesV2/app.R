@@ -19,32 +19,39 @@ library(renv)
 library(glue)
 #library(rsconnect)
 library(qrcode)
+library(leaflet)
+library(geoloc)
+
+
+
 
 ui <- fluidPage(
   
   # Application title
-  titlePanel("75 Years of Solar Eclipses Visible from Your Address", ),
+  titlePanel("75 Years of Solar Eclipses Visible from Your Current Location", ),
   
   sidebarLayout(
     sidebarPanel(
-      shiny::textInput(inputId = "addr_in", 
-                       label = "Enter Street Address [general terms like \'The White House\' won't work]", 
-                       value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
-                                            "1060 W Addison, Chicago IL",               
-                                            "1 Bear Valley Rd, Point Reyes Station, CA",  
-                                            "250 E Franklin St, Chapel Hill, NC",          
-                                            "100 Joe Nuxhall Wy, Cincinnati, OH",        
-                                            "281 W Lane Ave, Columbus, OH",               
-                                            "300 Alamo Plaza, San Antonio, TX",           
-                                            "2634 Main St, Lake Placid, NY",             
-                                            "1047 Main St, Buffalo, NY" ,                 
-                                            "2610 University Cir, Cincinnati, OH",     
-                                            "3159 W 11th St, Cleveland, OH",              
-                                            "4001 W 2nd St, Roswell, NM",              
-                                            "926 E McLemore Ave, Memphis, TN",           
-                                            "369 Central Ave, Hot Springs, AR",         
-                                            "4790 W 16th St, Indianapolis, IN"), 
-                                      size = 1)),
+      # shiny::textInput(inputId = "addr_in", 
+      #                  label = "Enter Street Address [general terms like \'The White House\' won't work]", 
+      #                  value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
+      #                                       "1060 W Addison, Chicago IL",               
+      #                                       "1 Bear Valley Rd, Point Reyes Station, CA",  
+      #                                       "250 E Franklin St, Chapel Hill, NC",          
+      #                                       "100 Joe Nuxhall Wy, Cincinnati, OH",        
+      #                                       "281 W Lane Ave, Columbus, OH",               
+      #                                       "300 Alamo Plaza, San Antonio, TX",           
+      #                                       "2634 Main St, Lake Placid, NY",             
+      #                                       "1047 Main St, Buffalo, NY" ,                 
+      #                                       "2610 University Cir, Cincinnati, OH",     
+      #                                       "3159 W 11th St, Cleveland, OH",              
+      #                                       "4001 W 2nd St, Roswell, NM",              
+      #                                       "926 E McLemore Ave, Memphis, TN",           
+      #                                       "369 Central Ave, Hot Springs, AR",         
+      #                                       "4790 W 16th St, Indianapolis, IN"), 
+      #                                 size = 1)),
+      geoloc::button_geoloc("myBtn", "Get my Location"),
+      leafletOutput("lf_map"),
       shiny::dateInput(inputId = "date_in", 
                        label = "Search-From Date", 
                        value = Sys.Date(), 
@@ -120,6 +127,16 @@ server <- function(input, output) {
     
     return(glue("https://eclipsewise.com/solar/SEping/{w.cenA}-{w.cenB}/SE{w.year}-{w.month}-{w.mday}{et}.gif"))
   }
+  
+  output$lf_map <- renderLeaflet({
+    req(input$myBtn_lon)
+    req(input$myBtn_lat)
+    leaflet() %>%
+      addTiles() %>%
+      setView(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), zoom = 8) %>%
+      addMarkers(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), label = "You're here!")
+  })
+  
   
   get_search.addr <- eventReactive(input$search_go, {
     censusxy::cxy_oneline(address = input$addr_in)
