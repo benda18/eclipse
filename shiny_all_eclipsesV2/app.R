@@ -58,8 +58,8 @@ ui <- fluidPage(
                        min   = "1000-01-01", 
                        max   = "2999-12-31", 
                        format = "MM dd, yyyy"),
-      actionButton(inputId = "search_go", 
-                   label   = "SEARCH ADDRESS"),
+      # actionButton(inputId = "search_go", 
+      #              label   = "SEARCH ADDRESS"),
       shiny::checkboxInput("cb_total.ecl", 
                            value = F,
                            label = "Show Only Total Eclipses"), 
@@ -138,24 +138,24 @@ server <- function(input, output) {
   })
   
   
-  get_search.addr <- eventReactive(input$search_go, {
-    censusxy::cxy_oneline(address = input$addr_in)
-  })
+  # get_search.addr <- eventReactive(input$search_go, {
+  #   censusxy::cxy_oneline(address = input$addr_in)
+  # })
   
-  get_search.date <- eventReactive(input$search_go, {
-    input$date_in
-  })
+  # get_search.date <- eventReactive(input$search_go, {
+  #   input$date_in
+  # })
   
   output$logtable <- shiny::renderTable({
     # vars----
-    start.date      <- get_search.date()
+    start.date      <- input$date_in #get_search.date()
     max.year        <- year(start.date) + 75
     #min_obsc        <- 1 
     
     # do work----
-    get.addr <- get_search.addr()
-    var.lon <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180) 
-    var.lat <- unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)  
+    # get.addr <- get_search.addr()
+    var.lon <- input$myBtn_lon #unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180) 
+    var.lat <- input$myBtn_lat #unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)  
     
     ####
     is_totality <- F
