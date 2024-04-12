@@ -22,6 +22,7 @@ library(glue)
 #library(rsconnect)
 #library(ggmap)
 library(qrcode)
+library(leaflet)
 
 # renv::status()
 # renv::snapshot()
