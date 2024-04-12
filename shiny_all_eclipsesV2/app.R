@@ -50,7 +50,7 @@ ui <- fluidPage(
       #                                       "369 Central Ave, Hot Springs, AR",         
       #                                       "4790 W 16th St, Indianapolis, IN"), 
       #                                 size = 1)),
-      geoloc::button_geoloc("myBtn", "Get my Location"),
+      geoloc::button_geoloc("myBtn", "Click to Start"),
       leafletOutput("lf_map"),
       shiny::dateInput(inputId = "date_in", 
                        label = "Search-From Date", 
@@ -162,7 +162,8 @@ server <- function(input, output) {
     n <- 0
     
     log.ecls <- NULL
-    
+    req(input$myBtn_lon)
+    req(input$myBtn_lat)
     while(#!is_totality & 
           year(start.date) < max.year){
       n <- n + 1
