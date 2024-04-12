@@ -29,27 +29,8 @@ ui <- fluidPage(
   
   # Application title
   titlePanel("75 Years of Solar Eclipses Visible from Your Current Location", ),
-  
   sidebarLayout(
     sidebarPanel(
-      # shiny::textInput(inputId = "addr_in", 
-      #                  label = "Enter Street Address [general terms like \'The White House\' won't work]", 
-      #                  value = sample(x = c("1600 Pennsylvania Ave, Washington, DC",      
-      #                                       "1060 W Addison, Chicago IL",               
-      #                                       "1 Bear Valley Rd, Point Reyes Station, CA",  
-      #                                       "250 E Franklin St, Chapel Hill, NC",          
-      #                                       "100 Joe Nuxhall Wy, Cincinnati, OH",        
-      #                                       "281 W Lane Ave, Columbus, OH",               
-      #                                       "300 Alamo Plaza, San Antonio, TX",           
-      #                                       "2634 Main St, Lake Placid, NY",             
-      #                                       "1047 Main St, Buffalo, NY" ,                 
-      #                                       "2610 University Cir, Cincinnati, OH",     
-      #                                       "3159 W 11th St, Cleveland, OH",              
-      #                                       "4001 W 2nd St, Roswell, NM",              
-      #                                       "926 E McLemore Ave, Memphis, TN",           
-      #                                       "369 Central Ave, Hot Springs, AR",         
-      #                                       "4790 W 16th St, Indianapolis, IN"), 
-      #                                 size = 1)),
       geoloc::button_geoloc("myBtn", "Click to Start"),
       leafletOutput("lf_map"),
       shiny::dateInput(inputId = "date_in", 
@@ -58,15 +39,13 @@ ui <- fluidPage(
                        min   = "1000-01-01", 
                        max   = "2999-12-31", 
                        format = "MM dd, yyyy"),
-      # actionButton(inputId = "search_go", 
-      #              label   = "SEARCH ADDRESS"),
       shiny::checkboxInput("cb_total.ecl", 
                            value = F,
                            label = "Show Only Total Eclipses"), 
       shiny::checkboxInput("cb_totality", 
                            value = F, 
                            label = "Show Only when in Path of Totality")
-     
+      
     ),
     
     mainPanel(
@@ -80,12 +59,11 @@ ui <- fluidPage(
         #fluidRow(strong("Help Cover ")), 
         fluidRow(strong(uiOutput("tab.venmo"))),
         fluidRow("Special thanks to reddit users u/danielsixfive and u/QuackingUp23")
-        ),
+      ),
       #/BRMP
       
       wellPanel(
         fluidRow("The table below shows the next 75 years of solar eclipses visible from this location."),
-        #fluidRow(strong(span("NOTE: Obscuration percentages were being incorrectly calculated in the table below by about 5% previously. This error has now been fixed.", style = "color:black"))),
       ),
       shiny::tableOutput(outputId = "logtable"),
       shiny::plotOutput(outputId = "qr_url", 
@@ -95,11 +73,6 @@ ui <- fluidPage(
         fluidRow(uiOutput("tab.PT")), 
         fluidRow(uiOutput("tab.NE"))
       )
-      # wellPanel(
-      #   fluidRow(strong("DONATIONS - help cover hosting costs")), 
-      #   fluidRow(uiOutput("tab.venmo")),
-      #   #fluidRow(uiOutput("addr_img"))
-      # )
     )
   )
 )
@@ -107,8 +80,11 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  eclipsewise_url <- function(ecl_date,# = ymd(20780511), 
-                              ecltype = c("Total Eclipse", "Annular", "Partial", "Hybrid")){
+  eclipsewise_url <- function(ecl_date,
+                              ecltype = c("Total Eclipse", 
+                                          "Annular", 
+                                          "Partial", 
+                                          "Hybrid")){
     require(glue)
     require(lubridate)
     w.year  <- year(ecl_date)
@@ -137,25 +113,15 @@ server <- function(input, output) {
       addMarkers(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), label = "You're here!")
   })
   
-  
-  # get_search.addr <- eventReactive(input$search_go, {
-  #   censusxy::cxy_oneline(address = input$addr_in)
-  # })
-  
-  # get_search.date <- eventReactive(input$search_go, {
-  #   input$date_in
-  # })
-  
   output$logtable <- shiny::renderTable({
     # vars----
-    start.date      <- input$date_in #get_search.date()
+    start.date      <- input$date_in 
     max.year        <- year(start.date) + 75
     #min_obsc        <- 1 
     
     # do work----
-    # get.addr <- get_search.addr()
-    var.lon <- input$myBtn_lon #unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180) 
-    var.lat <- input$myBtn_lat #unlist(unname(get.addr["coordinates.y"])) # runif(1, -90, 90)  
+    var.lon <- input$myBtn_lon 
+    var.lat <- input$myBtn_lat 
     
     ####
     is_totality <- F
@@ -164,8 +130,7 @@ server <- function(input, output) {
     log.ecls <- NULL
     req(input$myBtn_lon)
     req(input$myBtn_lat)
-    while(#!is_totality & 
-          year(start.date) < max.year){
+    while(year(start.date) < max.year){
       n <- n + 1
       if(n > 2000){
         stop("too many searches - ERROR")
@@ -186,9 +151,9 @@ server <- function(input, output) {
                                             backward = F)
       # search eclipse type
       ecl_total <- swe_sol_eclipse_when_glob(jd_start = when_next$tret[2]-1, 
-                                            ifltype = SE$ECL_TOTAL,#SE$ECL_CENTRAL|SE$ECL_NONCENTRAL,
-                                            ephe_flag = 4, 
-                                            backward = F)
+                                             ifltype = SE$ECL_TOTAL,#SE$ECL_CENTRAL|SE$ECL_NONCENTRAL,
+                                             ephe_flag = 4, 
+                                             backward = F)
       ecl_annular <- swe_sol_eclipse_when_glob(jd_start = when_next$tret[2]-1, 
                                                ifltype = SE$ECL_ANNULAR,
                                                ephe_flag = 4, 
@@ -198,19 +163,19 @@ server <- function(input, output) {
                                                ephe_flag = 4, 
                                                backward = F)
       ecl_hybrid <- swe_sol_eclipse_when_glob(jd_start = when_next$tret[2]-1, 
-                                               ifltype = SE$ECL_ANNULAR_TOTAL,
-                                               ephe_flag = 4, 
-                                               backward = F)
+                                              ifltype = SE$ECL_ANNULAR_TOTAL,
+                                              ephe_flag = 4, 
+                                              backward = F)
       
       ecl_type222 <- c("Total Eclipse", "Annular", 
                        "Partial", "Hybrid")[which(abs(c(ecl_total$tret[2] - when_next$tret[2],
-                                                    ecl_annular$tret[2] - when_next$tret[2],
-                                                    ecl_partial$tret[2] - when_next$tret[2],
-                                                    ecl_hybrid$tret[2] - when_next$tret[2])) == 
+                                                        ecl_annular$tret[2] - when_next$tret[2],
+                                                        ecl_partial$tret[2] - when_next$tret[2],
+                                                        ecl_hybrid$tret[2] - when_next$tret[2])) == 
                                                     min(abs(c(ecl_total$tret[2] - when_next$tret[2],
-                                                          ecl_annular$tret[2] - when_next$tret[2],
-                                                          ecl_partial$tret[2] - when_next$tret[2],
-                                                          ecl_hybrid$tret[2] - when_next$tret[2]))))]
+                                                              ecl_annular$tret[2] - when_next$tret[2],
+                                                              ecl_partial$tret[2] - when_next$tret[2],
+                                                              ecl_hybrid$tret[2] - when_next$tret[2]))))]
       # ecl_typecheck0 <- min(abs(c(ecl_total$tret[2] - when_next$tret[2],
       #                         ecl_annular$tret[2] - when_next$tret[2],
       #                         ecl_partial$tret[2] - when_next$tret[2],
@@ -225,18 +190,13 @@ server <- function(input, output) {
       temp.nextobs <- max(when_next$attr[c(1,3)]) # p
       
       log.ecls <- rbind(log.ecls,
-                        data.frame(#n        = n,
-                          #address  = the.addr,
-                          #date     = temp.nextdate,
-                          Date = strftime(x = temp.nextdate, 
-                                          format = "%b %d, %Y", 
-                                          tz = "America/New_York"),
-                          #jdate    = NA,
-                          Type = ecl_type222,
-                          #ecl_typecheck0 = ecl_typecheck0,
-                          pct_obscured = temp.nextobs, 
-                          Eclipse_Map = eclipsewise_url(ecl_date = temp.nextdate, 
-                                                        ecltype = ecl_type222)))
+                        data.frame(Date = strftime(x = temp.nextdate, 
+                                                   format = "%b %d, %Y", 
+                                                   tz = "America/New_York"),
+                                   Type = ecl_type222,
+                                   pct_obscured = temp.nextobs, 
+                                   Eclipse_Map = eclipsewise_url(ecl_date = temp.nextdate, 
+                                                                 ecltype = ecl_type222)))
       
       temp.utc <- temp.nextdate
       temp.jd  <- swe_utc_to_jd(year = year(temp.utc),
@@ -305,8 +265,8 @@ server <- function(input, output) {
   })
   #/RESOURCES
   url.AE <- a("* Every Solar Eclipse Visible from Your Address for 75 Years",
-                    href = "https://tim-bender.shinyapps.io/shiny_all_eclipses/",
-                    target = "_blank")
+              href = "https://tim-bender.shinyapps.io/shiny_all_eclipses/",
+              target = "_blank")
   output$tab.AE <- renderUI({
     tagList(url.AE)
   })
