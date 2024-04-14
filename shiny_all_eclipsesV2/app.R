@@ -246,6 +246,14 @@ server <- function(input, output) {
                                    Obscuration = temp.nextobs, 
                                    Eclipse_Map = eclipsewise_url(ecl_date = temp.nextdate, 
                                                                  ecltype = ecl_type222)))
+      log.ecls <- rbind(log.ecls,
+                        data.frame(Date = strftime(x = temp.nextdate.lun, 
+                                                   format = "%b %d, %Y", 
+                                                   tz = "America/New_York"),
+                                   Type = "Lunar",
+                                   Sub_Type = ecl_type222.lun,
+                                   Obscuration = NA, 
+                                   Eclipse_Map = NA))
       
       temp.utc <- temp.nextdate
       temp.jd  <- swe_utc_to_jd(year = year(temp.utc),
@@ -270,11 +278,12 @@ server <- function(input, output) {
       }
     }
     
-    log.ecls$Obscuration[log.ecls$Obscuration >= 1]  <- 1
-    log.ecls <- log.ecls[(log.ecls$Obscuration*100) >= input$obs_in,]
+    #log.ecls$Obscuration[log.ecls$Obscuration >= 1]  <- 1
+    log.ecls <- log.ecls[(log.ecls$Obscuration*100) >= input$obs_in | 
+                           is.na(log.ecls$Obscuration),]
     log.ecls$Obscuration <- scales::percent(log.ecls$Obscuration, accuracy = 0.1)
     #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
-    log.ecls$Eclipse_Map <- paste0("[<a href='",  
+    log.ecls$Eclipse_Map[!is.na(log.ecls$Eclipse_Map)] <- paste0("[<a href='",  
                                    log.ecls$Eclipse_Map,
                                    "' target='_blank'>see eclipse path</a>]")
     
