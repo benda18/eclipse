@@ -33,7 +33,9 @@ ui <- fluidPage(
     sidebarPanel(
       shiny::selectInput(inputId = "n_fut_yrs",
                          label = "Years to Look into the Future:",
-                         choices = c("25 years" = 25, 
+                         choices = c("5 years" = 5, 
+                                     "10 years" = 10,
+                                     "25 years" = 25, 
                                      "50 years" = 50,
                                      "75 years" = 75),
                          selected = 25,
@@ -155,13 +157,15 @@ server <- function(input, output) {
                                          sec   = 0, 
                                          gregflag = 1)$dret[2]
       
+      # get next solar eclipse----
       when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
                                             ephe_flag = 4, 
                                             geopos = c(x = var.lon, 
                                                        y = var.lat, 
                                                        z = 10), 
                                             backward = F)
-      # search eclipse type
+      
+      # search solar eclipse type
       ecl_total <- swe_sol_eclipse_when_glob(jd_start = when_next$tret[2]-1, 
                                              ifltype = SE$ECL_TOTAL,#SE$ECL_CENTRAL|SE$ECL_NONCENTRAL,
                                              ephe_flag = 4, 
@@ -193,7 +197,36 @@ server <- function(input, output) {
       #                         ecl_partial$tret[2] - when_next$tret[2],
       #                         ecl_hybrid$tret[2] - when_next$tret[2])))
       
+      # get next lunar eclipse----
+      when_next.lun <- swe_lun_eclipse_when_loc(jd_start = a.date.ju, 
+                                                ephe_flag = 4, 
+                                                geopos = c(x = var.lon, 
+                                                           y = var.lat, 
+                                                           z = 10), 
+                                                backward = F)
+      # get next lunar eclipse type
       
+      ecl_total.lun <- swe_lun_eclipse_when(jd_start = when_next.lun$tret[3]-1, 
+                                            ifltype = SE$ECL_TOTAL,
+                                            ephe_flag = 4, 
+                                            backward = F)
+      ecl_penumbral.lun <- swe_lun_eclipse_when(jd_start = when_next.lun$tret[3]-1, 
+                                                ifltype = SE$ECL_PENUMBRAL,
+                                                ephe_flag = 4, 
+                                                backward = F)
+      ecl_partial.lun <- swe_lun_eclipse_when(jd_start = when_next.lun$tret[3]-1, 
+                                              ifltype = SE$ECL_PARTIAL,
+                                              ephe_flag = 4, 
+                                              backward = F)
+      
+      
+      ecl_type222.lun <- c("Total Eclipse", "Penumbral", 
+                           "Partial")[which(abs(c(ecl_total.lun$tret[3] - when_next.lun$tret[3],
+                                                  ecl_penumbral.lun$tret[3] - when_next.lun$tret[3],
+                                                  ecl_partial.lun$tret[3] - when_next.lun$tret[3])) == 
+                                              min(abs(c(ecl_total.lun$tret[3] - when_next.lun$tret[3],
+                                                        ecl_penumbral.lun$tret[3] - when_next.lun$tret[3],
+                                                        ecl_partial.lun$tret[3] - when_next.lun$tret[3]))))]
       
       # NEXT DATE
       temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
@@ -221,6 +254,7 @@ server <- function(input, output) {
                                 gregflag = 1)$dret |>
         as.integer() |>
         unique()
+      
       
       if(year(start.date) >= max.year){
         break
