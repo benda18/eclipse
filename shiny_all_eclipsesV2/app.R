@@ -94,6 +94,20 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
+  ewlun_url <- function(ecl_date, 
+                        ecltype = c("Total Eclipse", 
+                                        "Penumbral", 
+                                        "Partial")){
+    require(glue)
+    require(lubridate)
+    
+    
+    et <- toupper(substr(ecltype,1,1))
+    glue("https://eclipsewise.com/oh/ec{year(ecl_date)}.html#LE{year(ecl_date)}{lubridate::month(ecl_date,abbr=T,label=T)}{mday(ecl_date)}{et}")
+    
+  }
+  #ewlun_url(mdy("Aug 28, 2026"),"P")
+  
   eclipsewise_url <- function(ecl_date,
                               ecltype = c("Total Eclipse", 
                                           "Annular", 
@@ -278,12 +292,12 @@ server <- function(input, output) {
       }
     }
     
-    #log.ecls$Obscuration[log.ecls$Obscuration >= 1]  <- 1
+    log.ecls$Obscuration[log.ecls$Obscuration >= 1 & !is.na(log.ecls$Obscuration)]  <- 1
     log.ecls <- log.ecls[(log.ecls$Obscuration*100) >= input$obs_in | 
                            is.na(log.ecls$Obscuration),]
     log.ecls$Obscuration <- scales::percent(log.ecls$Obscuration, accuracy = 0.1)
     #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
-    log.ecls$Eclipse_Map[!is.na(log.ecls$Eclipse_Map)] <- paste0("[<a href='",  
+    log.ecls$Eclipse_Map <- paste0("[<a href='",  
                                    log.ecls$Eclipse_Map,
                                    "' target='_blank'>see eclipse path</a>]")
     
@@ -294,7 +308,8 @@ server <- function(input, output) {
     }
     # checkbox_totality
     if(input$cb_totality){
-      log.ecls <- log.ecls[log.ecls$Obscuration == "100.0%",]
+      log.ecls <- log.ecls[log.ecls$Obscuration == "100.0%" & 
+                             log.ecls$Type == "Solar",]
     }
     
     log.ecls
