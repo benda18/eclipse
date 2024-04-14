@@ -28,23 +28,35 @@ library(geoloc)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("75 Years of Solar Eclipses Visible from Your Current Location", ),
+  titlePanel("Future Solar Eclipses Visible from Your Current Location", ),
   sidebarLayout(
     sidebarPanel(
-      geoloc::button_geoloc("myBtn", "Click to Start"),
-      leafletOutput("lf_map"),
-      shiny::dateInput(inputId = "date_in", 
-                       label = "Search-From Date", 
-                       value = Sys.Date(), 
-                       min   = "1000-01-01", 
-                       max   = "2999-12-31", 
-                       format = "MM dd, yyyy"),
+      shiny::selectInput(inputId = "n_fut_yrs",
+                         label = "Years to Look into the Future:",
+                         choices = c("25 years" = 25, 
+                                     "50 years" = 50,
+                                     "75 years" = 75),
+                         selected = 25,
+                         multiple = F),
+      # shiny::dateInput(inputId = "date_in", 
+      #                  label = "Search-From Date", 
+      #                  value = Sys.Date(), 
+      #                  min   = "1000-01-01", 
+      #                  max   = "2999-12-31", 
+      #                  format = "MM dd, yyyy"),
+      shiny::sliderInput(inputId = "obs_in", 
+                         label = "Minimum Obscuration Cutoff:", 
+                         min = 0, max = 100, value = 10, step = 5, 
+                         post = "%"),
       shiny::checkboxInput("cb_total.ecl", 
                            value = F,
                            label = "Show Only Total Eclipses"), 
       shiny::checkboxInput("cb_totality", 
                            value = F, 
-                           label = "Show Only when in Path of Totality")
+                           label = "Show Only when in Path of Totality"),
+      geoloc::button_geoloc("myBtn", "Click to Start"),
+      leafletOutput("lf_map"),
+      
       
     ),
     
@@ -63,7 +75,7 @@ ui <- fluidPage(
       #/BRMP
       
       wellPanel(
-        fluidRow("The table below shows the next 75 years of solar eclipses visible from this location."),
+        fluidRow("Data Table Will Load Below (may take a moment)"),
       ),
       shiny::tableOutput(outputId = "logtable"),
       shiny::plotOutput(outputId = "qr_url", 
@@ -115,8 +127,8 @@ server <- function(input, output) {
   
   output$logtable <- shiny::renderTable({
     # vars----
-    start.date      <- input$date_in 
-    max.year        <- year(start.date) + 75
+    start.date      <- with_tz(Sys.Date(), tzone = "America/New_York") #input$date_in 
+    max.year        <- year(start.date) + as.numeric(input$n_fut_yrs)
     #min_obsc        <- 1 
     
     # do work----
@@ -124,7 +136,7 @@ server <- function(input, output) {
     var.lat <- input$myBtn_lat 
     
     ####
-    is_totality <- F
+    #is_totality <- F
     n <- 0
     
     log.ecls <- NULL
@@ -187,7 +199,8 @@ server <- function(input, output) {
       temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
                                      sep = "-", collapse = "-"))
       
-      temp.nextobs <- max(when_next$attr[c(1,3)]) # p
+      #temp.nextobs <- max(when_next$attr[c(1,3)]) # p
+      temp.nextobs <- when_next$attr[c(3)]
       
       log.ecls <- rbind(log.ecls,
                         data.frame(Date = strftime(x = temp.nextdate, 
@@ -211,9 +224,9 @@ server <- function(input, output) {
       
       if(year(start.date) >= max.year){
         break
-        is_totality <- T
-        next.obs <- temp.nextobs
-        start.date <- as_date(temp.nextdate)
+        #is_totality <- T
+        # next.obs <- temp.nextobs
+        # start.date <- as_date(temp.nextdate)
       }else{
         start.date <- as_date(temp.nextdate) + days(2)
         next.obs <- temp.nextobs
@@ -221,11 +234,13 @@ server <- function(input, output) {
     }
     
     log.ecls$pct_obscured[log.ecls$pct_obscured >= 1]  <- 1
+    log.ecls <- log.ecls[(log.ecls$pct_obscured*100) >= input$obs_in,]
     log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 0.1)
     #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
     log.ecls$Eclipse_Map <- paste0("[<a href='",  
                                    log.ecls$Eclipse_Map,
                                    "' target='_blank'>see eclipse path</a>]")
+    
     
     # checkbox_totaleclipse
     if(input$cb_total.ecl){
