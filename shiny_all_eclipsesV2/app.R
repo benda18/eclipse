@@ -28,15 +28,17 @@ library(geoloc)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("Future Solar Eclipses Visible from Your Current Location", ),
+  titlePanel("Future Solar and Lunar Eclipses Visible from Your Current Location", ),
   sidebarLayout(
     sidebarPanel(
       shiny::selectInput(inputId = "n_fut_yrs",
                          label = "Years to Look into the Future:",
-                         choices = c("25 years" = 25, 
+                         choices = c("5 years" = 5, 
+                                     "10 years" = 10,
+                                     "25 years" = 25, 
                                      "50 years" = 50,
                                      "75 years" = 75),
-                         selected = 25,
+                         selected = 10,
                          multiple = F),
       # shiny::dateInput(inputId = "date_in", 
       #                  label = "Search-From Date", 
@@ -91,6 +93,20 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  ewlun_url <- function(ecl_date, 
+                        ecltype = c("Total Eclipse", 
+                                        "Penumbral", 
+                                        "Partial")){
+    require(glue)
+    require(lubridate)
+    
+    
+    et <- toupper(substr(ecltype,1,1))
+    glue("https://eclipsewise.com/oh/ec{year(ecl_date)}.html#LE{year(ecl_date)}{lubridate::month(ecl_date,abbr=T,label=T)}{mday(ecl_date)}{et}")
+    
+  }
+  #ewlun_url(mdy("Aug 28, 2026"),"P")
   
   eclipsewise_url <- function(ecl_date,
                               ecltype = c("Total Eclipse", 
@@ -155,13 +171,15 @@ server <- function(input, output) {
                                          sec   = 0, 
                                          gregflag = 1)$dret[2]
       
+      # get next solar eclipse----
       when_next <- swe_sol_eclipse_when_loc(jd_start = a.date.ju, 
                                             ephe_flag = 4, 
                                             geopos = c(x = var.lon, 
                                                        y = var.lat, 
                                                        z = 10), 
                                             backward = F)
-      # search eclipse type
+      
+      # search solar eclipse type
       ecl_total <- swe_sol_eclipse_when_glob(jd_start = when_next$tret[2]-1, 
                                              ifltype = SE$ECL_TOTAL,#SE$ECL_CENTRAL|SE$ECL_NONCENTRAL,
                                              ephe_flag = 4, 
@@ -193,10 +211,41 @@ server <- function(input, output) {
       #                         ecl_partial$tret[2] - when_next$tret[2],
       #                         ecl_hybrid$tret[2] - when_next$tret[2])))
       
+      # get next lunar eclipse----
+      when_next.lun <- swe_lun_eclipse_when_loc(jd_start = a.date.ju, 
+                                                ephe_flag = 4, 
+                                                geopos = c(x = var.lon, 
+                                                           y = var.lat, 
+                                                           z = 10), 
+                                                backward = F)
+      # get next lunar eclipse type
       
+      ecl_total.lun <- swe_lun_eclipse_when(jd_start = when_next.lun$tret[3]-1, 
+                                            ifltype = SE$ECL_TOTAL,
+                                            ephe_flag = 4, 
+                                            backward = F)
+      ecl_penumbral.lun <- swe_lun_eclipse_when(jd_start = when_next.lun$tret[3]-1, 
+                                                ifltype = SE$ECL_PENUMBRAL,
+                                                ephe_flag = 4, 
+                                                backward = F)
+      ecl_partial.lun <- swe_lun_eclipse_when(jd_start = when_next.lun$tret[3]-1, 
+                                              ifltype = SE$ECL_PARTIAL,
+                                              ephe_flag = 4, 
+                                              backward = F)
+      
+      
+      ecl_type222.lun <- c("Total Eclipse", "Penumbral", 
+                           "Partial")[which(abs(c(ecl_total.lun$tret[3] - when_next.lun$tret[3],
+                                                  ecl_penumbral.lun$tret[3] - when_next.lun$tret[3],
+                                                  ecl_partial.lun$tret[3] - when_next.lun$tret[3])) == 
+                                              min(abs(c(ecl_total.lun$tret[3] - when_next.lun$tret[3],
+                                                        ecl_penumbral.lun$tret[3] - when_next.lun$tret[3],
+                                                        ecl_partial.lun$tret[3] - when_next.lun$tret[3]))))]
       
       # NEXT DATE
       temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
+                                     sep = "-", collapse = "-"))
+      temp.nextdate.lun <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next.lun$tret[1], 1), 
                                      sep = "-", collapse = "-"))
       
       #temp.nextobs <- max(when_next$attr[c(1,3)]) # p
@@ -206,10 +255,20 @@ server <- function(input, output) {
                         data.frame(Date = strftime(x = temp.nextdate, 
                                                    format = "%b %d, %Y", 
                                                    tz = "America/New_York"),
-                                   Type = ecl_type222,
-                                   pct_obscured = temp.nextobs, 
+                                   Type = "Solar",
+                                   Sub_Type = ecl_type222,
+                                   Obscuration = temp.nextobs, 
                                    Eclipse_Map = eclipsewise_url(ecl_date = temp.nextdate, 
                                                                  ecltype = ecl_type222)))
+      log.ecls <- rbind(log.ecls,
+                        data.frame(Date = strftime(x = temp.nextdate.lun, 
+                                                   format = "%b %d, %Y", 
+                                                   tz = "America/New_York"),
+                                   Type = "Lunar",
+                                   Sub_Type = ecl_type222.lun,
+                                   Obscuration = NA, 
+                                   Eclipse_Map = ewlun_url(ecl_date = temp.nextdate.lun, 
+                                                           ecltype  = ecl_type222.lun)))
       
       temp.utc <- temp.nextdate
       temp.jd  <- swe_utc_to_jd(year = year(temp.utc),
@@ -222,6 +281,7 @@ server <- function(input, output) {
         as.integer() |>
         unique()
       
+      
       if(year(start.date) >= max.year){
         break
         #is_totality <- T
@@ -233,9 +293,10 @@ server <- function(input, output) {
       }
     }
     
-    log.ecls$pct_obscured[log.ecls$pct_obscured >= 1]  <- 1
-    log.ecls <- log.ecls[(log.ecls$pct_obscured*100) >= input$obs_in,]
-    log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 0.1)
+    log.ecls$Obscuration[log.ecls$Obscuration >= 1 & !is.na(log.ecls$Obscuration)]  <- 1
+    log.ecls <- log.ecls[(log.ecls$Obscuration*100) >= input$obs_in | 
+                           is.na(log.ecls$Obscuration),]
+    log.ecls$Obscuration <- scales::percent(log.ecls$Obscuration, accuracy = 0.1)
     #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
     log.ecls$Eclipse_Map <- paste0("[<a href='",  
                                    log.ecls$Eclipse_Map,
@@ -244,11 +305,12 @@ server <- function(input, output) {
     
     # checkbox_totaleclipse
     if(input$cb_total.ecl){
-      log.ecls <- log.ecls[log.ecls$Type == "Total Eclipse",]
+      log.ecls <- log.ecls[log.ecls$Sub_Type == "Total Eclipse",]
     }
     # checkbox_totality
     if(input$cb_totality){
-      log.ecls <- log.ecls[log.ecls$pct_obscured == "100.0%",]
+      log.ecls <- log.ecls[log.ecls$Obscuration == "100.0%" & 
+                             log.ecls$Type == "Solar",]
     }
     
     log.ecls
