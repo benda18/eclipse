@@ -47,7 +47,7 @@ ui <- fluidPage(
       #                  max   = "2999-12-31", 
       #                  format = "MM dd, yyyy"),
       shiny::sliderInput(inputId = "obs_in", 
-                         label = "Minimum Obscuration Cutoff:", 
+                         label = "Minimum Solar Eclipse Obscuration Cutoff:", 
                          min = 0, max = 100, value = 10, step = 5, 
                          post = "%"),
       shiny::checkboxInput("cb_total.ecl", 
@@ -56,6 +56,17 @@ ui <- fluidPage(
       shiny::checkboxInput("cb_totality", 
                            value = F, 
                            label = "Show Only when in Path of Totality"),
+      shiny::radioButtons(inputId = "sel_type", 
+                          label = "Select Type(s) of Eclipse to Show", 
+                          choices = c("All Eclipses" = "Solar|Lunar", 
+                                      "Solar Only" = "Solar", 
+                                      "Lunar Only" = "Lunar"), 
+                          selected = "Solar|Lunar"),
+      # shiny::selectInput(inputId = "sel_type", 
+      #                    label = "Select Type of Eclipse", 
+      #                    choices = c("Solar", "Lunar"), 
+      #                    selected = c("Solar", "Lunar"), 
+      #                    multiple = T),
       geoloc::button_geoloc("myBtn", "Click to Start"),
       leafletOutput("lf_map"),
       
@@ -288,7 +299,8 @@ server <- function(input, output) {
         # next.obs <- temp.nextobs
         # start.date <- as_date(temp.nextdate)
       }else{
-        start.date <- as_date(temp.nextdate) + days(2)
+        start.date <- as_date(min(c(temp.nextdate.lun, 
+                                temp.nextdate))) + days(2)
         next.obs <- temp.nextobs
       }
     }
@@ -302,6 +314,11 @@ server <- function(input, output) {
                                    log.ecls$Eclipse_Map,
                                    "' target='_blank'>see eclipse path</a>]")
     
+    log.ecls$Eclipse_Map[log.ecls$Type == "Lunar"] <-
+      gsub(pattern = "eclipse path", 
+           replacement = "eclipse info", 
+           x = log.ecls$Eclipse_Map[log.ecls$Type == "Lunar"])
+    
     
     # checkbox_totaleclipse
     if(input$cb_total.ecl){
@@ -313,7 +330,9 @@ server <- function(input, output) {
                              log.ecls$Type == "Solar",]
     }
     
-    log.ecls
+    log.ecls <- log.ecls[!duplicated(log.ecls),]
+    log.ecls[grepl(pattern = input$sel_type, 
+                   x = log.ecls$Type),]
   }, 
   sanitize.text.function = function(x) x
   )
