@@ -28,7 +28,7 @@ library(geoloc)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("Future Solar Eclipses Visible from Your Current Location", ),
+  titlePanel("Future Solar and Lunar Eclipses Visible from Your Current Location", ),
   sidebarLayout(
     sidebarPanel(
       shiny::selectInput(inputId = "n_fut_yrs",
