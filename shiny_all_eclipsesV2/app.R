@@ -38,7 +38,7 @@ ui <- fluidPage(
                                      "25 years" = 25, 
                                      "50 years" = 50,
                                      "75 years" = 75),
-                         selected = 25,
+                         selected = 10,
                          multiple = F),
       # shiny::dateInput(inputId = "date_in", 
       #                  label = "Search-From Date", 
@@ -267,7 +267,8 @@ server <- function(input, output) {
                                    Type = "Lunar",
                                    Sub_Type = ecl_type222.lun,
                                    Obscuration = NA, 
-                                   Eclipse_Map = NA))
+                                   Eclipse_Map = ewlun_url(ecl_date = temp.nextdate.lun, 
+                                                           ecltype  = ecl_type222.lun)))
       
       temp.utc <- temp.nextdate
       temp.jd  <- swe_utc_to_jd(year = year(temp.utc),
