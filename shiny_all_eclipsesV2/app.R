@@ -231,6 +231,8 @@ server <- function(input, output) {
       # NEXT DATE
       temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
                                      sep = "-", collapse = "-"))
+      temp.nextdate.lun <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next.lun$tret[1], 1), 
+                                     sep = "-", collapse = "-"))
       
       #temp.nextobs <- max(when_next$attr[c(1,3)]) # p
       temp.nextobs <- when_next$attr[c(3)]
@@ -239,8 +241,9 @@ server <- function(input, output) {
                         data.frame(Date = strftime(x = temp.nextdate, 
                                                    format = "%b %d, %Y", 
                                                    tz = "America/New_York"),
-                                   Type = ecl_type222,
-                                   pct_obscured = temp.nextobs, 
+                                   Type = "Solar",
+                                   Sub_Type = ecl_type222,
+                                   Obscuration = temp.nextobs, 
                                    Eclipse_Map = eclipsewise_url(ecl_date = temp.nextdate, 
                                                                  ecltype = ecl_type222)))
       
@@ -267,9 +270,9 @@ server <- function(input, output) {
       }
     }
     
-    log.ecls$pct_obscured[log.ecls$pct_obscured >= 1]  <- 1
-    log.ecls <- log.ecls[(log.ecls$pct_obscured*100) >= input$obs_in,]
-    log.ecls$pct_obscured <- scales::percent(log.ecls$pct_obscured, accuracy = 0.1)
+    log.ecls$Obscuration[log.ecls$Obscuration >= 1]  <- 1
+    log.ecls <- log.ecls[(log.ecls$Obscuration*100) >= input$obs_in,]
+    log.ecls$Obscuration <- scales::percent(log.ecls$Obscuration, accuracy = 0.1)
     #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
     log.ecls$Eclipse_Map <- paste0("[<a href='",  
                                    log.ecls$Eclipse_Map,
@@ -278,11 +281,11 @@ server <- function(input, output) {
     
     # checkbox_totaleclipse
     if(input$cb_total.ecl){
-      log.ecls <- log.ecls[log.ecls$Type == "Total Eclipse",]
+      log.ecls <- log.ecls[log.ecls$Sub_Type == "Total Eclipse",]
     }
     # checkbox_totality
     if(input$cb_totality){
-      log.ecls <- log.ecls[log.ecls$pct_obscured == "100.0%",]
+      log.ecls <- log.ecls[log.ecls$Obscuration == "100.0%",]
     }
     
     log.ecls
