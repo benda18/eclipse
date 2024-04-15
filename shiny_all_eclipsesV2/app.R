@@ -5,6 +5,7 @@
 #    https://shiny.posit.co/
 #
 
+library(readr)
 library(shiny)
 library(jpeg)
 library(swephR)
@@ -33,7 +34,8 @@ ui <- fluidPage(
     sidebarPanel(
       shiny::selectInput(inputId = "n_fut_yrs",
                          label = "Years to Look into the Future:",
-                         choices = c("5 years" = 5, 
+                         choices = c("1 year" = 1, 
+                                     "5 years" = 5, 
                                      "10 years" = 10,
                                      "25 years" = 25, 
                                      "50 years" = 50,
@@ -89,9 +91,11 @@ ui <- fluidPage(
       #/BRMP
       
       wellPanel(
-        fluidRow("Data Table Will Load Below (may take a moment)"),
+        fluidRow(strong("Data Table Will Load Below (may take a moment)")),
       ),
       shiny::tableOutput(outputId = "logtable"),
+      # shiny::downloadButton(outputId = "dl_csv", 
+      #                       label = "Download as CSV"),
       shiny::plotOutput(outputId = "qr_url", 
                         height = "200px"),
       wellPanel(
@@ -396,6 +400,10 @@ server <- function(input, output) {
     plot(qr_app_logo)
   })
   
+  # output$dl_csv <- downloadHandler(
+  #   filename = "eclipse.csv", 
+  #   content = write.csv(log.ecls)
+  # )
 }
 
 # Run the application 
