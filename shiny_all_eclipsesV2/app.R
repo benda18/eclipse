@@ -68,7 +68,7 @@ ui <- fluidPage(
       #                    choices = c("Solar", "Lunar"), 
       #                    selected = c("Solar", "Lunar"), 
       #                    multiple = T),
-      geoloc::button_geoloc("myBtn", "Click to Start"),
+      geoloc::button_geoloc("myBtn", ("Click to Start")),
       leafletOutput("lf_map"),
       
       
@@ -270,7 +270,7 @@ server <- function(input, output) {
                                    Type = "Solar",
                                    Sub_Type = ecl_type222,
                                    Obscuration = temp.nextobs, 
-                                   Eclipse_Map = eclipsewise_url(ecl_date = temp.nextdate, 
+                                   See_Also = eclipsewise_url(ecl_date = temp.nextdate, 
                                                                  ecltype = ecl_type222)))
       log.ecls <- rbind(log.ecls,
                         data.frame(Date = strftime(x = temp.nextdate.lun, 
@@ -279,7 +279,7 @@ server <- function(input, output) {
                                    Type = "Lunar",
                                    Sub_Type = ecl_type222.lun,
                                    Obscuration = NA, 
-                                   Eclipse_Map = ewlun_url(ecl_date = temp.nextdate.lun, 
+                                   See_Also = ewlun_url(ecl_date = temp.nextdate.lun, 
                                                            ecltype  = ecl_type222.lun)))
       
       temp.utc <- temp.nextdate
@@ -311,14 +311,14 @@ server <- function(input, output) {
                            is.na(log.ecls$Obscuration),]
     log.ecls$Obscuration <- scales::percent(log.ecls$Obscuration, accuracy = 0.1)
     #https://stackoverflow.com/questions/21909826/r-shiny-open-the-urls-from-rendertable-in-a-new-tab
-    log.ecls$Eclipse_Map <- paste0("[<a href='",  
-                                   log.ecls$Eclipse_Map,
+    log.ecls$See_Also <- paste0("[<a href='",  
+                                   log.ecls$See_Also,
                                    "' target='_blank'>see eclipse path</a>]")
     
-    log.ecls$Eclipse_Map[log.ecls$Type == "Lunar"] <-
+    log.ecls$See_Also[log.ecls$Type == "Lunar"] <-
       gsub(pattern = "eclipse path", 
            replacement = "eclipse info", 
-           x = log.ecls$Eclipse_Map[log.ecls$Type == "Lunar"])
+           x = log.ecls$See_Also[log.ecls$Type == "Lunar"])
     
     
     # checkbox_totaleclipse
@@ -348,7 +348,7 @@ server <- function(input, output) {
   })
   
   url.github <- a("Source Code (Github)", 
-                  href = "https://github.com/benda18/eclipse/blob/main/shiny_all_eclipses/app.R", 
+                  href = "https://github.com/benda18/eclipse/blob/main/shiny_all_eclipsesV2/app.R", 
                   target = "_blank")
   output$tab.github <- renderUI({
     tagList(url.github)
