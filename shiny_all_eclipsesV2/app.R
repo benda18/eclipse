@@ -107,9 +107,7 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   ewlun_url <- function(ecl_date, 
-                        ecltype = c("Total Eclipse", 
-                                        "Penumbral", 
-                                        "Partial")){
+                        ecltype){
     require(glue)
     require(lubridate)
     w.year  <- year(ecl_date)
@@ -121,13 +119,14 @@ server <- function(input, output) {
     w.cenA  <- floor(w.year/100)*100+1
     w.cenB  <- w.cenA + 99
     
-    ecltype <- ifelse(ecltype == "Penumbral", "NPenumbral", ecltype)
+    ecltype <- ifelse(ecltype %in% c("Penumbral", 
+                                     "penumbral"), "NPenumbral", ecltype)
     et <- toupper(substr(ecltype,1,1))
     glue("https://eclipsewise.com/lunar/LEprime/{w.cenA}-{w.cenB}/LE{w.year}{w.month}{w.mday}{et}prime.html")
     #glue("https://eclipsewise.com/oh/ec{year(ecl_date)}.html#LE{year(ecl_date)}{lubridate::month(ecl_date,abbr=T,label=T)}{mday(ecl_date)}{et}")
     
   }
-  #ewlun_url(mdy("Aug 28, 2026"),"P")
+  ewlun_url(mdy("Aug 28, 2026"),"Penumbral")
   
   eclipsewise_url <- function(ecl_date,
                               ecltype = c("Total Eclipse", 
@@ -262,6 +261,11 @@ server <- function(input, output) {
                                               min(abs(c(ecl_total.lun$tret[3] - when_next.lun$tret[3],
                                                         ecl_penumbral.lun$tret[3] - when_next.lun$tret[3],
                                                         ecl_partial.lun$tret[3] - when_next.lun$tret[3]))))]
+      # temp manual fix for penumbral eclipses
+      if(length(ecl_type222.lun) == 3){
+        ecl_type222.lun <- "Penumbral"
+      }
+      
       
       # NEXT DATE
       temp.nextdate <- ymd_hms(paste(swephR::swe_jdet_to_utc(when_next$tret[1], 1), 
