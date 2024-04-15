@@ -17,6 +17,7 @@ Many useful web tools and resources exist to help plan where and when to go to b
 * Find the next Solar and Lunar Eclipse for a Location ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_next_eclipse/))
   
 ### Sources
+* www.eclipsewise.com for information and images of solar and lunar eclipses. 
 * leaflet: Create Interactive Web Maps with the JavaScript 'Leaflet' Library ([link to CRAN](https://cran.r-project.org/web/packages/leaflet/index.html))
 * geoloc: Add geolocation inside your shiny app ([link to github](https://github.com/ColinFay/geoloc))
 * swephR: High Precision Swiss Ephemeris ([link to CRAN](https://cran.r-project.org/package=swephR))
