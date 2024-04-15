@@ -112,10 +112,19 @@ server <- function(input, output) {
                                         "Partial")){
     require(glue)
     require(lubridate)
+    w.year  <- year(ecl_date)
+    w.month <- lubridate::month(ecl_date,label=T,abbr=T)
+    w.mday  <- mday(ecl_date)
+    w.mday  <- ifelse(nchar(w.mday) == 1,
+                      paste("0", w.mday, sep = "", collapse = ""),
+                      w.mday)
+    w.cenA  <- floor(w.year/100)*100+1
+    w.cenB  <- w.cenA + 99
     
-    
+    ecltype <- ifelse(ecltype == "Penumbral", "NPenumbral", ecltype)
     et <- toupper(substr(ecltype,1,1))
-    glue("https://eclipsewise.com/oh/ec{year(ecl_date)}.html#LE{year(ecl_date)}{lubridate::month(ecl_date,abbr=T,label=T)}{mday(ecl_date)}{et}")
+    glue("https://eclipsewise.com/lunar/LEprime/{w.cenA}-{w.cenB}/LE{w.year}{w.month}{w.mday}{et}prime.html")
+    #glue("https://eclipsewise.com/oh/ec{year(ecl_date)}.html#LE{year(ecl_date)}{lubridate::month(ecl_date,abbr=T,label=T)}{mday(ecl_date)}{et}")
     
   }
   #ewlun_url(mdy("Aug 28, 2026"),"P")
