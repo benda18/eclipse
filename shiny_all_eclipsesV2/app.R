@@ -11,14 +11,11 @@ library(jpeg)
 library(swephR)
 library(lubridate)
 library(dplyr)
-#library(tigris)
 library(censusxy)
 library(scales)
 library(ggplot2)
-#library(sf)
 library(renv)
 library(glue)
-#library(rsconnect)
 library(qrcode)
 library(leaflet)
 library(geoloc)
@@ -40,14 +37,8 @@ ui <- fluidPage(
                                      "25 years" = 25, 
                                      "50 years" = 50,
                                      "75 years" = 75),
-                         selected = 10,
+                         selected = 25,
                          multiple = F),
-      # shiny::dateInput(inputId = "date_in", 
-      #                  label = "Search-From Date", 
-      #                  value = Sys.Date(), 
-      #                  min   = "1000-01-01", 
-      #                  max   = "2999-12-31", 
-      #                  format = "MM dd, yyyy"),
       shiny::sliderInput(inputId = "obs_in", 
                          label = "Minimum Solar Eclipse Obscuration Cutoff:", 
                          min = 0, max = 100, value = 10, step = 5, 
@@ -57,19 +48,13 @@ ui <- fluidPage(
                           choices = c("All Eclipses" = "Solar|Lunar", 
                                       "Solar Only" = "Solar", 
                                       "Lunar Only" = "Lunar"), 
-                          selected = "Solar|Lunar"),
+                          selected = "Solar"),
       shiny::checkboxInput("cb_total.ecl", 
                            value = F,
                            label = "Show Only Total Eclipses"), 
       shiny::checkboxInput("cb_totality", 
                            value = F, 
                            label = "Show Only when in Path of Totality"),
-      
-      # shiny::selectInput(inputId = "sel_type", 
-      #                    label = "Select Type of Eclipse", 
-      #                    choices = c("Solar", "Lunar"), 
-      #                    selected = c("Solar", "Lunar"), 
-      #                    multiple = T),
       geoloc::button_geoloc("myBtn", ("Click to Start")),
       leafletOutput("lf_map"),
       
@@ -79,12 +64,8 @@ ui <- fluidPage(
     mainPanel(
       # BLOCK RESOURCES MAIN PANEL----
       wellPanel(
-        # fluidRow(strong("DEVELOPED BY")), 
         fluidRow(strong(uiOutput("tab.linkedin"))),
-        #fluidRow(strong("SPECIAL ASSISTANCE FROM")),
-        #fluidRow(strong("SOURCES")),
         fluidRow(strong(uiOutput("tab.github"))),
-        #fluidRow(strong("Help Cover ")), 
         fluidRow(strong(uiOutput("tab.venmo"))),
         fluidRow("Special thanks to reddit users u/danielsixfive and u/QuackingUp23")
       ),
@@ -94,8 +75,6 @@ ui <- fluidPage(
         fluidRow(strong("Data Table Will Load Below (may take a moment)")),
       ),
       shiny::tableOutput(outputId = "logtable"),
-      # shiny::downloadButton(outputId = "dl_csv", 
-      #                       label = "Download as CSV"),
       shiny::plotOutput(outputId = "qr_url", 
                         height = "200px"),
       wellPanel(
@@ -107,7 +86,7 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic required to draw a histogram
+# Define server logic
 server <- function(input, output) {
   
   ewlun_url <- function(ecl_date, 
@@ -169,14 +148,12 @@ server <- function(input, output) {
     # vars----
     start.date      <- with_tz(Sys.Date(), tzone = "America/New_York") #input$date_in 
     max.year        <- year(start.date) + as.numeric(input$n_fut_yrs)
-    #min_obsc        <- 1 
     
     # do work----
     var.lon <- input$myBtn_lon 
     var.lat <- input$myBtn_lat 
     
     ####
-    #is_totality <- F
     n <- 0
     
     log.ecls <- NULL
@@ -400,10 +377,7 @@ server <- function(input, output) {
     plot(qr_app_logo)
   })
   
-  # output$dl_csv <- downloadHandler(
-  #   filename = "eclipse.csv", 
-  #   content = write.csv(log.ecls)
-  # )
+  
 }
 
 # Run the application 
