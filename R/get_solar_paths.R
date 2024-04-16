@@ -27,8 +27,9 @@ df.out <- NULL
 #                          ecltype.num = c(4,8,16,32), 
 #                          ecltype.name = c("Total", "Annular", 
 #                                           "Partial", "Hybrid"))
-
-for(i10 in 1:50){
+i10 <- 0
+while(year(the.datetime.utc) < (year(Sys.Date()) + 110)){
+  i10 <- i10 + 1
   if(i10 > 1){
     the.datetime.utc <- max(df.out$gregtime.utc) %m+% days(1)
   }
@@ -44,7 +45,7 @@ for(i10 in 1:50){
                       sec      = second(the.datetime.utc), 
                       gregflag = 1)$dret)), 
       ephe_flag = 4, 
-      ifltype   = SE$ECL_TOTAL, 
+      ifltype   = 0, #SE$ECL_TOTAL, 
       backward  = F)
     
     next_ecl_glob.times <- temp$tret[c(3,4)]
