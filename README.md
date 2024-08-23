@@ -14,9 +14,8 @@ Many useful web tools and resources exist to help plan where and when to go to b
 2) [R-Shiny dashboard #2 | Find all eclipses for the next 75 years for a location](https://tim-bender.shinyapps.io/shiny_all_eclipses/): A planning tool that uses your current location (calculated using your public ip address) that can tell you the date and time of every single lunar and solar eclipse (partial or total) visibile from your current location basically for the rest of your life (75 years from today).  This app is computationally heavy and requires a long time to load results after clicking the "Click to Start" button. 
 
 ### Web Apps Developed
-* April 8, 2024 Total Eclipse Planning Tool ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_eclipse_planner/))
-* Find all eclipses for the next 75 years for a location ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_all_eclipses/))
-* Find the next Solar and Lunar Eclipse for a Location (link to shinyapps.io) [Archived - redundant]
+* April 8, 2024 Total Eclipse Planning Tool ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_eclipse_planner/)) | [link to code](https://github.com/benda18/eclipse/blob/main/shiny_eclipse_timer/app.R)
+* Find all eclipses for the next 75 years for a location ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_all_eclipses/)) | [link to code]()
   
 ### Sources
 * www.eclipsewise.com for information and images of solar and lunar eclipses. 
