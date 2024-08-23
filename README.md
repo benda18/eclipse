@@ -6,7 +6,7 @@ The 2024 Total Eclipse that will cross North America on April 8th will be the la
 ### PURPOSE/GOALS:
 Many useful web tools and resources exist to help plan where and when to go to best see the eclipse.  However, I kept looking for (and couldn't find) a simple tool that allowed you to enter a mailing address and would give you all the planning information you needed about the eclipse for that location - timeline of the eclipse for that location, whether totality could be seen, etc.  So I created the tool that I wanted. Based on all I've learned in the process, I've built additional tools to leverage the calculations to show what eclipses will happen in the future ~~and past~~.  
 
-A secondary goal of this project was to improve my R programming skills, particularly in learning how to communicate better in interactive ways using [Shiny](https://shiny.posit.co/) and [Leaflet](https://leafletjs.com/) to create inspiring dashboards with interactive and useful maps. 
+A secondary goal of this project was to improve my R programming skills, particularly in communicating better interactively using [Shiny](https://shiny.posit.co/) and [Leaflet](https://leafletjs.com/). 
 
 ### HOW IT WORKS: 
 
