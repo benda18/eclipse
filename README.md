@@ -1,11 +1,12 @@
 # Eclipse Planning Tools
-## Search for Solar and Lunar Eclipse Information by US Mailing Address
 
 ### BACKGROUND: 
 The 2024 Total Eclipse that will cross North America on April 8th will be the last chance for many of us to see a total solar eclipse for the next 21 years.  NASA estimates that 150 million people live within 200 miles of totality of this eclipse, 5 times as many people as the 2017 eclipse that also crossed the continental US.  
 
-### PURPOSE:
+### PURPOSE/GOALS:
 Many useful web tools and resources exist to help plan where and when to go to best see the eclipse.  However, I kept looking for (and couldn't find) a simple tool that allowed you to enter a mailing address and would give you all the planning information you needed about the eclipse for that location - timeline of the eclipse for that location, whether totality could be seen, etc.  So I created the tool that I wanted. Based on all I've learned in the process, I've built additional tools to leverage the calculations to show what eclipses will happen in the future ~~and past~~.  
+
+A secondary goal of this project was to improve my R programming skills, particularly in learning how to communicate better in interactive ways using [Shiny](https://shiny.posit.co/) and [Leaflet](https://leafletjs.com/) to create inspiring dashboards with interactive and useful maps. 
 
 ### HOW IT WORKS: 
 
