@@ -9,7 +9,9 @@ Many useful web tools and resources exist to help plan where and when to go to b
 
 ### HOW IT WORKS: 
 
-[to be updated]
+2 web apps came out of this project (links provided directly below): 
+1) A planning tool for the April 8th, 2024 total solar eclipse that takes almost any US postal address as an input and as an output provides information on whether that location was in the path of totality, how long it would experience totality (if any), the time of the eclipse first and last contact as well as totality (if any), how much of the sun would be eclipsed (< 100% if outside of the path of totality), and finally it would calculate and return the next date that the location would see totality of a total solar eclipse.
+2) A planning tool that uses your current location (calculated using your public ip address) that can tell you the date and time of every single lunar and solar eclipse (partial or total) visibile from your current location basically for the rest of your life (75 years from today).  This app is computationally heavy and requires a long time to load results after clicking the "Click to Start" button. 
 
 ### Web Apps Developed
 * April 8, 2024 Total Eclipse Planning Tool ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_eclipse_planner/))
