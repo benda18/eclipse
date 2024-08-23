@@ -263,7 +263,7 @@ server <- function(input, output) {
   #/RESOURCES
   
   output$qr_url <- renderPlot({
-    qr_app <- qrcode::qr_code(x = "https://tim-bender.shinyapps.io/shiny_next_eclipse/", 
+    qr_app <- qrcode::qr_code(x = "https://tim-bender.shinyapps.io/shiny_next_eclipse/", # dead link
                               ecl = "H")
     qr_app_logo <- add_logo(qr_app, 
                             logo = "www/QRLOGO.jpg")
