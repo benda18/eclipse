@@ -15,7 +15,7 @@ Many useful web tools and resources exist to help plan where and when to go to b
 
 ### Web Apps Developed
 * April 8, 2024 Total Eclipse Planning Tool ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_eclipse_planner/)) | [link to code](https://github.com/benda18/eclipse/blob/main/shiny_eclipse_timer/app.R)
-* Find all eclipses for the next 75 years for a location ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_all_eclipses/)) | [link to code]()
+* Find all eclipses for the next 75 years for a location ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_all_eclipses/)) | [link to code](https://github.com/benda18/eclipse/blob/main/shiny_all_eclipsesV2/app.R)
   
 ### Sources
 * www.eclipsewise.com for information and images of solar and lunar eclipses. 
