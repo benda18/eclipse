@@ -1,26 +1,27 @@
 # Eclipse Planning Tools
 
-### BACKGROUND: 
+## BACKGROUND
 The 2024 Total Eclipse that will cross North America on April 8th will be the last chance for many of us to see a total solar eclipse for the next 21 years.  NASA estimates that 150 million people live within 200 miles of totality of this eclipse, 5 times as many people as the 2017 eclipse that also crossed the continental US.  
 
-### PURPOSE/GOALS:
+## PURPOSE/GOALS
 Many useful web tools and resources exist to help plan where and when to go to best see the eclipse.  However, I kept looking for (and couldn't find) a simple tool that allowed you to enter a mailing address and would give you all the planning information you needed about the eclipse for that location - timeline of the eclipse for that location, whether totality could be seen, etc.  So I created the tool that I wanted. Based on all I've learned in the process, I've built additional tools to leverage the calculations to show what eclipses will happen in the future ~~and past~~.  
 
 A secondary goal of this project was to improve my R programming skills, particularly in communicating better interactively using [Shiny](https://shiny.posit.co/) and [Leaflet](https://leafletjs.com/). 
 
-### HOW IT WORKS: 
+## HOW IT WORKS
 
 2 web apps came out of this project (links provided directly below): 
 1) [April 8, 2024 Total Eclipse Planning Tool](https://tim-bender.shinyapps.io/shiny_eclipse_planner/): A planning tool for the April 8th, 2024 total solar eclipse that takes almost any US postal address as an input and as an output provides information on whether that location was in the path of totality, how long it would experience totality (if any), the time of the eclipse first and last contact as well as totality (if any), how much of the sun would be eclipsed (< 100% if outside of the path of totality), and finally it would calculate and return the next date that the location would see totality of a total solar eclipse.
 2) [Find all eclipses for the next 75 years for a location](https://tim-bender.shinyapps.io/shiny_all_eclipses/): A planning tool that uses your current location (calculated using your public ip address) that can tell you the date and time of every single lunar and solar eclipse (partial or total) visibile from your current location basically for the rest of your life (75 years from today).  This app is computationally heavy and requires a long time to load results after clicking the "Click to Start" button. 
 
+## APPENDIX
 ### Web Apps Developed
 * April 8, 2024 Total Eclipse Planning Tool ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_eclipse_planner/)) | [link to code](https://github.com/benda18/eclipse/blob/main/shiny_eclipse_timer/app.R)
 * Find all eclipses for the next 75 years for a location ([link to shinyapps.io](https://tim-bender.shinyapps.io/shiny_all_eclipses/)) | [link to code](https://github.com/benda18/eclipse/blob/main/shiny_all_eclipsesV2/app.R)
   
 ### Sources
 * www.eclipsewise.com for information and images of solar and lunar eclipses. 
-* leaflet: Create Interactive Web Maps with the JavaScript 'Leaflet' Library ([link to CRAN](https://cran.r-project.org/web/packages/leaflet/index.html))
+* leaflet: Create Interactive Web Maps with the JavaScript 'Leaflet' Library ([link to CRAN](https://cran.r-project.org/web/packages/leaflet/index.html)) ([link to github](https://github.com/rstudio/leaflet)) ([link to project website](https://leafletjs.com/))
 * geoloc: Add geolocation inside your shiny app ([link to github](https://github.com/ColinFay/geoloc))
 * swephR: High Precision Swiss Ephemeris ([link to CRAN](https://cran.r-project.org/package=swephR))
 * ggmap: spatial visualization with ggplot2 ([link to CRAN](https://cran.r-project.org/package=ggmap)) ([link to D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161.](http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf))
