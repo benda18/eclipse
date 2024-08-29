@@ -1,11 +1,11 @@
 # [SIMPLE] Eclipse Planning Tools
 
 ## BACKGROUND
-The 2024 total solar eclipse that crossed North America on April 8th was the last chance for many of us to see a total solar eclipse for the next 21 years.  NASA estimates that 150 million people lived within 200 miles of totality, 5 times as many people as the 2017 eclipse that also crossed the continental US.  
+The 2024 total solar eclipse that crossed North America on April 8th was the last chance for many of us to see a total solar eclipse for the next 21 years.  NASA estimates that 150 million people lived within 200 miles of totality, 5 times as many people as the 2017 eclipse that also crossed the continental US. Many useful web tools and resources existed leading up to the 2024 event to help plan where and when to go to best see the eclipse.  All were useful but few in the way I needed - a simple tool just gave you the basic planning information for a US mailing address - a timeline of the eclipse for that location, whether totality could be seen, etc.  So I created the tool that I wanted as a Shiny webapp in R. 
 
 ## PURPOSE/GOALS
-Many useful web tools and resources existed leading up to the 2024 event to help plan where and when to go to best see the eclipse.  All were useful but few in the way I needed - a simple tool just gave you the basic planning information for a US mailing address - a timeline of the eclipse for that location, whether totality could be seen, etc.  So I created the tool that I wanted. 
-
+To create a simple web-based app useful for evaluating locations for eclipse suitability in advance as well as accessing geographically-specific eclipse timielines.  While most people will understand the eclipse to be peaking mid-afternoon, that time could range +/- 90 minutes depending on longitude (x-axis).  
+ 
 A secondary goal of this project was to improve my R programming skills, particularly in communicating better interactively using [Shiny](https://shiny.posit.co/) and [Leaflet](https://leafletjs.com/). 
 
 ## HOW IT WORKS
