@@ -1,4 +1,4 @@
-# Eclipse Planning Tools
+# [SIMPLE] Eclipse Planning Tools
 
 ## BACKGROUND
 The 2024 total solar eclipse that crossed North America on April 8th was the last chance for many of us to see a total solar eclipse for the next 21 years.  NASA estimates that 150 million people lived within 200 miles of totality, 5 times as many people as the 2017 eclipse that also crossed the continental US.  
