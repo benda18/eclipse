@@ -35,16 +35,16 @@ library(qrcode)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("Total Eclipse of April 8, 2024 - What to Expect from Your Location"),
+  titlePanel("Total Solar Eclipse of April 8, 2024 - What to Expect from Your Location"),
   sidebarLayout(
     sidebarPanel(
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Street Address [general terms like \'The White House\' won't work]" , 
                        value = "1600 Pennsylvania Ave, Washington, DC"),
-      shiny::dateInput(inputId = "date_di", 
-                       label = "Eclipses Occuring On or After:", 
-                       value = with_tz(Sys.Date(), "America/New_York"), 
-                       format = "MM dd, yyyy"),
+      # shiny::dateInput(inputId = "date_di", 
+      #                  label = "Select for Next Solar Eclipse on or After:", 
+      #                  value = with_tz(ymd_hms("2024-04-08 03:00:00"), "America/New_York"), 
+      #                  format = "MM dd, yyyy"),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH"),
       
@@ -57,19 +57,20 @@ ui <- fluidPage(
         shiny::plotOutput(outputId = "sched"),
       ),
       wellPanel(
-        fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
+        #fluidRow(HTML('<iframe width="100%" height="auto" aspect-ratio: 16-9 src="https://www.youtube.com/embed/791qJZivHpk?si=1dezKelYKTVQXEkf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
       )
     ),
     mainPanel(
       # BLOCK RESOURCES MAIN PANEL----
       wellPanel(
-        fluidRow(uiOutput("tab.res")),
-        fluidRow(strong("DEVELOPED BY")), 
-        fluidRow(uiOutput("tab.linkedin")),
-        fluidRow("Special thanks to reddit users u/danielsixfive and u/QuackingUp23"),
+        #fluidRow(uiOutput("tab.res")),
         fluidRow(strong(uiOutput("tab.github"))),
-        fluidRow(strong("Help cover hosting costs")), 
-        fluidRow(uiOutput("tab.venmo"))
+        fluidRow(" ."),
+        fluidRow(strong(uiOutput("tab.AE")))
+        #fluidRow(strong("OTHER ECLIPSE WEBAPPS")), 
+        #fluidRow(uiOutput("tab.AE"))
+        #fluidRow(strong("Help cover hosting costs")), 
+        #fluidRow(uiOutput("tab.venmo"))
       ),
       #/BRMP
       wellPanel(
@@ -78,9 +79,10 @@ ui <- fluidPage(
                           height = "200px")
       ), 
       wellPanel(
-        fluidRow(strong("OTHER ECLIPSE WEBAPPS")), 
-        fluidRow(uiOutput("tab.AE")), 
-        fluidRow(uiOutput("tab.NE"))
+        #fluidRow(uiOutput("tab.NE")), 
+        fluidRow(strong("DEVELOPED BY")), 
+        fluidRow(uiOutput("tab.linkedin"))#,
+        
       )
     )
   )
@@ -220,15 +222,16 @@ server <- function(input, output) {
   # output$tab.nasa <- renderUI({
   #   tagList(url.nasa)
   # })
-  # RESOURCES----
-  url.venmo <- a("Venmo: @Tim_J_Bender", 
-                 href = "https://venmo.com/u/Tim_J_Bender", 
-                 target = "_blank")
-  output$tab.venmo <- renderUI({
-    tagList(url.venmo)
-  })
   
-  url.github <- a("Source Code", 
+  # RESOURCES----
+  # url.venmo <- a("Venmo: @Tim_J_Bender", 
+  #                href = "https://venmo.com/u/Tim_J_Bender", 
+  #                target = "_blank")
+  # output$tab.venmo <- renderUI({
+  #   tagList(url.venmo)
+  # })
+  
+  url.github <- a("Source Code on GitHub", 
                   href = "https://github.com/benda18/eclipse/blob/main/shiny_all_eclipses/app.R", 
                   target = "_blank")
   output$tab.github <- renderUI({
@@ -241,7 +244,7 @@ server <- function(input, output) {
   output$tab.linkedin <- renderUI({
     tagList(url.linkedin)
   })
-  #/RESOURCES
+  #/RESOURCES - removed for simplicity after April 8th
   
   # url.res2 <- a("The AAS \"Suppliers of Safe Solar Viewers & Filters\" list", 
   #               href = "https://eclipse.aas.org/eye-safety/viewers-filters", 
@@ -261,8 +264,8 @@ server <- function(input, output) {
     temp          <- get_cxyinfo()
     lon_in        <- temp$coordinates.x
     lat_in        <- temp$coordinates.y
-    #greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
-    greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
+    greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    #greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
     tz.local      <- tz(greg_dt.local)
     
     # convert to utc
@@ -293,7 +296,8 @@ server <- function(input, output) {
   
   #### get next eclipse
   get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
-    start.date <- input$date_di
+    start.date <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    #start.date <- input$date_di
     min_obsc <- 1
     get.addr <- censusxy::cxy_oneline(address = input$addr_in)
     var.lon  <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180)
@@ -361,8 +365,8 @@ server <- function(input, output) {
     temp          <- get_cxyinfo()
     lon_in        <- temp$coordinates.x
     lat_in        <- temp$coordinates.y
-    #greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
-    greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
+    greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    #greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
     tz.local      <- tz(greg_dt.local)
     
     # convert to utc
@@ -389,8 +393,8 @@ server <- function(input, output) {
   get_tot.dur <- eventReactive(eventExpr = input$cxy_go, {
     #if(as.numeric(gsub("%", "", x = get_suncov())) >= 100){
     #out <- "yes"
-    #start.datetime <- ymd_hms("2024-04-07 08:30:00", tz = "America/New_York")
-    start.datetime <- with_tz(as_datetime(input$date_di), "America/New_York")
+    start.datetime <- ymd_hms("2024-04-07 08:30:00", tz = "America/New_York")
+    #start.datetime <- with_tz(as_datetime(input$date_di), "America/New_York")
     get.addr <- get_cxyinfo()
     var.lon <- unlist(unname(get.addr["coordinates.x"]))
     var.lat <- unlist(unname(get.addr["coordinates.y"]))
@@ -500,8 +504,8 @@ server <- function(input, output) {
     
     df.sched <- ec_sched(unname(unlist(addr.coords$coordinates.x)), 
                          unname(unlist(addr.coords$coordinates.y)), 
-                         #ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
-                         with_tz(as_datetime(input$date_di), "America/New_York"))
+                         ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
+                         #with_tz(as_datetime(input$date_di), "America/New_York"))
     if(max(df.sched$coverage) >= 1){
       # img <- readPNG(system.file(#"img", "flawless.png", package="png"))
       img <- readPNG("www/totality.png")
@@ -576,7 +580,7 @@ server <- function(input, output) {
     
     
   })
-  url.AE <- a("* Every Solar Eclipse Visible from Your Address for 75 Years",
+  url.AE <- a("Every eclipse visible where you're at right now for the next 75 Years (webapp #2)",
               href = "https://tim-bender.shinyapps.io/shiny_all_eclipses/",
               target = "_blank")
   output$tab.AE <- renderUI({
