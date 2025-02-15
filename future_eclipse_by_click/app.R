@@ -78,8 +78,8 @@ ui <- fluidPage(
         fluidRow(strong("Data Table Will Load Below (may take a moment)")),
       ),
       shiny::tableOutput(outputId = "logtable"),
-      shiny::plotOutput(outputId = "qr_url", 
-                        height = "200px"),
+      # shiny::plotOutput(outputId = "qr_url", 
+      #                   height = "200px"),
       wellPanel(
         fluidRow(strong("OTHER ECLIPSE WEBAPPS")), 
         fluidRow(uiOutput("tab.PT")), 
@@ -373,13 +373,13 @@ server <- function(input, output) {
   })
   
   
-  output$qr_url <- renderPlot({
-    qr_app <- qrcode::qr_code(x = "https://tim-bender.shinyapps.io/shiny_all_eclipses/", 
-                              ecl = "H")
-    qr_app_logo <- add_logo(qr_app, 
-                            logo = "www/QRLOGO.jpg")
-    plot(qr_app_logo)
-  })
+  # output$qr_url <- renderPlot({
+  #   qr_app <- qrcode::qr_code(x = "https://tim-bender.shinyapps.io/shiny_all_eclipses/", 
+  #                             ecl = "H")
+  #   qr_app_logo <- add_logo(qr_app, 
+  #                           logo = "www/QRLOGO.jpg")
+  #   plot(qr_app_logo)
+  # })
   
   
 }
