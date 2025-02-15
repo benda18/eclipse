@@ -58,6 +58,8 @@ ui <- fluidPage(
       shiny::checkboxInput("cb_totality", 
                            value = F, 
                            label = "Show Only when in Path of Totality"),
+      
+      # get lon lat from ip address---- 
       geoloc::button_geoloc(inputId = "myBtn", ("Click to Start")),
       leafletOutput("lf_map"),
       
@@ -77,7 +79,12 @@ ui <- fluidPage(
       wellPanel(
         fluidRow(strong("Data Table Will Load Below (may take a moment)")),
       ),
-      shiny::tableOutput(outputId = "logtable"),
+      
+      # temp print lon lat output----
+      shiny::textOutput(outputId = "lonlattable"),
+      # /temp
+      
+     shiny::tableOutput(outputId = "logtable"),
       # shiny::plotOutput(outputId = "qr_url", 
       #                   height = "200px"),
       wellPanel(
@@ -145,8 +152,31 @@ server <- function(input, output) {
       addTiles() %>%
       setView(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), zoom = 8) %>%
       addMarkers(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), 
-                 label = "You're here!")
+                 label = "You're here!") #%>%
+    # temp lon lat on click----
+    #addMarkers(data = points())
+    
   })
+  
+  # temp output print with lon/lat in it----
+  
+  # https://rstudio.github.io/leaflet/articles/shiny.html#inputsevents
+  
+  # points <- eventReactive(input$recalc, {
+  #   cbind(rnorm(40) * 2 + 13, rnorm(40) + 48)
+  # }, ignoreNULL = FALSE)
+  
+  points <- eventReactive(input$lf_map_click, {
+    cbind(input$lf_map_lon, input$lf_map_lat)
+  }, ignoreNULL = T)
+  
+   output$lonlattable <- shiny::renderPrint({
+    #"hello world"
+     # cbind(as.numeric(input$lf_map_lon), 
+     #       as.numeric(input$lf_map_lat))
+     points()
+  })
+  # /temp
   
   output$logtable <- shiny::renderTable({
     # vars----
