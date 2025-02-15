@@ -9,6 +9,9 @@
 # live link: https://tim-bender.shinyapps.io/shiny_eclipse_planner/
 
 
+# install.packages("remotes")
+# remotes::install_github("chris-prener/censusxy")
+
 library(renv)
 library(jpeg)
 library(swephR)
@@ -41,10 +44,10 @@ ui <- fluidPage(
       shiny::textInput(inputId = "addr_in", 
                        label = "Enter Street Address [general terms like \'The White House\' won't work]" , 
                        value = "1600 Pennsylvania Ave, Washington, DC"),
-      # shiny::dateInput(inputId = "date_di", 
-      #                  label = "Select for Next Solar Eclipse on or After:", 
-      #                  value = with_tz(ymd_hms("2024-04-08 03:00:00"), "America/New_York"), 
-      #                  format = "MM dd, yyyy"),
+      shiny::dateInput(inputId = "date_di",
+                       label = "Select for Next Solar Eclipse on or After:",
+                       value = with_tz(ymd_hms("2024-08-11 03:00:00"), "America/New_York"),
+                       format = "MM dd, yyyy"),
       actionButton(inputId = "cxy_go", 
                    label   = "SEARCH"),
       
@@ -264,8 +267,8 @@ server <- function(input, output) {
     temp          <- get_cxyinfo()
     lon_in        <- temp$coordinates.x
     lat_in        <- temp$coordinates.y
-    greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
-    #greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
+    #greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
     tz.local      <- tz(greg_dt.local)
     
     # convert to utc
@@ -296,8 +299,9 @@ server <- function(input, output) {
   
   #### get next eclipse
   get_nextecl <- eventReactive(eventExpr = input$cxy_go, {
-    start.date <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
-    #start.date <- input$date_di
+    #start.date <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    start.date <- input$date_di
+    start.date <- with_tz(as_datetime(start.date), tzone = "America/New_York") # added 20240911
     min_obsc <- 1
     get.addr <- censusxy::cxy_oneline(address = input$addr_in)
     var.lon  <- unlist(unname(get.addr["coordinates.x"])) # runif(1, -180,180)
@@ -365,8 +369,8 @@ server <- function(input, output) {
     temp          <- get_cxyinfo()
     lon_in        <- temp$coordinates.x
     lat_in        <- temp$coordinates.y
-    greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
-    #greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
+    #greg_dt.local <- ymd_hm("2024-04-07 08:30AM", tz = "America/New_York")
+    greg_dt.local <- with_tz(as_datetime(input$date_di), "America/New_York")
     tz.local      <- tz(greg_dt.local)
     
     # convert to utc
@@ -393,8 +397,8 @@ server <- function(input, output) {
   get_tot.dur <- eventReactive(eventExpr = input$cxy_go, {
     #if(as.numeric(gsub("%", "", x = get_suncov())) >= 100){
     #out <- "yes"
-    start.datetime <- ymd_hms("2024-04-07 08:30:00", tz = "America/New_York")
-    #start.datetime <- with_tz(as_datetime(input$date_di), "America/New_York")
+    #start.datetime <- ymd_hms("2024-04-07 08:30:00", tz = "America/New_York")
+    start.datetime <- with_tz(as_datetime(input$date_di), "America/New_York")
     get.addr <- get_cxyinfo()
     var.lon <- unlist(unname(get.addr["coordinates.x"]))
     var.lat <- unlist(unname(get.addr["coordinates.y"]))
@@ -504,8 +508,8 @@ server <- function(input, output) {
     
     df.sched <- ec_sched(unname(unlist(addr.coords$coordinates.x)), 
                          unname(unlist(addr.coords$coordinates.y)), 
-                         ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
-                         #with_tz(as_datetime(input$date_di), "America/New_York"))
+                         #ymd_hms("2024-04-07 08:30:00", tz = "America/New_York"))
+                         with_tz(as_datetime(input$date_di), "America/New_York"))
     if(max(df.sched$coverage) >= 1){
       # img <- readPNG(system.file(#"img", "flawless.png", package="png"))
       img <- readPNG("www/totality.png")
@@ -536,6 +540,7 @@ server <- function(input, output) {
               axis.text.y = element_text(size = 12), 
               axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
         labs(title = "Eclipse Timeline (Eastern Timezone)", 
+             caption = input$date_di,
              subtitle = unname(unlist(addr.coords$matchedAddress))) +
         geom_vline(aes(xintercept = range(df.sched[df.sched$coverage >= 1,]$time), 
                        color = "Time of Totality")) +
@@ -568,6 +573,7 @@ server <- function(input, output) {
               axis.text.y = element_text(size = 12), 
               axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 12))+
         labs(title = "Eclipse Timeline", 
+             caption = min(df.sched$time),
              subtitle = unname(unlist(addr.coords$matchedAddress)))+
         geom_vline(aes(xintercept = max(df.sched[df.sched$coverage ==
                                                    max(df.sched$coverage),]$time), 

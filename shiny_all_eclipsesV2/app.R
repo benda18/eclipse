@@ -5,22 +5,25 @@
 #    https://shiny.posit.co/
 #
 
-library(readr)
+# remotes::install_github("ColinFay/geoloc")
+
+
+#library(readr)
 library(shiny)
 library(jpeg)
 library(swephR)
 library(lubridate)
 library(dplyr)
-library(censusxy)
+#library(censusxy)
 library(scales)
-library(ggplot2)
+#library(ggplot2)
 library(renv)
 library(glue)
 library(qrcode)
 library(leaflet)
 library(geoloc)
 
-
+# renv::snapshot()
 
 
 ui <- fluidPage(
@@ -37,7 +40,7 @@ ui <- fluidPage(
                                      "25 years" = 25, 
                                      "50 years" = 50,
                                      "75 years" = 75),
-                         selected = 25,
+                         selected = 5,
                          multiple = F),
       shiny::sliderInput(inputId = "obs_in", 
                          label = "Minimum Solar Eclipse Obscuration Cutoff:", 
@@ -48,14 +51,14 @@ ui <- fluidPage(
                           choices = c("All Eclipses" = "Solar|Lunar", 
                                       "Solar Only" = "Solar", 
                                       "Lunar Only" = "Lunar"), 
-                          selected = "Solar"),
+                          selected = "Solar|Lunar"),
       shiny::checkboxInput("cb_total.ecl", 
                            value = F,
                            label = "Show Only Total Eclipses"), 
       shiny::checkboxInput("cb_totality", 
                            value = F, 
                            label = "Show Only when in Path of Totality"),
-      geoloc::button_geoloc("myBtn", ("Click to Start")),
+      geoloc::button_geoloc(inputId = "myBtn", ("Click to Start")),
       leafletOutput("lf_map"),
       
       
@@ -141,7 +144,8 @@ server <- function(input, output) {
     leaflet() %>%
       addTiles() %>%
       setView(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), zoom = 8) %>%
-      addMarkers(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), label = "You're here!")
+      addMarkers(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), 
+                 label = "You're here!")
   })
   
   output$logtable <- shiny::renderTable({
