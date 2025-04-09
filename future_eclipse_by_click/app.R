@@ -7,7 +7,7 @@
 
 # remotes::install_github("ColinFay/geoloc")
 
-
+library(openssl)
 #library(readr)
 library(shiny)
 library(jpeg)
@@ -60,7 +60,9 @@ ui <- fluidPage(
                            label = "Show Only when in Path of Totality"),
       
       # get lon lat from ip address---- 
-      geoloc::button_geoloc(inputId = "myBtn", ("Click to Start")),
+      geoloc::button_geoloc(inputId = "myBtn", ("Click to Use Device Location")),
+      # actionButton(inputId = "xy_custom", 
+      #              label   = "Search custom lon lat"),
       leafletOutput("lf_map"),
       
       
@@ -70,9 +72,9 @@ ui <- fluidPage(
       # BLOCK RESOURCES MAIN PANEL----
       wellPanel(
         fluidRow(strong(uiOutput("tab.linkedin"))),
-        fluidRow(strong(uiOutput("tab.github"))),
-        fluidRow(strong(uiOutput("tab.venmo"))),
-        fluidRow("Special thanks to reddit users u/danielsixfive and u/QuackingUp23")
+        fluidRow(strong(uiOutput("tab.github"))) #,
+        # fluidRow(strong(uiOutput("tab.venmo"))) #,
+        # fluidRow("Special thanks to reddit users u/danielsixfive and u/QuackingUp23")
       ),
       #/BRMP
       
@@ -119,7 +121,7 @@ server <- function(input, output) {
     #glue("https://eclipsewise.com/oh/ec{year(ecl_date)}.html#LE{year(ecl_date)}{lubridate::month(ecl_date,abbr=T,label=T)}{mday(ecl_date)}{et}")
     
   }
-  ewlun_url(mdy("Aug 28, 2026"),"Penumbral")
+  # ewlun_url(mdy("Aug 28, 2026"),"Penumbral")
   
   eclipsewise_url <- function(ecl_date,
                               ecltype = c("Total Eclipse", 
@@ -152,31 +154,34 @@ server <- function(input, output) {
       addTiles() %>%
       setView(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), zoom = 8) %>%
       addMarkers(as.numeric(input$myBtn_lon), as.numeric(input$myBtn_lat), 
-                 label = "You're here!") #%>%
-    # temp lon lat on click----
-    #addMarkers(data = points())
+                 label = "You're here!") 
     
-  })
+    })
   
-  # temp output print with lon/lat in it----
+  # get_cxyinfo <- eventReactive(input$xy_custom, {
+  #   var.lon <- -38
+  #   var.lat <-  47
+  # })
   
-  # https://rstudio.github.io/leaflet/articles/shiny.html#inputsevents
-  
-  # points <- eventReactive(input$recalc, {
-  #   cbind(rnorm(40) * 2 + 13, rnorm(40) + 48)
-  # }, ignoreNULL = FALSE)
-  
-  points <- eventReactive(input$lf_map_click, {
-    cbind(input$lf_map_lon, input$lf_map_lat)
-  }, ignoreNULL = T)
-  
-   output$lonlattable <- shiny::renderPrint({
-    #"hello world"
-     # cbind(as.numeric(input$lf_map_lon), 
-     #       as.numeric(input$lf_map_lat))
-     points()
-  })
-  # /temp
+  # # temp output print with lon/lat in it----
+  # 
+  # # https://rstudio.github.io/leaflet/articles/shiny.html#inputsevents
+  # 
+  # # points <- eventReactive(input$recalc, {
+  # #   cbind(rnorm(40) * 2 + 13, rnorm(40) + 48)
+  # # }, ignoreNULL = FALSE)
+  # 
+  # points <- eventReactive(input$lf_map_click, {
+  #   cbind(input$lf_map_lon, input$lf_map_lat)
+  # }, ignoreNULL = T)
+  # 
+  #  output$lonlattable <- shiny::renderPrint({
+  #   #"hello world"
+  #    # cbind(as.numeric(input$lf_map_lon), 
+  #    #       as.numeric(input$lf_map_lat))
+  #    points()
+  # })
+  # # /temp
   
   output$logtable <- shiny::renderTable({
     # vars----
@@ -310,16 +315,16 @@ server <- function(input, output) {
                                    See_Also = ewlun_url(ecl_date = temp.nextdate.lun, 
                                                         ecltype  = ecl_type222.lun)))
       
-      temp.utc <- temp.nextdate
-      temp.jd  <- swe_utc_to_jd(year = year(temp.utc),
-                                month = lubridate::month(x = temp.utc, label = F),
-                                day = mday(temp.utc),
-                                houri = hour(temp.utc),
-                                min = minute(temp.utc),
-                                sec = second(temp.utc),
-                                gregflag = 1)$dret |>
-        as.integer() |>
-        unique()
+      # temp.utc <- temp.nextdate
+      # temp.jd  <- swe_utc_to_jd(year = year(temp.utc),
+      #                           month = lubridate::month(x = temp.utc, label = F),
+      #                           day = mday(temp.utc),
+      #                           houri = hour(temp.utc),
+      #                           min = minute(temp.utc),
+      #                           sec = second(temp.utc),
+      #                           gregflag = 1)$dret |>
+      #   as.integer() |>
+      #   unique()
       
       
       if(year(start.date) >= max.year){
@@ -329,7 +334,7 @@ server <- function(input, output) {
         # start.date <- as_date(temp.nextdate)
       }else{
         start.date <- as_date(min(c(temp.nextdate.lun, 
-                                    temp.nextdate))) + days(2)
+                                    temp.nextdate))) + days(1)
         next.obs <- temp.nextobs
       }
     }
@@ -358,8 +363,11 @@ server <- function(input, output) {
       log.ecls <- log.ecls[log.ecls$Obscuration == "100.0%" & 
                              log.ecls$Type == "Solar",]
     }
+
+    log.ecls <- ungroup(log.ecls)
     
     log.ecls <- log.ecls[!duplicated(log.ecls),]
+    log.ecls <- log.ecls[order(mdy(log.ecls$Date)),]
     log.ecls[grepl(pattern = input$sel_type, 
                    x = log.ecls$Type),]
   }, 
