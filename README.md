@@ -50,6 +50,4 @@ A secondary goal of this project was to improve my R programming skills, particu
 -   NASA's Five Millennium Catalog of Solar Eclipses ([pdf download](http://eclipse.gsfc.nasa.gov/5MCSE/TP2009-214174.pdf))
 -   [Webpages on the History of Astronomy by Robert Harry van Gent](https://webspace.science.uu.nl/~gent0113/)
 
-### Special Thanks
 
--   Reddit users u/danielsixfive and u/QuackingUp23
