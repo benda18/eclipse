@@ -2,7 +2,7 @@
 
 ## PRESENTED APP AT useR!2025 - DUKE UNIVERSITY IN DURHAM, NC
 
-In the early spring of 2025 I submitted an abstract and was selected to present the app at [useR!2025](https://user2025.r-project.org/), the annual R user conference which was being held at Duke University. A copy of the Google Slides presentation can be found [here](https://docs.google.com/presentation/d/1a3xUYX5hytqEFV1xuzWRiyrxi70f5ak4GfYjf1b5o7k/edit?usp=sharing).
+In the early spring of 2025 I submitted an abstract and was selected to present the app at [useR!2025](https://user2025.r-project.org/), the annual R user conference which was being held at Duke University. A copy of the Google Slides presentation can be found [here](https://docs.google.com/presentation/d/1a3xUYX5hytqEFV1xuzWRiyrxi70f5ak4GfYjf1b5o7k/edit?usp=sharing). The presentation was recorded and should be available to watch at some point in the future at the https://user2025.r-project.org/
 
 ## BACKGROUND
 
