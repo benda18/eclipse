@@ -1,5 +1,9 @@
 # Eclipse Planning Tool
 
+## PRESENTED APP AT useR!2025 - DUKE UNIVERSITY IN DURHAM, NC
+
+In the early spring of 2025 I submitted an abstract and was selected to present the app at [useR!2025](https://user2025.r-project.org/), the annual R user conference which was being held at Duke University. A copy of the Google Slides presentation can be found [here](https://docs.google.com/presentation/d/1a3xUYX5hytqEFV1xuzWRiyrxi70f5ak4GfYjf1b5o7k/edit?usp=sharing).
+
 ## BACKGROUND
 
 The 2024 total solar eclipse that crossed North America on April 8th was the last chance for many of us to see a total solar eclipse for the next 21 years. NASA estimates that 150 million people lived within 200 miles of totality, 5 times as many people as the 2017 eclipse that also crossed the continental US. Many useful web tools and resources existed leading up to the 2024 event to help plan where and when to go to best see the eclipse. All were useful but few in the way I needed - a simple tool just gave you the basic planning information for a US mailing address - a timeline of the eclipse for that location, whether totality could be seen, etc. So I created the tool that I wanted as a Shiny webapp in R.
